@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L&D Monitor 2026 — Germany (DE) Bilendi Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Regular.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Bold.woff2') format('woff2'); font-weight: 700; }
+
+  :root {
+    --st-blue: #056DFF;
+    --st-cyan: #00C2FF;
+    --st-green: #10B981;
+    --st-yellow: #F59E0B;
+    --st-red: #EF4444;
+    --st-navy: #11295A;
+    --bg-dark: #0f172a;
+    --glass-bg: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.1);
+    --glass-bg-light: rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Euclid Circular B', system-ui, -apple-system, sans-serif;
+    background: var(--bg-dark);
+    color: #e2e8f0;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .nav-link {
+    position: relative; color: rgba(255,255,255,0.55);
+    font-size: 13px; font-weight: 400; padding: 14px 12px;
+    text-decoration: none; white-space: nowrap; transition: color 0.25s;
+  }
+  .nav-link:hover, .nav-link.active { color: #fff; }
+  .nav-link.active::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 12px; right: 12px;
+    height: 2px; background: var(--st-blue); border-radius: 2px;
+  }
+
+  .glass {
+    background: var(--glass-bg); backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border); border-radius: 16px; padding: 28px;
+  }
+  .glass-light {
+    background: var(--glass-bg-light); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 20px;
+  }
+
+  .badge-confirmed {
+    display: inline-block; padding: 4px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+    background: rgba(16,185,129,0.15); color: var(--st-green);
+    border: 1px solid rgba(16,185,129,0.3);
+  }
+
+  .bar-track {
+    background: rgba(255,255,255,0.07); border-radius: 6px;
+    height: 28px; overflow: hidden; position: relative;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 6px;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    display: flex; align-items: center; padding-left: 10px;
+    font-size: 12px; font-weight: 700; color: #fff; min-width: fit-content;
+  }
+  .bar-fill.blue { background: linear-gradient(90deg, var(--st-blue), var(--st-cyan)); }
+  .bar-fill.green { background: linear-gradient(90deg, #059669, var(--st-green)); }
+  .bar-fill.yellow { background: linear-gradient(90deg, #d97706, var(--st-yellow)); }
+  .bar-fill.red { background: linear-gradient(90deg, #dc2626, var(--st-red)); }
+  .bar-fill.cyan { background: linear-gradient(90deg, #0891b2, var(--st-cyan)); }
+  .bar-fill.navy { background: linear-gradient(90deg, var(--st-navy), #1e3a6e); }
+
+  .gap-bar-container { position: relative; height: 44px; margin: 6px 0; }
+  .gap-bar-track { position: absolute; top: 50%; transform: translateY(-50%); left: 0; right: 0; height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; }
+  .gap-marker {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 16px; height: 16px; border-radius: 50%; border: 2px solid #fff; z-index: 2;
+  }
+  .gap-marker.manager { background: var(--st-blue); }
+  .gap-marker.employee { background: var(--st-cyan); }
+  .gap-zone {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    height: 6px; background: rgba(239, 68, 68, 0.25); border-radius: 3px; z-index: 1;
+  }
+  .gap-label {
+    position: absolute; top: -2px; font-size: 11px; font-weight: 700;
+    transform: translateX(-50%); white-space: nowrap;
+  }
+  .gap-label.bottom-label { top: auto; bottom: -2px; }
+
+  .donut-ring { fill: none; stroke: rgba(255,255,255,0.07); }
+  .donut-segment { fill: none; stroke-linecap: round; transition: stroke-dasharray 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+
+  .section-header { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .section-sub { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+
+  .stat-big {
+    font-size: 48px; font-weight: 700;
+    background: linear-gradient(135deg, var(--st-blue), var(--st-cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1;
+  }
+  .stat-big.green { background: linear-gradient(135deg, var(--st-green), #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-big.yellow { background: linear-gradient(135deg, var(--st-yellow), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-big.red { background: linear-gradient(135deg, var(--st-red), #f87171); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .compare-row {
+    display: grid; grid-template-columns: 1fr 80px 80px 60px;
+    gap: 12px; align-items: center; padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .compare-row:last-child { border-bottom: none; }
+
+  .sample-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+  @media (max-width: 1024px) {
+    .section-header { font-size: 26px; }
+    .stat-big { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="top-nav">
+  <div class="max-w-7xl mx-auto px-4 flex items-center" style="overflow-x: auto;">
+    <a href="#hero" class="nav-link active" data-section="hero">Overview</a>
+    <a href="#hypotheses" class="nav-link" data-section="hypotheses">Hypotheses</a>
+    <a href="#strategy-gap" class="nav-link" data-section="strategy-gap">Strategy Gap</a>
+    <a href="#perception-gap" class="nav-link" data-section="perception-gap">Perception Gap</a>
+    <a href="#barriers" class="nav-link" data-section="barriers">Barriers</a>
+    <a href="#skills" class="nav-link" data-section="skills">Skills</a>
+    <a href="#budget" class="nav-link" data-section="budget">Budget</a>
+    <a href="#focus-2026" class="nav-link" data-section="focus-2026">2026 Focus</a>
+    <a href="#nl-vs-de" class="nav-link" data-section="nl-vs-de">NL vs DE</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="max-w-7xl mx-auto px-4 pt-16 pb-12">
+  <div class="reveal">
+    <div class="flex flex-wrap items-center gap-3 mb-6">
+      <div class="sample-badge"><span style="width:8px;height:8px;border-radius:50%;background:var(--st-cyan);display:inline-block;"></span> HR Leaders DE: 521</div>
+      <div class="sample-badge"><span style="width:8px;height:8px;border-radius:50%;background:var(--st-blue);display:inline-block;"></span> HR Leaders NL: 259</div>
+      <div class="sample-badge"><span style="width:8px;height:8px;border-radius:50%;background:var(--st-green);display:inline-block;"></span> Managers DE: 359</div>
+      <div class="sample-badge"><span style="width:8px;height:8px;border-radius:50%;background:var(--st-yellow);display:inline-block;"></span> Employees DE: 935</div>
+    </div>
+    <h1 style="font-size:clamp(36px,5vw,56px); font-weight:700; color:#fff; line-height:1.1; margin-bottom:12px;">
+      L&amp;D Monitor 2026 &mdash; Germany
+    </h1>
+    <p style="font-size:18px; color:rgba(255,255,255,0.5); max-width:640px; margin-bottom:40px;">
+      Bilendi survey dashboard &mdash; 1,815 DE respondents (521 HR leaders, 359 managers, 935 employees). Six hypotheses tested, all confirmed.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal" style="transition-delay:0.1s;">
+    <div class="glass text-center">
+      <div class="stat-big">6/6</div>
+      <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Hypotheses Confirmed</div>
+    </div>
+    <div class="glass text-center">
+      <div class="stat-big red">72%</div>
+      <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Stuck in Stages 1-2</div>
+    </div>
+    <div class="glass text-center">
+      <div class="stat-big yellow">24.7pp</div>
+      <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Skill Clarity Gap</div>
+    </div>
+    <div class="glass text-center">
+      <div class="stat-big green">10%</div>
+      <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Full Skill Transparency</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: HYPOTHESIS VALIDATION -->
+<section id="hypotheses" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="reveal">
+    <h2 class="section-header">Hypothesis Validation</h2>
+    <p class="section-sub">Six hypotheses tested against 1,815 DE responses. All confirmed.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+    <div class="glass reveal" style="border-left: 4px solid var(--st-blue);">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-size:12px; font-weight:700; color:var(--st-blue); letter-spacing:1px;">H1</span>
+        <span class="badge-confirmed">Confirmed</span>
+      </div>
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Strategy exists but doesn't drive action</h3>
+      <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:16px;">71% have a strategy, but ~40% cannot confidently measure impact. 72.4% still in maturity stages 1-2.</p>
+      <div class="flex items-baseline gap-2">
+        <span class="stat-big" style="font-size:32px;">~40%</span>
+        <span style="font-size:12px; color:rgba(255,255,255,0.4);">cannot measure L&amp;D impact</span>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="border-left: 4px solid var(--st-cyan); transition-delay:0.05s;">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-size:12px; font-weight:700; color:var(--st-cyan); letter-spacing:1px;">H2</span>
+        <span class="badge-confirmed">Confirmed</span>
+      </div>
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Culture fails on structure, not motivation</h3>
+      <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:16px;">Active culture gap: 23pp. Feedback translates to plans: 28pp gap. Empowerment gap: 26pp. Culture gaps are wider in DE than NL.</p>
+      <div class="flex items-baseline gap-2">
+        <span class="stat-big" style="font-size:32px;">28pp</span>
+        <span style="font-size:12px; color:rgba(255,255,255,0.4);">feedback-to-development gap</span>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="border-left: 4px solid var(--st-green); transition-delay:0.1s;">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-size:12px; font-weight:700; color:var(--st-green); letter-spacing:1px;">H3</span>
+        <span class="badge-confirmed">Confirmed</span>
+      </div>
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Manager perception gap</h3>
+      <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:16px;">Design learning paths gap: 26pp. Skill clarity gap: 25pp. Proactive upskilling gap: 16pp. DE shows wider gaps than NL across all support dimensions.</p>
+      <div class="flex items-baseline gap-2">
+        <span class="stat-big" style="font-size:32px;">26pp</span>
+        <span style="font-size:12px; color:rgba(255,255,255,0.4);">learning path design gap</span>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="border-left: 4px solid var(--st-yellow); transition-delay:0.15s;">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-size:12px; font-weight:700; color:var(--st-yellow); letter-spacing:1px;">H4</span>
+        <span class="badge-confirmed">Confirmed</span>
+      </div>
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Skill transparency crisis</h3>
+      <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:16px;">Only 10% have full skill/gap transparency. 32.4% say goals not defined along skills. Manager vs employee skill clarity gap: 24.7pp.</p>
+      <div class="flex items-baseline gap-2">
+        <span class="stat-big yellow" style="font-size:32px;">10%</span>
+        <span style="font-size:12px; color:rgba(255,255,255,0.4);">full skill transparency</span>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="border-left: 4px solid var(--st-red); transition-delay:0.2s;">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-size:12px; font-weight:700; color:var(--st-red); letter-spacing:1px;">H5</span>
+        <span class="badge-confirmed">Confirmed</span>
+      </div>
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">Upskilling recognized but not embedded</h3>
+      <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:16px;">72.4% in stages 1-2. Only 5.8% strategic. Yet 33% aspire to roles/skills/data-driven within 3 years.</p>
+      <div class="flex items-baseline gap-2">
+        <span class="stat-big red" style="font-size:32px;">5.8%</span>
+        <span style="font-size:12px; color:rgba(255,255,255,0.4);">operate strategically today</span>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="border-left: 4px solid #8b5cf6; transition-delay:0.25s;">
+      <div class="flex items-center justify-between mb-3">
+        <span style="font-size:12px; font-weight:700; color:#8b5cf6; letter-spacing:1px;">H6</span>
+        <span class="badge-confirmed">Confirmed</span>
+      </div>
+      <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:8px;">L&amp;D wants strategic role but operates reactively</h3>
+      <p style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:16px;">34.9% plan stronger manager role. 41.7% invest in learning tech. But 36.1% say budget/resources block progress.</p>
+      <div class="flex items-baseline gap-2">
+        <span style="font-size:32px; font-weight:700; background:linear-gradient(135deg,#8b5cf6,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1.1;">15.9%</span>
+        <span style="font-size:12px; color:rgba(255,255,255,0.4);">introducing L&amp;D KPIs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: STRATEGY-EXECUTION GAP -->
+<section id="strategy-gap" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="reveal">
+    <h2 class="section-header">The Strategy-Execution Gap</h2>
+    <p class="section-sub">H1 &mdash; 71% claim a strategy, but execution and measurement tell a different story.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+    <!-- Strategy Existence Donut -->
+    <div class="glass reveal">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">L&amp;D Strategy Existence</h3>
+      <div style="display:flex; justify-content:center; margin-bottom:20px;">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="donut-ring" cx="90" cy="90" r="70" stroke-width="22"/>
+          <!-- circumference = 2*pi*70 = 439.82 -->
+          <!-- 40.7% Clear = 179.0 -->
+          <circle class="donut-segment" cx="90" cy="90" r="70" stroke-width="22"
+            stroke="var(--st-blue)" stroke-dasharray="179.0 260.8" stroke-dashoffset="110"
+            transform="rotate(-90 90 90)"/>
+          <!-- 30.3% On paper = 133.3 -->
+          <circle class="donut-segment" cx="90" cy="90" r="70" stroke-width="22"
+            stroke="var(--st-cyan)" stroke-dasharray="133.3 306.5" stroke-dashoffset="-69.0"
+            transform="rotate(-90 90 90)"/>
+          <!-- 18.6% Planned = 81.8 -->
+          <circle class="donut-segment" cx="90" cy="90" r="70" stroke-width="22"
+            stroke="var(--st-yellow)" stroke-dasharray="81.8 358.0" stroke-dashoffset="-202.3"
+            transform="rotate(-90 90 90)"/>
+          <!-- 6.0% None = 26.4 -->
+          <circle class="donut-segment" cx="90" cy="90" r="70" stroke-width="22"
+            stroke="var(--st-red)" stroke-dasharray="26.4 413.4" stroke-dashoffset="-284.1"
+            transform="rotate(-90 90 90)"/>
+          <!-- 3.3% DK = 14.5 -->
+          <circle class="donut-segment" cx="90" cy="90" r="70" stroke-width="22"
+            stroke="rgba(255,255,255,0.2)" stroke-dasharray="14.5 425.3" stroke-dashoffset="-310.5"
+            transform="rotate(-90 90 90)"/>
+          <text x="90" y="86" text-anchor="middle" fill="#fff" font-size="28" font-weight="700" font-family="Euclid Circular B, sans-serif">71%</text>
+          <text x="90" y="105" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="11" font-family="Euclid Circular B, sans-serif">have a strategy</text>
+        </svg>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-blue);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.7);">Clear &amp; active</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">40.7%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-cyan);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.7);">On paper only</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">30.3%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-yellow);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.7);">Planned but inactive</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">18.6%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-red);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.7);">No strategy</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">6.0%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:rgba(255,255,255,0.2);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.7);">Don't know</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">3.3%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Impact Measurement -->
+    <div class="glass reveal" style="transition-delay:0.08s;">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">Can You Measure L&amp;D Impact?</h3>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.7);">Top-2-box (can measure)</span>
+            <span style="font-weight:700; color:#fff;">60.5%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:60.5%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.7);">Neutral</span>
+            <span style="font-weight:700; color:#fff;">22.6%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:22.6%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.7);">Bottom-2-box (cannot)</span>
+            <span style="font-weight:700; color:#fff;">16.9%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill red" style="width:16.9%;"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:20px; padding:14px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:10px;">
+        <p style="font-size:13px; color:rgba(255,255,255,0.6);"><span style="font-weight:700; color:var(--st-red);">~40%</span> of organizations cannot confidently measure L&amp;D impact (neutral + bottom-2).</p>
+      </div>
+    </div>
+
+    <!-- Maturity Stage -->
+    <div class="glass reveal" style="transition-delay:0.16s;">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">Maturity Stage Distribution</h3>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.7);">Stage 1: Ad hoc</span>
+            <span style="font-weight:700; color:#fff;">23.0%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill red" style="width:23%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.7);">Stage 2: Standardized</span>
+            <span style="font-weight:700; color:#fff;">49.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:49.3%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.7);">Stage 3: Talent-focused</span>
+            <span style="font-weight:700; color:#fff;">21.9%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:21.9%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.7);">Stage 4: Strategic</span>
+            <span style="font-weight:700; color:#fff;">5.8%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:5.8%;"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:20px; padding:14px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:10px;">
+        <p style="font-size:13px; color:rgba(255,255,255,0.6);"><span style="font-weight:700; color:var(--st-yellow);">72.4%</span> remain in the bottom two maturity stages.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: MANAGER PERCEPTION GAP -->
+<section id="perception-gap" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="reveal">
+    <h2 class="section-header">The Manager Perception Gap</h2>
+    <p class="section-sub">H3 &mdash; What managers think they deliver vs. what employees actually experience (DE data).</p>
+  </div>
+
+  <div class="flex items-center gap-6 mb-8 reveal" style="transition-delay:0.05s;">
+    <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+      <span style="width:14px;height:14px;border-radius:50%;background:var(--st-blue);border:2px solid #fff;display:inline-block;"></span>
+      <span style="color:rgba(255,255,255,0.7);">Manager says</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+      <span style="width:14px;height:14px;border-radius:50%;background:var(--st-cyan);border:2px solid #fff;display:inline-block;"></span>
+      <span style="color:rgba(255,255,255,0.7);">Employee says</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+      <span style="width:24px;height:6px;border-radius:3px;background:rgba(239,68,68,0.3);display:inline-block;"></span>
+      <span style="color:rgba(255,255,255,0.7);">Perception gap</span>
+    </div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:16px;">
+    <!-- Gap 1: Feedback→development (culture r8) - 28pp -->
+    <div class="glass reveal" style="padding:20px 28px; transition-delay:0.08s;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:700; color:#fff;">"Feedback translates to development plans"</span>
+        <span style="font-size:13px; font-weight:700; color:var(--st-red); background:rgba(239,68,68,0.12); padding:3px 12px; border-radius:999px;">-28pp</span>
+      </div>
+      <div class="gap-bar-container">
+        <div class="gap-bar-track"></div>
+        <div class="gap-zone" style="left:39%; width:28%;"></div>
+        <div class="gap-marker manager" style="left:68%;"></div>
+        <div class="gap-marker employee" style="left:39%;"></div>
+        <span class="gap-label" style="left:68%; color:var(--st-blue);">68%</span>
+        <span class="gap-label bottom-label" style="left:39%; color:var(--st-cyan);">39%</span>
+      </div>
+    </div>
+
+    <!-- Gap 2: Design learning paths (support r4) - 26pp -->
+    <div class="glass reveal" style="padding:20px 28px; transition-delay:0.12s;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:700; color:#fff;">"I design learning paths for my team"</span>
+        <span style="font-size:13px; font-weight:700; color:var(--st-red); background:rgba(239,68,68,0.12); padding:3px 12px; border-radius:999px;">-26pp</span>
+      </div>
+      <div class="gap-bar-container">
+        <div class="gap-bar-track"></div>
+        <div class="gap-zone" style="left:40%; width:26%;"></div>
+        <div class="gap-marker manager" style="left:66%;"></div>
+        <div class="gap-marker employee" style="left:40%;"></div>
+        <span class="gap-label" style="left:66%; color:var(--st-blue);">66%</span>
+        <span class="gap-label bottom-label" style="left:40%; color:var(--st-cyan);">40%</span>
+      </div>
+    </div>
+
+    <!-- Gap 3: Empowered own development (culture r7) - 26pp -->
+    <div class="glass reveal" style="padding:20px 28px; transition-delay:0.16s;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:700; color:#fff;">"Empowered to drive own development"</span>
+        <span style="font-size:13px; font-weight:700; color:var(--st-red); background:rgba(239,68,68,0.12); padding:3px 12px; border-radius:999px;">-26pp</span>
+      </div>
+      <div class="gap-bar-container">
+        <div class="gap-bar-track"></div>
+        <div class="gap-zone" style="left:43%; width:26%;"></div>
+        <div class="gap-marker manager" style="left:69%;"></div>
+        <div class="gap-marker employee" style="left:43%;"></div>
+        <span class="gap-label" style="left:69%; color:var(--st-blue);">69%</span>
+        <span class="gap-label bottom-label" style="left:43%; color:var(--st-cyan);">43%</span>
+      </div>
+    </div>
+
+    <!-- Gap 4: Skill clarity (ordinal) - 25pp -->
+    <div class="glass reveal" style="padding:20px 28px; transition-delay:0.2s;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:700; color:#fff;">"Clear overview of team skills &amp; gaps"</span>
+        <span style="font-size:13px; font-weight:700; color:var(--st-red); background:rgba(239,68,68,0.12); padding:3px 12px; border-radius:999px;">-25pp</span>
+      </div>
+      <div class="gap-bar-container">
+        <div class="gap-bar-track"></div>
+        <div class="gap-zone" style="left:45%; width:25%;"></div>
+        <div class="gap-marker manager" style="left:70%;"></div>
+        <div class="gap-marker employee" style="left:45%;"></div>
+        <span class="gap-label" style="left:70%; color:var(--st-blue);">70%</span>
+        <span class="gap-label bottom-label" style="left:45%; color:var(--st-cyan);">45%</span>
+      </div>
+    </div>
+
+    <!-- Gap 5: Active learning culture (culture r1) - 23pp -->
+    <div class="glass reveal" style="padding:20px 28px; transition-delay:0.24s;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:700; color:#fff;">"Active learning culture"</span>
+        <span style="font-size:13px; font-weight:700; color:var(--st-red); background:rgba(239,68,68,0.12); padding:3px 12px; border-radius:999px;">-23pp</span>
+      </div>
+      <div class="gap-bar-container">
+        <div class="gap-bar-track"></div>
+        <div class="gap-zone" style="left:40%; width:23%;"></div>
+        <div class="gap-marker manager" style="left:63%;"></div>
+        <div class="gap-marker employee" style="left:40%;"></div>
+        <span class="gap-label" style="left:63%; color:var(--st-blue);">63%</span>
+        <span class="gap-label bottom-label" style="left:40%; color:var(--st-cyan);">40%</span>
+      </div>
+    </div>
+
+    <!-- Gap 6: Prioritize development (culture r2) - 22pp -->
+    <div class="glass reveal" style="padding:20px 28px; transition-delay:0.28s;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:14px; font-weight:700; color:#fff;">"Continuous development is prioritized"</span>
+        <span style="font-size:13px; font-weight:700; color:var(--st-red); background:rgba(239,68,68,0.12); padding:3px 12px; border-radius:999px;">-22pp</span>
+      </div>
+      <div class="gap-bar-container">
+        <div class="gap-bar-track"></div>
+        <div class="gap-zone" style="left:38%; width:22%;"></div>
+        <div class="gap-marker manager" style="left:60%;"></div>
+        <div class="gap-marker employee" style="left:38%;"></div>
+        <span class="gap-label" style="left:60%; color:var(--st-blue);">60%</span>
+        <span class="gap-label bottom-label" style="left:38%; color:var(--st-cyan);">38%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: BARRIERS -->
+<section id="barriers" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="reveal">
+    <h2 class="section-header">Barriers &amp; Challenges</h2>
+    <p class="section-sub">What stands between L&amp;D ambition and reality, from both HR leader and employee perspectives (DE).</p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+    <div class="glass reveal">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--st-cyan);display:inline-block;"></span>
+        <h3 style="font-size:15px; font-weight:700; color:#fff;">HR Leaders DE &mdash; Employee Barriers (n=521)</h3>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Daily work takes priority</span>
+            <span style="font-weight:700; color:#fff;">38.8%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:38.8%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Participation not stimulated</span>
+            <span style="font-weight:700; color:#fff;">29.0%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:29.0%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Other business priorities</span>
+            <span style="font-weight:700; color:#fff;">27.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:27.3%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Not aligned with role/skills</span>
+            <span style="font-weight:700; color:#fff;">26.7%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill cyan" style="width:26.7%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Access exists, orientation lacking</span>
+            <span style="font-weight:700; color:#fff;">25.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill cyan" style="width:25.3%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Managers don't support consistently</span>
+            <span style="font-weight:700; color:#fff;">18.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill cyan" style="width:18.4%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="transition-delay:0.08s;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--st-yellow);display:inline-block;"></span>
+        <h3 style="font-size:15px; font-weight:700; color:#fff;">Employees DE (n=935)</h3>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Daily work leaves too little time</span>
+            <span style="font-weight:700; color:#fff;">47.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:47.4%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Other business priorities</span>
+            <span style="font-weight:700; color:#fff;">19.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:19.4%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Content doesn't match needs</span>
+            <span style="font-weight:700; color:#fff;">19.1%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:19.1%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Not aligned with role</span>
+            <span style="font-weight:700; color:#fff;">17.8%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:17.8%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Not informed about offerings</span>
+            <span style="font-weight:700; color:#fff;">16.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:16.3%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Participation not recognized</span>
+            <span style="font-weight:700; color:#fff;">15.9%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:15.9%;"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:14px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:10px;">
+        <p style="font-size:13px; color:rgba(255,255,255,0.6);"><span style="font-weight:700; color:var(--st-red);">47.4% of DE employees say daily work leaves too little time</span> &mdash; significantly higher than NL (37%).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: SKILLS & TRANSPARENCY -->
+<section id="skills" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="reveal">
+    <h2 class="section-header">Skills &amp; Transparency</h2>
+    <p class="section-sub">H4 &mdash; Only 10% of DE organizations have full visibility into their people's skills and gaps.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+    <div class="glass reveal">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">Skill Transparency Level</h3>
+      <div style="display:flex; justify-content:center; margin-bottom:24px;">
+        <!-- Half-circle gauge: arc length at r=90 from M30,130 to M210,130 = pi*90 = 282.7 -->
+        <svg width="240" height="140" viewBox="0 0 240 140">
+          <path d="M 30 130 A 90 90 0 0 1 210 130" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="20" stroke-linecap="round"/>
+          <!-- 10.0% Very transparent = 28.3 -->
+          <path d="M 30 130 A 90 90 0 0 1 210 130" fill="none" stroke="var(--st-green)" stroke-width="20" stroke-linecap="round"
+            stroke-dasharray="28.3 260" stroke-dashoffset="0"/>
+          <!-- 37.0% Mostly = 104.6 -->
+          <path d="M 30 130 A 90 90 0 0 1 210 130" fill="none" stroke="var(--st-blue)" stroke-width="20"
+            stroke-dasharray="104.6 260" stroke-dashoffset="-28.3"/>
+          <!-- 29.6% Partial = 83.7 -->
+          <path d="M 30 130 A 90 90 0 0 1 210 130" fill="none" stroke="var(--st-yellow)" stroke-width="20"
+            stroke-dasharray="83.7 260" stroke-dashoffset="-132.9"/>
+          <!-- 14.8% Barely = 41.8 -->
+          <path d="M 30 130 A 90 90 0 0 1 210 130" fill="none" stroke="#f97316" stroke-width="20"
+            stroke-dasharray="41.8 260" stroke-dashoffset="-216.6"/>
+          <!-- 3.8% Not at all = 10.7 -->
+          <path d="M 30 130 A 90 90 0 0 1 210 130" fill="none" stroke="var(--st-red)" stroke-width="20" stroke-linecap="round"
+            stroke-dasharray="10.7 260" stroke-dashoffset="-258.4"/>
+          <text x="120" y="110" text-anchor="middle" fill="#fff" font-size="36" font-weight="700" font-family="Euclid Circular B, sans-serif">10%</text>
+          <text x="120" y="130" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="11" font-family="Euclid Circular B, sans-serif">fully transparent</text>
+        </svg>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-green);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Very transparent</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">10.0%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-blue);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Mostly</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">37.0%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-yellow);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Partial</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">29.6%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:#f97316;flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Barely</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">14.8%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-red);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Not at all</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">3.8%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="transition-delay:0.08s;">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">Barriers to Skill-Based Learning (DE)</h3>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Goals not defined along skills</span>
+            <span style="font-weight:700; color:#fff;">32.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill red" style="width:32.4%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Lack of data / skills overview</span>
+            <span style="font-weight:700; color:#fff;">28.8%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:28.8%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Content not matched to skill gaps</span>
+            <span style="font-weight:700; color:#fff;">27.8%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:27.8%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">No tools/processes to map skills</span>
+            <span style="font-weight:700; color:#fff;">27.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill cyan" style="width:27.4%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Managers don't provide enough input</span>
+            <span style="font-weight:700; color:#fff;">16.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill cyan" style="width:16.3%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Leadership doesn't prioritize</span>
+            <span style="font-weight:700; color:#fff;">10.6%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill navy" style="width:10.6%;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: BUDGET & INVESTMENT -->
+<section id="budget" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="reveal">
+    <h2 class="section-header">Budget &amp; Investment</h2>
+    <p class="section-sub">86% of DE organizations have some form of L&amp;D budget, but utilization and confidence vary widely.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+    <div class="glass reveal">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">Budget Exists</h3>
+      <div style="display:flex; justify-content:center; margin-bottom:16px;">
+        <svg width="160" height="160" viewBox="0 0 160 160">
+          <!-- circumference = 2*pi*60 = 376.99 -->
+          <circle class="donut-ring" cx="80" cy="80" r="60" stroke-width="20"/>
+          <!-- 86% = 324.2 -->
+          <circle class="donut-segment" cx="80" cy="80" r="60" stroke-width="20"
+            stroke="var(--st-green)" stroke-dasharray="324.2 52.8" stroke-dashoffset="94.2"
+            transform="rotate(-90 80 80)"/>
+          <text x="80" y="76" text-anchor="middle" fill="#fff" font-size="32" font-weight="700" font-family="Euclid Circular B, sans-serif">86%</text>
+          <text x="80" y="95" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="11" font-family="Euclid Circular B, sans-serif">have budget</text>
+        </svg>
+      </div>
+      <div style="padding:12px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:10px;">
+        <p style="font-size:13px; color:rgba(255,255,255,0.6);">Budget existence is not the problem &mdash; utilization and strategic allocation are.</p>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="transition-delay:0.08s;">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">Budget Utilization</h3>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">0-25% used</span>
+            <span style="font-weight:700; color:#fff;">7.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill red" style="width:7.3%;min-width:32px;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">26-50% used</span>
+            <span style="font-weight:700; color:#fff;">28.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:28.4%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">51-75% used</span>
+            <span style="font-weight:700; color:#fff;">36.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:36.3%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">76-100% used</span>
+            <span style="font-weight:700; color:#fff;">13.6%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:13.6%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Exceeds budget</span>
+            <span style="font-weight:700; color:#fff;">2.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:2.3%;min-width:24px;"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:12px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:10px;">
+        <p style="font-size:13px; color:rgba(255,255,255,0.6);"><span style="font-weight:700; color:var(--st-yellow);">35.7%</span> use less than half their budget.</p>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="transition-delay:0.16s;">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">Investment Climate</h3>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Increasing</span>
+            <span style="font-weight:700; color:var(--st-green);">10.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:10.4%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Stable + targeted investment</span>
+            <span style="font-weight:700; color:#fff;">39.3%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:39.3%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Stable + ROI pressure</span>
+            <span style="font-weight:700; color:#fff;">26.7%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:26.7%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Declining</span>
+            <span style="font-weight:700; color:var(--st-red);">14.4%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill red" style="width:14.4%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Don't know</span>
+            <span style="font-weight:700; color:rgba(255,255,255,0.5);">5.2%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill navy" style="width:5.2%;min-width:24px;"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:12px; background:rgba(5,109,255,0.08); border:1px solid rgba(5,109,255,0.2); border-radius:10px;">
+        <p style="font-size:13px; color:rgba(255,255,255,0.6);"><span style="font-weight:700; color:var(--st-blue);">49.7%</span> face stable-to-growing budgets &mdash; but more pressure than NL (14.4% declining vs 10.8%).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: 2026 FOCUS & AMBITION -->
+<section id="focus-2026" class="max-w-7xl mx-auto px-4 py-16">
+  <div class="reveal">
+    <h2 class="section-header">2026 Focus &amp; Ambition</h2>
+    <p class="section-sub">Where DE HR leaders plan to invest their attention and where they want to be in 3 years.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+    <div class="glass reveal">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">HR Leaders DE &mdash; Top Focus Areas</h3>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Empower self-directed development</span>
+            <span style="font-weight:700; color:#fff;">40.5%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:40.5%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Stronger manager involvement</span>
+            <span style="font-weight:700; color:#fff;">34.9%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:34.9%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Build/embed learning culture</span>
+            <span style="font-weight:700; color:#fff;">33.8%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill cyan" style="width:33.8%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Link L&amp;D to business strategy</span>
+            <span style="font-weight:700; color:#fff;">30.1%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill cyan" style="width:30.1%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">AI-based tools</span>
+            <span style="font-weight:700; color:#fff;">26.5%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:26.5%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Future-critical skill development</span>
+            <span style="font-weight:700; color:#fff;">25.5%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:25.5%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px;">
+            <span style="color:rgba(255,255,255,0.7);">Strategic positioning of L&amp;D</span>
+            <span style="font-weight:700; color:#fff;">11.9%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill navy" style="width:11.9%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass reveal" style="transition-delay:0.08s;">
+      <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:20px;">3-Year Ambition &mdash; Where do you want to be?</h3>
+      <div style="display:flex; justify-content:center; margin-bottom:20px;">
+        <!-- circumference = 2*pi*75 = 471.24 -->
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <circle class="donut-ring" cx="100" cy="100" r="75" stroke-width="26"/>
+          <!-- 19.0% compliance = 89.5 -->
+          <circle class="donut-segment" cx="100" cy="100" r="75" stroke-width="26"
+            stroke="var(--st-red)" stroke-dasharray="89.5 381.7" stroke-dashoffset="117.8"
+            transform="rotate(-90 100 100)"/>
+          <!-- 42.0% standardize = 197.9 -->
+          <circle class="donut-segment" cx="100" cy="100" r="75" stroke-width="26"
+            stroke="var(--st-yellow)" stroke-dasharray="197.9 273.3" stroke-dashoffset="28.3"
+            transform="rotate(-90 100 100)"/>
+          <!-- 16.7% roles/skills = 78.7 -->
+          <circle class="donut-segment" cx="100" cy="100" r="75" stroke-width="26"
+            stroke="var(--st-blue)" stroke-dasharray="78.7 392.5" stroke-dashoffset="-169.6"
+            transform="rotate(-90 100 100)"/>
+          <!-- 10.4% data-driven = 49.0 -->
+          <circle class="donut-segment" cx="100" cy="100" r="75" stroke-width="26"
+            stroke="var(--st-cyan)" stroke-dasharray="49.0 422.2" stroke-dashoffset="-248.3"
+            transform="rotate(-90 100 100)"/>
+          <!-- 5.6% strategic = 26.4 -->
+          <circle class="donut-segment" cx="100" cy="100" r="75" stroke-width="26"
+            stroke="var(--st-green)" stroke-dasharray="26.4 444.8" stroke-dashoffset="-297.3"
+            transform="rotate(-90 100 100)"/>
+          <!-- 6.3% don't know = 29.7 -->
+          <circle class="donut-segment" cx="100" cy="100" r="75" stroke-width="26"
+            stroke="rgba(255,255,255,0.2)" stroke-dasharray="29.7 441.5" stroke-dashoffset="-323.7"
+            transform="rotate(-90 100 100)"/>
+          <text x="100" y="96" text-anchor="middle" fill="#fff" font-size="26" font-weight="700" font-family="Euclid Circular B, sans-serif">33%</text>
+          <text x="100" y="114" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10" font-family="Euclid Circular B, sans-serif">aspire beyond</text>
+          <text x="100" y="126" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10" font-family="Euclid Circular B, sans-serif">standardization</text>
+        </svg>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-red);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Keep compliance focus</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">19.0%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-yellow);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Standardize processes</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">42.0%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-blue);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Align to roles/skills</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">16.7%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-cyan);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Data-driven skill-based</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">10.4%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--st-green);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Strategic business-tied</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">5.6%</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+          <span style="width:10px;height:10px;border-radius:3px;background:rgba(255,255,255,0.2);flex-shrink:0;"></span>
+          <span style="color:rgba(255,255,255,0.6);">Don't know</span>
+          <span style="margin-left:auto; font-weight:700; color:#fff;">6.3%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ambition vs Reality -->
+  <div class="glass reveal" style="margin-top:24px; border-left:4px solid var(--st-blue); transition-delay:0.12s;">
+    <div style="display:flex; flex-wrap:wrap; gap:32px; align-items:center;">
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--st-blue); letter-spacing:1px; margin-bottom:4px;">THE AMBITION-REALITY GAP</div>
+        <p style="font-size:15px; color:rgba(255,255,255,0.7); max-width:640px;">
+          <span style="font-weight:700; color:#fff;">33%</span> aspire to roles-, skills-, or data-driven L&amp;D within 3 years.
+          Today, <span style="font-weight:700; color:var(--st-red);">72.4%</span> are stuck in stages 1-2. Meanwhile <span style="font-weight:700; color:#fff;">42%</span> just want to standardize &mdash; DE ambitions are more modest than NL (68%).
+        </p>
+      </div>
+      <div style="display:flex; gap:24px;">
+        <div style="text-align:center;">
+          <div class="stat-big" style="font-size:36px;">72.4%</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.4);">Today (Stages 1-2)</div>
+        </div>
+        <div style="display:flex; align-items:center; color:rgba(255,255,255,0.3); font-size:24px;">&#8594;</div>
+        <div style="text-align:center;">
+          <div class="stat-big green" style="font-size:36px;">33%</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.4);">Aspire beyond</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: NL vs DE -->
+<section id="nl-vs-de" class="max-w-7xl mx-auto px-4 pt-16 pb-24">
+  <div class="reveal">
+    <h2 class="section-header">NL vs DE Quick Comparison</h2>
+    <p class="section-sub">Key metrics side by side. Netherlands (n=259) vs Germany (n=521).</p>
+  </div>
+
+  <div class="glass reveal">
+    <div class="compare-row" style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:12px;">
+      <span style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.5);">Metric</span>
+      <span style="font-size:13px; font-weight:700; color:var(--st-blue); text-align:center;">NL</span>
+      <span style="font-size:13px; font-weight:700; color:var(--st-cyan); text-align:center;">DE</span>
+      <span style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.5); text-align:center;">Delta</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">L&amp;D Strategy (clear + active)</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">39%</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">40.7%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:rgba(255,255,255,0.4);">-1.7pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Maturity Stage 4 (strategic)</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">5.4%</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">5.8%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:rgba(255,255,255,0.4);">-0.4pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Can measure impact (top-2)</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">58.3%</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">60.5%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:rgba(255,255,255,0.4);">-2.2pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Full skill transparency</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">8.1%</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">10.0%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-cyan);">-1.9pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Investment increasing</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-green); text-align:center;">12.7%</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">10.4%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-green);">+2.3pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Investment declining</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-green); text-align:center;">10.8%</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-red); text-align:center;">14.4%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-red);">-3.6pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Self-directed enablement</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">58.2%</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">57.9%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:rgba(255,255,255,0.4);">+0.3pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Business alignment (top-2)</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">61.4%</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">66.4%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-cyan);">-5.0pp</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Stuck in stages 1-2</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-yellow); text-align:center;">71.8%</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-yellow); text-align:center;">72.4%</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:rgba(255,255,255,0.4);">-0.6pp</span>
+    </div>
+  </div>
+
+  <!-- Perception Gap Comparison -->
+  <div class="glass reveal" style="margin-top:16px; transition-delay:0.06s;">
+    <h3 style="font-size:15px; font-weight:700; color:#fff; margin-bottom:16px;">Perception Gaps &mdash; NL vs DE</h3>
+    <div class="compare-row" style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:12px;">
+      <span style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.5);">Gap Metric</span>
+      <span style="font-size:13px; font-weight:700; color:var(--st-blue); text-align:center;">NL</span>
+      <span style="font-size:13px; font-weight:700; color:var(--st-cyan); text-align:center;">DE</span>
+      <span style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.5); text-align:center;">Wider</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Feedback→development</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">17pp</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-red); text-align:center;">28pp</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-red);">DE</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Skill clarity gap</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">15pp</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-red); text-align:center;">25pp</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-red);">DE</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Active learning culture</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">16pp</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-red); text-align:center;">23pp</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-red);">DE</span>
+    </div>
+    <div class="compare-row">
+      <span style="font-size:14px; color:rgba(255,255,255,0.8);">Empowered own development</span>
+      <span style="font-size:16px; font-weight:700; color:#fff; text-align:center;">8pp</span>
+      <span style="font-size:16px; font-weight:700; color:var(--st-red); text-align:center;">26pp</span>
+      <span style="font-size:13px; font-weight:700; text-align:center; color:var(--st-red);">DE</span>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="glass reveal" style="margin-top:24px; transition-delay:0.12s;">
+    <div style="display:flex; flex-wrap:wrap; gap:20px;">
+      <div style="flex:1; min-width:260px;">
+        <div style="font-size:12px; font-weight:700; color:var(--st-blue); letter-spacing:1px; margin-bottom:8px;">NETHERLANDS</div>
+        <p style="font-size:14px; color:rgba(255,255,255,0.6);">
+          Narrower perception gaps across the board &mdash; feedback→development 17pp (vs 28pp DE), skill clarity 15pp (vs 25pp DE). More optimistic investment outlook (+2.3pp increasing). More ambitious 3-year outlook (68% aspire beyond vs 33% DE).
+        </p>
+      </div>
+      <div style="width:1px; background:rgba(255,255,255,0.08);"></div>
+      <div style="flex:1; min-width:260px;">
+        <div style="font-size:12px; font-weight:700; color:var(--st-cyan); letter-spacing:1px; margin-bottom:8px;">GERMANY</div>
+        <p style="font-size:14px; color:rgba(255,255,255,0.6);">
+          Slightly higher strategy adoption and skill transparency. But significantly wider perception gaps across all dimensions: feedback→development 28pp (vs 17pp NL), skill clarity 25pp (vs 15pp NL), empowerment 26pp (vs 8pp NL). Facing more investment pressure (14.4% declining). More modest ambitions &mdash; 42% just want standardization.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center; margin-top:48px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.06);">
+    <p style="font-size:12px; color:rgba(255,255,255,0.3);">L&amp;D Monitor 2026 &mdash; Germany (DE) Bilendi Dashboard / Studytube</p>
+    <p style="font-size:11px; color:rgba(255,255,255,0.2); margin-top:4px;">Data: HR Leaders DE (521), Managers DE (359), Employees DE (935), HR Leaders NL (259)</p>
+  </div>
+</section>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector('.nav-link[data-section="' + entry.target.id + '"]');
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+  sections.forEach(section => navObserver.observe(section));
+
+  // Bar animations
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const bars = entry.target.querySelectorAll('.bar-fill');
+        bars.forEach((bar, i) => {
+          const targetWidth = bar.style.width;
+          bar.style.width = '0%';
+          setTimeout(() => { bar.style.width = targetWidth; }, 100 + (i * 80));
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.glass').forEach(card => {
+    if (card.querySelector('.bar-fill')) barObserver.observe(card);
+  });
+</script>
+
+</body>
+</html>

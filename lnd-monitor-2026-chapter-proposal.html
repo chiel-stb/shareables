@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L&D Monitor 2026 — Chapter Outline Proposal (Monday Alignment)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Regular.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Bold.woff2') format('woff2'); font-weight: 700; }
+
+  :root {
+    --st-blue: #056DFF;
+    --st-cyan: #00C2FF;
+    --st-green: #10B981;
+    --st-yellow: #F59E0B;
+    --st-red: #EF4444;
+    --st-purple: #7c3aed;
+    --st-navy: #11295A;
+    --bg-dark: #0f172a;
+    --glass-bg: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Euclid Circular B', system-ui, -apple-system, sans-serif;
+    background: var(--bg-dark);
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+
+  .container { max-width: 1040px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    border-radius: 20px; padding: 4px 14px; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+  }
+  .badge-blue { background: rgba(5,109,255,0.12); border: 1px solid rgba(5,109,255,0.25); color: var(--st-blue); }
+  .badge-purple { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); color: var(--st-purple); }
+  .badge-green { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: var(--st-green); }
+  .badge-yellow { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); color: var(--st-yellow); }
+  .badge-red { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: var(--st-red); }
+
+  /* Section navigation */
+  .section-nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15,23,42,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 10px 0; margin: 0 -24px; padding-left: 24px; padding-right: 24px;
+  }
+  .section-nav-inner {
+    display: flex; gap: 4px; overflow-x: auto; max-width: 1040px; margin: 0 auto;
+    scrollbar-width: none;
+  }
+  .section-nav-inner::-webkit-scrollbar { display: none; }
+  .nav-pill {
+    flex-shrink: 0; padding: 6px 14px; border-radius: 8px; font-size: 12px;
+    font-weight: 700; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.04);
+    cursor: pointer; transition: all 0.2s; border: none; white-space: nowrap;
+  }
+  .nav-pill:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+  .nav-pill.active { color: #fff; background: var(--st-blue); }
+
+  /* Arc row */
+  .arc-row { display: flex; align-items: stretch; gap: 0; margin: 32px 0 40px; }
+  .arc-step { flex: 1; padding: 14px 10px; text-align: center; position: relative; border-bottom: 2px solid rgba(255,255,255,0.06); }
+  .arc-step.active { border-bottom-color: var(--st-blue); }
+  .arc-num { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-bottom: 4px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); }
+  .arc-step.active .arc-num { background: var(--st-blue); color: #fff; }
+  .arc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.35); }
+  .arc-step.active .arc-label { color: rgba(255,255,255,0.7); }
+  .arc-connector { width: 20px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); font-size: 12px; padding-top: 8px; }
+
+  /* Chapter cards */
+  .chapter {
+    border: 1px solid var(--glass-border); border-radius: 16px;
+    margin-bottom: 20px; overflow: hidden;
+    background: var(--glass-bg); transition: all 0.3s;
+  }
+  .chapter:hover { border-color: rgba(255,255,255,0.15); }
+  .chapter-head {
+    display: flex; align-items: flex-start; gap: 16px; padding: 24px 24px 0;
+    cursor: pointer; user-select: none;
+  }
+  .ch-num {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: #fff;
+  }
+  .ch-num.ch1 { background: linear-gradient(135deg, #056DFF, #3B8FFF); }
+  .ch-num.ch2 { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+  .ch-num.ch3 { background: linear-gradient(135deg, #059669, #34d399); }
+  .ch-num.ch4 { background: linear-gradient(135deg, #d97706, #fbbf24); }
+  .ch-num.ch5 { background: linear-gradient(135deg, #00C2FF, #056DFF); }
+  .ch-meta { flex: 1; }
+  .ch-storylines { font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .ch-title { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.3; }
+  .ch-subtitle { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.4; }
+  .ch-toggle {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3);
+    font-size: 14px; transition: all 0.3s; margin-top: 4px;
+  }
+  .chapter.open .ch-toggle { transform: rotate(180deg); color: var(--st-blue); }
+  .ch-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+  .chapter.open .ch-body { max-height: 4000px; }
+  .ch-inner { padding: 20px 24px 24px; }
+
+  /* Stat grid */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; text-align: center; }
+  .stat-num { font-size: 24px; font-weight: 700; color: #fff; line-height: 1; }
+  .stat-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; line-height: 1.3; }
+  .stat-flag { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+
+  /* Story text */
+  .ch-story { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 16px; max-width: 720px; }
+  .ch-story strong { color: rgba(255,255,255,0.85); font-weight: 700; }
+
+  /* Hook quote */
+  .hook { border-left: 3px solid var(--st-blue); padding: 12px 16px; background: rgba(5,109,255,0.05); border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+  .hook-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--st-blue); font-weight: 700; margin-bottom: 4px; }
+  .hook-text { font-size: 14px; color: rgba(255,255,255,0.75); font-style: italic; line-height: 1.5; }
+
+  /* Sub-sections within chapter */
+  .subsection { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .subsection-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px; }
+
+  /* Action items */
+  .action-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .action-row:last-child { border-bottom: none; }
+  .action-icon { width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .action-text { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .action-text strong { color: rgba(255,255,255,0.85); }
+
+  /* Layer tags */
+  .layer-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .layer-tag { font-size: 10px; padding: 3px 10px; border-radius: 6px; font-weight: 700; letter-spacing: 0.3px; }
+  .layer-tag.pov { background: rgba(5,109,255,0.1); color: var(--st-blue); }
+  .layer-tag.pillar { background: rgba(0,194,255,0.1); color: var(--st-cyan); }
+  .layer-tag.icp { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); }
+  .layer-tag.new { background: rgba(16,185,129,0.15); color: var(--st-green); }
+  .layer-tag.reframed { background: rgba(245,158,11,0.15); color: var(--st-yellow); }
+
+  /* Recurring element cards */
+  .recurring-el {
+    display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; margin-bottom: 8px;
+  }
+  .recurring-icon { font-size: 20px; flex-shrink: 0; width: 32px; text-align: center; }
+  .recurring-title { font-size: 14px; font-weight: 700; color: #fff; }
+  .recurring-desc { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; line-height: 1.5; }
+
+  /* Decision badge */
+  .decision-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 6px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .decision-new { background: rgba(16,185,129,0.1); color: var(--st-green); }
+  .decision-reframed { background: rgba(245,158,11,0.1); color: var(--st-yellow); }
+  .decision-confirmed { background: rgba(5,109,255,0.1); color: var(--st-blue); }
+
+  /* Glass box */
+  .glass-box {
+    border: 1px solid var(--glass-border); border-radius: 16px;
+    padding: 24px; margin-bottom: 24px; background: var(--glass-bg);
+  }
+  .glass-box-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+
+  /* Logic box */
+  .logic-box {
+    border: 1px dashed rgba(5,109,255,0.2); border-radius: 16px;
+    padding: 24px; margin-top: 24px; background: rgba(5,109,255,0.03);
+  }
+  .logic-flow { display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; }
+  .logic-step { flex: 1; min-width: 140px; padding: 14px; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; text-align: center; }
+  .logic-step-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 4px; }
+  .logic-step-text { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+  .logic-arrow { display: flex; align-items: center; justify-content: center; width: 28px; color: rgba(255,255,255,0.15); font-size: 14px; }
+
+  /* Table */
+  .mapping-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .mapping-table th { text-align: left; padding: 10px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.4); border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 700; }
+  .mapping-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); vertical-align: top; }
+  .mapping-table td:first-child { color: #fff; font-weight: 700; }
+  .mapping-table tr:last-child td { border-bottom: none; }
+
+  /* Two col grid */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 640px) {
+    .arc-row { flex-wrap: wrap; gap: 4px; }
+    .arc-connector { display: none; }
+    .arc-step { flex: 0 0 auto; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .logic-flow { flex-direction: column; gap: 8px; }
+    .logic-arrow { transform: rotate(90deg); width: 100%; height: 20px; }
+    .section-nav { margin: 0 -24px; padding-left: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="section-nav">
+  <div class="section-nav-inner">
+    <button class="nav-pill active" onclick="scrollToSection('overview')">Overview</button>
+    <button class="nav-pill" onclick="scrollToSection('context')">Context & Decisions</button>
+    <button class="nav-pill" onclick="scrollToSection('chapters')">5 Chapters</button>
+    <button class="nav-pill" onclick="scrollToSection('recurring')">Recurring Elements</button>
+    <button class="nav-pill" onclick="scrollToSection('pillars')">Pillar Mapping</button>
+    <button class="nav-pill" onclick="scrollToSection('overlap')">2025 vs 2026</button>
+    <button class="nav-pill" onclick="scrollToSection('interactive')">Interactive Tools</button>
+    <button class="nav-pill" onclick="scrollToSection('division')">Division of Labor</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <section id="overview">
+  <div style="margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+    <span class="badge badge-blue">Monday Alignment</span>
+    <span class="badge badge-purple">Chapter Proposal</span>
+    <span class="badge badge-green">Feb 25, 2026</span>
+  </div>
+  <h1 style="font-size: 30px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 8px;">
+    L&D Monitor 2026 — Chapter Outline Proposal
+  </h1>
+  <p style="font-size: 15px; color: rgba(255,255,255,0.45); max-width: 700px; margin-bottom: 6px;">
+    5 chapters, 7 data storylines, mapped to 5 content strategy pillars. Each chapter follows: Data &rarr; So What &rarr; Now What &rarr; With What. Integrates meeting decisions from Feb 25 (Chiel, Ena, Imke, Lenny).
+  </p>
+  <p style="font-size: 12px; color: rgba(255,255,255,0.3);">
+    Bilendi NL n=1,017 &middot; DE n=1,815 &middot; Both markets, managers + employees + HR
+  </p>
+
+  <!-- NARRATIVE ARC -->
+  <div class="arc-row">
+    <div class="arc-step active"><div class="arc-num">1</div><div class="arc-label">The Paradox</div></div>
+    <div class="arc-connector">&rarr;</div>
+    <div class="arc-step active"><div class="arc-num">2</div><div class="arc-label">The Blind Spot</div></div>
+    <div class="arc-connector">&rarr;</div>
+    <div class="arc-step active"><div class="arc-num">3</div><div class="arc-label">The Bottleneck</div></div>
+    <div class="arc-connector">&rarr;</div>
+    <div class="arc-step active"><div class="arc-num">4</div><div class="arc-label">The Way Out</div></div>
+    <div class="arc-connector">&rarr;</div>
+    <div class="arc-step active"><div class="arc-num">5</div><div class="arc-label">Your Move</div></div>
+  </div>
+  <p style="font-size: 12px; color: rgba(255,255,255,0.25); text-align: center; margin: -28px 0 36px;">
+    "You have a strategy. You have budget. But you're operating blind. Here's how to break out."
+  </p>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION: CONTEXT & MEETING DECISIONS -->
+  <!-- ============================================ -->
+  <section id="context">
+  <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 16px; padding-top: 24px;">Context & Key Decisions (Feb 25 Meeting)</h2>
+
+  <div class="two-col">
+    <div class="glass-box">
+      <div class="glass-box-title">Confirmed Decisions</div>
+      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+        <div><span class="decision-pill decision-confirmed">Confirmed</span> &nbsp;In-house design (AI-assisted, no agency)</div>
+        <div><span class="decision-pill decision-confirmed">Confirmed</span> &nbsp;"What Now" per chapter (not just at end)</div>
+        <div><span class="decision-pill decision-confirmed">Confirmed</span> &nbsp;NL and DE versions can differ completely</div>
+        <div><span class="decision-pill decision-confirmed">Confirmed</span> &nbsp;NL-DE comparison = separate repurposing piece</div>
+        <div><span class="decision-pill decision-confirmed">Confirmed</span> &nbsp;3-minute AI summary at the start</div>
+        <div><span class="decision-pill decision-confirmed">Confirmed</span> &nbsp;Interactive benchmark tools embedded in report</div>
+      </div>
+    </div>
+    <div class="glass-box">
+      <div class="glass-box-title">Design Brief Requirements (Imke)</div>
+      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.55);">
+        <div><strong style="color:#fff;">Fix 2025 pain:</strong> Too pale in print, too text-heavy, too long</div>
+        <div><strong style="color:#fff;">Recurring elements:</strong> Chapter summary boxes, Key Takeaway modules, Product connection blocks, Navigation markers</div>
+        <div><strong style="color:#fff;">Modular design:</strong> Must reuse in newsletters, LinkedIn, ads, decks</div>
+        <div><strong style="color:#fff;">Print + digital:</strong> High contrast, scan-friendly pages</div>
+        <div><strong style="color:#fff;">Stronger purple:</strong> More prominent role (booths, events)</div>
+        <div><strong style="color:#fff;">No AI visuals:</strong> Purposeful, credible, premium design</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-box" style="border-left: 3px solid var(--st-purple);">
+    <div class="glass-box-title">Lenny's Framing</div>
+    <div style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7;">
+      <em>"Things are changing, but not as fast as some people might realize. L&D is still a topic, but some companies feel they're executing right."</em>
+      <br><br>
+      The disappointment that metrics haven't moved much year-over-year IS the story. Frame as: the market confirms what we found last year &mdash; which means this is structural truth, not a sampling artifact. The report isn't repeating &mdash; it's holding the industry accountable.
+    </div>
+  </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION: 5 CHAPTERS -->
+  <!-- ============================================ -->
+  <section id="chapters">
+  <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin: 32px 0 16px;">The 5 Chapters</h2>
+
+  <!-- CHAPTER 1 -->
+  <div class="chapter open" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch1">1</div>
+      <div class="ch-meta">
+        <div class="ch-storylines">
+          SL1 + SL5 &middot; <span class="decision-pill decision-reframed">Reframed from 2025</span>
+        </div>
+        <div class="ch-title">The Strategy Paradox</div>
+        <div class="ch-subtitle">Everyone has a strategy and a growing budget. Almost no one can prove the impact.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body"><div class="ch-inner">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-blue);">73%</div><div class="stat-label">have an L&D strategy</div><div class="stat-flag">NL 73% &middot; DE 71%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-green);">51%</div><div class="stat-label">growing L&D budget</div><div class="stat-flag">NL 51% &middot; DE 50%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">31%</div><div class="stat-label">fully utilize budget</div><div class="stat-flag">NL 31% &middot; DE 36%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">8.5%</div><div class="stat-label">full skill visibility</div><div class="stat-flag">NL 8.5% &middot; DE 10.5%</div></div>
+      </div>
+
+      <div class="ch-story">
+        Nearly 3 in 4 organizations have a strategy. Half are growing their budget. Sounds great &mdash; until you look at execution. <strong>Only 31% fully spend their budget</strong>, and fewer than 1 in 10 actually have visibility into the skills they're developing. More money is flowing in. Impact is not flowing out. <strong>The problem isn't budget &mdash; it's organization.</strong>
+      </div>
+
+      <div class="hook"><div class="hook-label">C-Level Hook</div><div class="hook-text">"73% have a strategy. 8.5% can see which skills they have. That's not a strategy &mdash; that's a wish list."</div></div>
+
+      <!-- 2025 OVERLAP -->
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-yellow);">2025 &rarr; 2026 Reframing</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6;">
+          <strong style="color: rgba(255,255,255,0.8);">2025 said:</strong> "Organizations have strategies but can't connect them to impact."<br>
+          <strong style="color: rgba(255,255,255,0.8);">2026 says:</strong> "A year later: more budget, same problem. The gap isn't closing &mdash; it's getting more expensive."<br>
+          <em>Frame as escalation, not repetition. Add the budget dimension that 2025 didn't have.</em>
+        </div>
+      </div>
+
+      <!-- WHAT NOW (per chapter) -->
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-green);">What Now? (Chapter-Level)</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,109,255,0.1); color: var(--st-blue);">&#10003;</div>
+          <div class="action-text"><strong>Strategy-to-KPI audit:</strong> Can you name 3 business KPIs your L&D strategy explicitly drives?</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,109,255,0.1); color: var(--st-blue);">&#10003;</div>
+          <div class="action-text"><strong>Budget impact report:</strong> Map where the money went and what effect it had. If you can't, the problem is accountability &mdash; not budget.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,109,255,0.1); color: var(--st-blue);">&#10003;</div>
+          <div class="action-text"><strong>Start with 3 measurable skills:</strong> Don't try to map everything. Build visibility where it matters most first.</div>
+        </div>
+      </div>
+
+      <div class="layer-row">
+        <span class="layer-tag pov">POV 1: Impact-Driven Learning</span>
+        <span class="layer-tag pillar">P1: Strategic L&D</span>
+        <span class="layer-tag pillar">P5: Entrepreneurial L&D</span>
+        <span class="layer-tag icp">CHRO &middot; CFO &middot; CEO</span>
+        <span class="layer-tag reframed">Escalated from 2025</span>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- CHAPTER 2 -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch2">2</div>
+      <div class="ch-meta">
+        <div class="ch-storylines">
+          SL2 + SL6 &middot; <span class="decision-pill decision-new">New in 2026</span>
+        </div>
+        <div class="ch-title">The Perception Gap</div>
+        <div class="ch-subtitle">Managers think they're developing people. Employees disagree. In Germany, the gap is nearly double.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body"><div class="ch-inner">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" style="color: #a78bfa;">17pp</div><div class="stat-label">feedback gap NL</div><div class="stat-flag">Mgr 72% &middot; Emp 55%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">28pp</div><div class="stat-label">feedback gap DE</div><div class="stat-flag">Mgr 68% &middot; Emp 39%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: #a78bfa;">8pp</div><div class="stat-label">empowerment gap NL</div><div class="stat-flag">relatively small</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">26pp</div><div class="stat-label">empowerment gap DE</div><div class="stat-flag">Mgr 69% &middot; Emp 43%</div></div>
+      </div>
+
+      <div class="ch-story">
+        This is the most confrontational chapter and <strong>the #1 press release stat</strong>. Managers rate learning culture, feedback, and skill development <strong>15 to 28 percentage points higher</strong> than their employees. In Germany, the gap is nearly double NL on every dimension. The manager isn't malicious &mdash; the manager is untrained. This is <strong>genuinely new data</strong> that 2025 never had at this depth.
+      </div>
+
+      <div class="hook"><div class="hook-label">C-Level Hook</div><div class="hook-text">"Managers overestimate their learning support by 28 points. That's not a disagreement &mdash; it's a structural failure."</div></div>
+
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-green);">2025 &rarr; 2026: Genuinely New</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6;">
+          2025 mentioned "managers matter" conceptually. 2026 <strong style="color: rgba(255,255,255,0.8);">quantified the blind spot</strong>: 17-28pp across 5 dimensions, NL vs DE side-by-side. First time ever. Lead with this as the headline finding.
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-green);">What Now? (Chapter-Level)</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(124,58,237,0.1); color: #a78bfa;">&#10003;</div>
+          <div class="action-text"><strong>Pulse survey:</strong> Ask the same 5 questions to managers AND employees. Compare the scores. The delta is your blind spot.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(124,58,237,0.1); color: #a78bfa;">&#10003;</div>
+          <div class="action-text"><strong>Manager enablement:</strong> Specific skills: development conversations, skill identification, growth-oriented feedback. Not generic leadership training.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(124,58,237,0.1); color: #a78bfa;">&#9733;</div>
+          <div class="action-text"><strong>Influencer perspective (Ena):</strong> Practical "what now" from paid influencers &mdash; real-world advice, not AI suggestions.</div>
+        </div>
+      </div>
+
+      <div class="layer-row">
+        <span class="layer-tag pov">POV 2: Ownership + Manager</span>
+        <span class="layer-tag pillar">P3: Future = Managers</span>
+        <span class="layer-tag icp">CHRO &middot; HR Director &middot; Int'l CHRO</span>
+        <span class="layer-tag new">New in 2026</span>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- CHAPTER 3 -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch3">3</div>
+      <div class="ch-meta">
+        <div class="ch-storylines">
+          SL4 &middot; <span class="decision-pill decision-reframed">Advocacy &rarr; Evidence</span>
+        </div>
+        <div class="ch-title">The Skill Visibility Crisis</div>
+        <div class="ch-subtitle">You're asking people to develop skills you can't see or measure.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body"><div class="ch-inner">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">8.5%</div><div class="stat-label">full skill visibility NL</div><div class="stat-flag">DE: 10.5%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">37%</div><div class="stat-label">basic transparency NL</div><div class="stat-flag">DE: 49%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-green);">58%</div><div class="stat-label">HR says self-direction works</div><div class="stat-flag">NL + DE equal</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: #a78bfa;">25pp</div><div class="stat-label">skill clarity gap DE</div><div class="stat-flag">Mgr 70% &middot; Emp 45%</div></div>
+      </div>
+
+      <div class="ch-story">
+        This is the pivot point. <strong>You can't develop what you can't see.</strong> 58% of HR says employees are self-directing their learning. But only 8.5% have full visibility into which skills exist. That's like asking people to navigate without a map. It explains why strategy doesn't land (Ch1), why managers and employees disagree (Ch2), and why budget doesn't convert to impact.
+      </div>
+
+      <div class="hook"><div class="hook-label">C-Level Hook</div><div class="hook-text">"Only 1 in 10 organizations can see which skills they have. That's not a learning problem &mdash; that's a strategic blind spot."</div></div>
+
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-yellow);">2025 &rarr; 2026 Reframing</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6;">
+          <strong style="color: rgba(255,255,255,0.8);">2025 said:</strong> "Skills should be the organizing principle for L&D" (advocacy).<br>
+          <strong style="color: rgba(255,255,255,0.8);">2026 says:</strong> "We measured it. 8.5% actually did it. Here's why the other 91.5% got stuck." (evidence)<br>
+          <em>Don't lead with "skill-based learning" as concept (that was 2025's hero). Lead with the number.</em>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-green);">What Now? (Chapter-Level)</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,150,105,0.1); color: var(--st-green);">&#10003;</div>
+          <div class="action-text"><strong>Start small:</strong> Pick 3 critical roles. Define the skill profiles. Run an assessment. Now you have data &mdash; not assumptions.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,150,105,0.1); color: var(--st-green);">&#10003;</div>
+          <div class="action-text"><strong>Make skills visible to employees:</strong> When they know what's expected, they can steer their own development.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,150,105,0.1); color: var(--st-green);">&#9733;</div>
+          <div class="action-text"><strong>Influencer perspective (Ena):</strong> Expert lens on bridging the visibility gap in practice.</div>
+        </div>
+      </div>
+
+      <div class="layer-row">
+        <span class="layer-tag pov">POV 3: Skills = Adaptation</span>
+        <span class="layer-tag pillar">P1: Strategic L&D</span>
+        <span class="layer-tag pillar">P4: Organized Ownership</span>
+        <span class="layer-tag icp">CHRO &middot; L&D Manager</span>
+        <span class="layer-tag reframed">Evidence, not advocacy</span>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- CHAPTER 4 -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch4">4</div>
+      <div class="ch-meta">
+        <div class="ch-storylines">
+          SL3 + SL7 &middot; <span class="decision-pill decision-reframed">Diagnosis &rarr; Escape</span> &middot; <span class="decision-pill decision-new">AI = New</span>
+        </div>
+        <div class="ch-title">Breaking Out of Reactive</div>
+        <div class="ch-subtitle">72% are stuck. The 28% that escaped don't have more budget &mdash; they have a different model.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body"><div class="ch-inner">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">72%</div><div class="stat-label">reactive or standardized</div><div class="stat-flag">NL + DE identical</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-green);">28%</div><div class="stat-label">advanced or strategic</div><div class="stat-flag">NL + DE identical</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">40%</div><div class="stat-label">top barrier: no time</div><div class="stat-flag">NL 40% &middot; DE 41%</div></div>
+        <div class="stat-card"><div class="stat-num" style="color: var(--st-cyan);">32%</div><div class="stat-label">AI actually in L&D</div><div class="stat-flag">NL 32% &middot; DE 38%</div></div>
+      </div>
+
+      <div class="ch-story">
+        72% are stuck in reactive or standardized L&D. The paradox: half are growing their budget. <strong>More money, same mode.</strong> Time, not budget, is the #1 barrier (40%). Meanwhile, only 1 in 3 uses AI in L&D. The way out? <strong>Think like a product team, not a service desk.</strong> The 28% that escaped experiment, automate, and use data. Lenny: <em>"This is new-ish. We never really used this before. A pretty interesting storyline."</em>
+      </div>
+
+      <div class="hook"><div class="hook-label">C-Level Hook</div><div class="hook-text">"Your L&D budget is growing. Your L&D maturity isn't. 72% are reactive &mdash; more money won't fix that."</div></div>
+
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-yellow);">2025 &rarr; 2026 Reframing</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6;">
+          <strong style="color: rgba(255,255,255,0.8);">2025 said:</strong> "Most L&D teams are stuck at operational levels" (diagnosis).<br>
+          <strong style="color: rgba(255,255,255,0.8);">2026 says:</strong> "72% still stuck. But now we know why (time, not money) and who got out (the 28% who think like product teams)." (escape)<br>
+          <strong style="color: var(--st-green);">AI section is completely new</strong> &mdash; 2025 didn't measure AI adoption at all. "1 in 3" is a fresh, provocative stat.
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-green);">What Now? (Chapter-Level)</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(217,119,6,0.1); color: var(--st-yellow);">&#10003;</div>
+          <div class="action-text"><strong>Block 20% strategy time:</strong> If 100% of your week is operational, you'll never break out.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(217,119,6,0.1); color: var(--st-yellow);">&#10003;</div>
+          <div class="action-text"><strong>Start with 1 AI use case:</strong> Content recommendations, skill assessments, or learning paths. Prove value, then scale.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(217,119,6,0.1); color: var(--st-yellow);">&#10003;</div>
+          <div class="action-text"><strong>Build an L&D product roadmap:</strong> Stop being an order-taker. Quarterly roadmap with defined outcomes.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(217,119,6,0.1); color: var(--st-yellow);">&#9733;</div>
+          <div class="action-text"><strong>Influencer perspective (Ena):</strong> How real L&D teams escaped reactive mode. Practitioner stories, not theory.</div>
+        </div>
+      </div>
+
+      <div class="layer-row">
+        <span class="layer-tag pov">POV 4: Entrepreneurial L&D</span>
+        <span class="layer-tag pillar">P5: Entrepreneurial L&D</span>
+        <span class="layer-tag pillar">P2: AI & Automation</span>
+        <span class="layer-tag icp">L&D Manager &middot; CHRO</span>
+        <span class="layer-tag reframed">Diagnosis &rarr; Escape</span>
+        <span class="layer-tag new">AI = New</span>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- CHAPTER 5 -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch5">5</div>
+      <div class="ch-meta">
+        <div class="ch-storylines">
+          All storylines &middot; <span class="decision-pill decision-new">Format Innovation</span>
+        </div>
+        <div class="ch-title">What Now? &mdash; Your Next Step</div>
+        <div class="ch-subtitle">From market data to personal action plan. Where does your organization stand?</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body"><div class="ch-inner">
+      <div class="ch-story">
+        The closing chapter turns the reader from <strong>observer into participant</strong>. This is the "shopping list" Lenny described &mdash; everything you flagged throughout the chapters comes together here. Three interactive tools + a persistent action plan let readers discover where they stand and what to do first.
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <div class="recurring-el">
+          <div class="recurring-icon">&#128202;</div>
+          <div><div class="recurring-title">Benchmark Quiz</div><div class="recurring-desc">10 questions &rarr; radar chart: you vs. NL vs. DE. Identifies your biggest gap across all chapters.</div></div>
+        </div>
+        <div class="recurring-el" style="border-color: rgba(124,58,237,0.15);">
+          <div class="recurring-icon">&#127919;</div>
+          <div><div class="recurring-title">Predict Your Employees Game</div><div class="recurring-desc">Guess what employees think on 5 dimensions. Reveals the perception gap in your assumptions.</div></div>
+        </div>
+        <div class="recurring-el" style="border-color: rgba(245,158,11,0.15);">
+          <div class="recurring-icon">&#128200;</div>
+          <div><div class="recurring-title">CEO Dashboard Generator <span class="decision-pill decision-new" style="font-size: 9px; vertical-align: middle;">Lenny's Idea</span></div><div class="recurring-desc">5 questions about what your CEO cares about &rarr; fake but relevant dashboard you can actually paste into a presentation.</div></div>
+        </div>
+        <div class="recurring-el" style="border-color: rgba(16,185,129,0.15);">
+          <div class="recurring-icon">&#128269;</div>
+          <div><div class="recurring-title">Gap Prioritizer</div><div class="recurring-desc">Which hypothesis is most urgent for your org? Sorted by priority with concrete actions + action plan export.</div></div>
+        </div>
+      </div>
+
+      <div class="hook"><div class="hook-label">Funnel Logic</div><div class="hook-text">Chapter "What Now" items &rarr; Action plan builds up &rarr; Interactive tools at end &rarr; L&D Impact Scan &rarr; Conversation</div></div>
+
+      <div class="subsection">
+        <div class="subsection-title" style="color: var(--st-green);">2025 &rarr; 2026: Completely New</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6;">
+          2025 was a static PDF that ended with "contact us." 2026 turns the reader into a participant with self-diagnosis tools. <strong style="color: rgba(255,255,255,0.8);">This IS the differentiation.</strong> "We don't just publish data &mdash; we let you diagnose yourself."
+        </div>
+      </div>
+
+      <div class="layer-row">
+        <span class="layer-tag pov">All POVs</span>
+        <span class="layer-tag pillar">All Pillars</span>
+        <span class="layer-tag icp">All ICPs &mdash; self-serve</span>
+        <span class="layer-tag new">Format Innovation</span>
+      </div>
+    </div></div>
+  </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION: RECURRING ELEMENTS -->
+  <!-- ============================================ -->
+  <section id="recurring">
+  <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin: 40px 0 16px;">Recurring Elements Per Chapter</h2>
+  <p style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 16px;">From Imke's design brief: "Create 2&ndash;3 recurring components used in every chapter to improve orientation and rhythm."</p>
+
+  <div class="two-col">
+    <div>
+      <div class="recurring-el">
+        <div class="recurring-icon">&#9889;</div>
+        <div><div class="recurring-title">3-Minute Summary</div><div class="recurring-desc">At the very start of the report (before Ch1). AI-summarized key findings. "Here's the entire L&D Monitor in 3 minutes."</div></div>
+      </div>
+      <div class="recurring-el">
+        <div class="recurring-icon">&#128202;</div>
+        <div><div class="recurring-title">Chapter Summary Box</div><div class="recurring-desc">Opening card per chapter: headline stat, one-sentence insight, 3 key findings. Scannable in 10 seconds.</div></div>
+      </div>
+      <div class="recurring-el">
+        <div class="recurring-icon">&#128161;</div>
+        <div><div class="recurring-title">Key Takeaway Module</div><div class="recurring-desc">After each data section: "What this means for you" &mdash; the SO WHAT in a highlighted box. ICP-specific framing.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="recurring-el">
+        <div class="recurring-icon">&#10004;</div>
+        <div><div class="recurring-title">What Now? Section</div><div class="recurring-desc">End of every chapter: 3 actions + influencer perspective (Ena's contribution). Builds toward the shopping list in Ch5.</div></div>
+      </div>
+      <div class="recurring-el">
+        <div class="recurring-icon">&#128279;</div>
+        <div><div class="recurring-title">How Studytube Helps</div><div class="recurring-desc">Optional, end-of-chapter. ONE sentence + use case name. Appears only in "With What" layer. Never pushy.</div></div>
+      </div>
+      <div class="recurring-el">
+        <div class="recurring-icon">&#127758;</div>
+        <div><div class="recurring-title">NL vs DE Callout</div><div class="recurring-desc">Where data differs significantly: mini comparison card (not a full section). Teaser for the separate NL-DE deep dive.</div></div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION: PILLAR MAPPING -->
+  <!-- ============================================ -->
+  <section id="pillars">
+  <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin: 40px 0 16px;">Content Strategy 2025 &rarr; L&D Monitor Chapters</h2>
+  <p style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 16px;">The L&D Monitor is the <strong style="color: rgba(255,255,255,0.7);">empirical backbone</strong> for all 5 content pillars. Each chapter feeds months of pillar content.</p>
+
+  <div class="glass-box" style="padding: 0; overflow: hidden;">
+    <table class="mapping-table">
+      <thead>
+        <tr><th style="width: 20%;">Content Pillar</th><th style="width: 14%;">Chapter</th><th style="width: 22%;">Key Data Proof</th><th>How It Feeds Pillar Content</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>P1: Learning as Strategic Pillar</td>
+          <td><span style="color: var(--st-blue); font-weight: 700;">Ch1</span></td>
+          <td style="color: rgba(255,255,255,0.6);">73% strategy, 8.5% visibility, 51% budget growth</td>
+          <td style="color: rgba(255,255,255,0.6);">Every "Why your CFO should care" article cites Ch1. The strategy-impact gap IS pillar 1's evidence base.</td>
+        </tr>
+        <tr>
+          <td>P2: AI & Automation</td>
+          <td><span style="color: var(--st-yellow); font-weight: 700;">Ch4</span></td>
+          <td style="color: rgba(255,255,255,0.6);">32% AI in L&D, 34% data-driven decisions</td>
+          <td style="color: rgba(255,255,255,0.6);">"1 in 3 actually uses AI" validates every P2 angle. Lenny: explore separate AI-in-L&D Monitor product.</td>
+        </tr>
+        <tr>
+          <td>P3: Future = Managers</td>
+          <td><span style="color: #a78bfa; font-weight: 700;">Ch2</span></td>
+          <td style="color: rgba(255,255,255,0.6);">17-28pp perception gap, NL vs DE</td>
+          <td style="color: rgba(255,255,255,0.6);">The perception gap quantifies "managers are the missing link." Every P3 article can reference this data.</td>
+        </tr>
+        <tr>
+          <td>P4: Organized Ownership</td>
+          <td><span style="color: var(--st-green); font-weight: 700;">Ch3</span></td>
+          <td style="color: rgba(255,255,255,0.6);">8.5% visibility, 58% say self-direction works</td>
+          <td style="color: rgba(255,255,255,0.6);">Ownership requires visibility. 91.5% haven't built the foundation. P4 content shows how to get there.</td>
+        </tr>
+        <tr>
+          <td>P5: Entrepreneurial L&D</td>
+          <td><span style="color: var(--st-yellow); font-weight: 700;">Ch4</span> + <span style="color: var(--st-cyan); font-weight: 700;">Ch5</span></td>
+          <td style="color: rgba(255,255,255,0.6);">72% reactive, time = #1 barrier</td>
+          <td style="color: rgba(255,255,255,0.6);">72% reactive = the opposite of entrepreneurial. The "What Now" tools ARE P5 in action.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="logic-box">
+    <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 12px;">The L&D Monitor as Content Engine</div>
+    <div class="logic-flow">
+      <div class="logic-step"><div class="logic-step-label" style="color: var(--st-blue);">Pillars</div><div class="logic-step-text">"What we believe"<br><em style="font-size:10px;">5 content pillars</em></div></div>
+      <div class="logic-arrow">&rarr;</div>
+      <div class="logic-step"><div class="logic-step-label" style="color: var(--st-cyan);">L&D Monitor</div><div class="logic-step-text">"Proof it's true"<br><em style="font-size:10px;">Bilendi data</em></div></div>
+      <div class="logic-arrow">&rarr;</div>
+      <div class="logic-step"><div class="logic-step-label" style="color: var(--st-green);">What Now</div><div class="logic-step-text">"Here's what to do"<br><em style="font-size:10px;">Influencer + tools</em></div></div>
+      <div class="logic-arrow">&rarr;</div>
+      <div class="logic-step"><div class="logic-step-label" style="color: rgba(255,255,255,0.35);">With What</div><div class="logic-step-text">"How we help"<br><em style="font-size:10px;">Studytube only here</em></div></div>
+    </div>
+  </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION: 2025 VS 2026 OVERLAP -->
+  <!-- ============================================ -->
+  <section id="overlap">
+  <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin: 40px 0 16px;">2025 vs 2026: What's New, What's Reframed</h2>
+  <p style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 16px;">Per Lenny: "Connect the old versions. Don't tell the same story the same way again if it's not necessary."</p>
+
+  <div class="glass-box" style="border-left: 3px solid var(--st-green);">
+    <div class="glass-box-title" style="color: var(--st-green);">Genuinely New in 2026 (zero overlap)</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+      <div style="color: rgba(255,255,255,0.6);"><strong style="color: #fff;">Perception Gap (Ch2)</strong><br>First time quantifying the manager-employee blind spot at this depth. 17-28pp across 5 dimensions. #1 press stat.</div>
+      <div style="color: rgba(255,255,255,0.6);"><strong style="color: #fff;">NL-DE Comparison</strong><br>First time side-by-side market data. DE gap nearly double NL. Positions Studytube as cross-market authority.</div>
+      <div style="color: rgba(255,255,255,0.6);"><strong style="color: #fff;">AI Adoption Reality (Ch4)</strong><br>2025 didn't measure AI at all. "1 in 3" is fresh and provocative in 2026's AI-everything climate.</div>
+      <div style="color: rgba(255,255,255,0.6);"><strong style="color: #fff;">Interactive Format (Ch5)</strong><br>Static PDF &rarr; interactive self-diagnosis tools. The format itself is the differentiation.</div>
+    </div>
+  </div>
+
+  <div class="glass-box" style="border-left: 3px solid var(--st-yellow);">
+    <div class="glass-box-title" style="color: var(--st-yellow);">Reframed (overlap but different angle)</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: 13px;">
+      <div>
+        <div style="color: #fff; font-weight: 700; margin-bottom: 4px;">Strategy-Impact Gap &rarr; Ch1</div>
+        <div style="color: rgba(255,255,255,0.4);">2025: "Strategy doesn't connect to impact"</div>
+        <div style="color: rgba(255,255,255,0.6); margin-top: 4px;">2026: "A year later, more budget, same problem. The gap is getting more expensive."</div>
+      </div>
+      <div>
+        <div style="color: #fff; font-weight: 700; margin-bottom: 4px;">Skill-Based Learning &rarr; Ch3</div>
+        <div style="color: rgba(255,255,255,0.4);">2025: "Skills should be the organizing principle" (advocacy)</div>
+        <div style="color: rgba(255,255,255,0.6); margin-top: 4px;">2026: "We measured it. 8.5% did it. Here's why the 91.5% got stuck." (evidence)</div>
+      </div>
+      <div>
+        <div style="color: #fff; font-weight: 700; margin-bottom: 4px;">L&D Maturity &rarr; Ch4</div>
+        <div style="color: rgba(255,255,255,0.4);">2025: "Most are stuck at operational levels" (diagnosis)</div>
+        <div style="color: rgba(255,255,255,0.6); margin-top: 4px;">2026: "72% still stuck. But we know why (time, not money) and who got out." (escape)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hook" style="margin-top: 16px;">
+    <div class="hook-label">Narrative framing for the foreword</div>
+    <div class="hook-text">"This is the 5th year we publish the L&D Monitor. Last year, skill-based learning was the focus. This year, we measured it. The results are confronting: only 8.5% have full skill visibility. But we also discovered something nobody saw coming."</div>
+  </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION: INTERACTIVE TOOLS -->
+  <!-- ============================================ -->
+  <section id="interactive">
+  <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin: 40px 0 16px;">Interactive Tools & Placement</h2>
+  <p style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 16px;">Where each tool lives in the report flow. Tools appear in context (per chapter) AND in the final "What Now" chapter.</p>
+
+  <div class="glass-box" style="padding: 0; overflow: hidden;">
+    <table class="mapping-table">
+      <thead>
+        <tr><th>Tool</th><th>In-Chapter</th><th>Ch5</th><th>Purpose</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Benchmark Quiz</td>
+          <td style="color: rgba(255,255,255,0.6);">Intro / Ch1 opener</td>
+          <td style="color: rgba(255,255,255,0.6);">Full results</td>
+          <td style="color: rgba(255,255,255,0.6);">10 questions &rarr; radar chart vs NL/DE benchmarks. Identifies biggest gap.</td>
+          <td><span class="decision-pill decision-confirmed">P0 &middot; Building</span></td>
+        </tr>
+        <tr>
+          <td>Predict Game</td>
+          <td style="color: rgba(255,255,255,0.6);">Ch2 opener</td>
+          <td style="color: rgba(255,255,255,0.6);">Link to Ch2</td>
+          <td style="color: rgba(255,255,255,0.6);">5 sliders: guess employee % &rarr; reveal actual gap. Makes perception gap personal.</td>
+          <td><span class="decision-pill decision-confirmed">P1 &middot; Building</span></td>
+        </tr>
+        <tr>
+          <td>CEO Dashboard</td>
+          <td style="color: rgba(255,255,255,0.6);">Ch1 or Ch5</td>
+          <td style="color: rgba(255,255,255,0.6);">Full tool</td>
+          <td style="color: rgba(255,255,255,0.6);">5 questions about what your CEO cares about &rarr; pasteable dashboard. (Lenny's idea)</td>
+          <td><span class="decision-pill decision-new">New &middot; Concept</span></td>
+        </tr>
+        <tr>
+          <td>Gap Prioritizer</td>
+          <td style="color: rgba(255,255,255,0.6);">Ch5</td>
+          <td style="color: rgba(255,255,255,0.6);">Primary home</td>
+          <td style="color: rgba(255,255,255,0.6);">10 questions &rarr; prioritized action cards with FLIP animation. Pre-fills from Benchmark Quiz.</td>
+          <td><span class="decision-pill decision-confirmed">P1 &middot; Building</span></td>
+        </tr>
+        <tr>
+          <td>Action Plan Bar</td>
+          <td style="color: rgba(255,255,255,0.6);">Persistent (all)</td>
+          <td style="color: rgba(255,255,255,0.6);">Export</td>
+          <td style="color: rgba(255,255,255,0.6);">Shopping list that builds up as you read. Copy, email, or print your personalized plan.</td>
+          <td><span class="decision-pill decision-confirmed">P0 &middot; Building</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION: DIVISION OF LABOR -->
+  <!-- ============================================ -->
+  <section id="division">
+  <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin: 40px 0 16px;">Division of Labor</h2>
+  <p style="font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 16px;">Agreed Feb 25. Chiel = storyline + interactive tools. Ena = "What Now" + influencer content. All = human validation.</p>
+
+  <div class="two-col">
+    <div class="glass-box">
+      <div class="glass-box-title">Chiel (NL Content & Tech)</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.6); display: flex; flex-direction: column; gap: 8px;">
+        <div>&#9745; Chapter outline &amp; storyline proposal (this doc)</div>
+        <div>&#9744; NL storyline text per chapter</div>
+        <div>&#9744; Interactive tools (benchmark quiz, predict game, CEO dashboard, gap prioritizer, action plan)</div>
+        <div>&#9744; Data visualization system</div>
+        <div>&#9744; Interactive report HTML build</div>
+        <div>&#9744; Share NotebookLM workspace with team</div>
+        <div>&#9744; Double-check identical numbers</div>
+        <div>&#9744; Compare with 2025 report (done: overlap analysis)</div>
+      </div>
+    </div>
+    <div class="glass-box">
+      <div class="glass-box-title">Ena (DE Content & "What Now")</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.6); display: flex; flex-direction: column; gap: 8px;">
+        <div>&#9744; "What Now" content per chapter (influencer-driven)</div>
+        <div>&#9744; Work with paid influencers on practical recommendations</div>
+        <div>&#9744; DE storyline (can differ from NL if data warrants)</div>
+        <div>&#9744; Sanity check Chiel's storyline</div>
+        <div>&#9744; Text-based chapter writing from her Google Doc</div>
+        <div>&#9744; Leverage experience from 3+ previous editions</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top: 0;">
+    <div class="glass-box">
+      <div class="glass-box-title">Imke (Program Owner)</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.6); display: flex; flex-direction: column; gap: 8px;">
+        <div>&#9744; Storyline sanity check</div>
+        <div>&#9744; Deadline enforcement</div>
+        <div>&#9744; Printable version coordination</div>
+        <div>&#9744; Design direction (stronger purple, per brief)</div>
+      </div>
+    </div>
+    <div class="glass-box">
+      <div class="glass-box-title">Key Dates</div>
+      <div style="font-size: 13px; color: rgba(255,255,255,0.6); display: flex; flex-direction: column; gap: 8px;">
+        <div><strong style="color:#fff;">Feb 25:</strong> Chapter outline proposal (this doc)</div>
+        <div><strong style="color:#fff;">Mon morning:</strong> Alignment meeting</div>
+        <div><strong style="color:#fff;">Mar 6:</strong> Feedback on storylines &amp; final version</div>
+        <div><strong style="color:#fff;">Mar 10:</strong> Final version ready for design</div>
+        <div><strong style="color:#fff;">Mar 24:</strong> Public report launch</div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- FOOTER: 4-LAYER PATTERN -->
+  <div class="logic-box" style="margin-top: 48px;">
+    <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 12px;">Every data point follows the same pattern</div>
+    <div class="logic-flow">
+      <div class="logic-step"><div class="logic-step-label" style="color: var(--st-blue);">Data</div><div class="logic-step-text">"8.5% have full skill visibility"</div></div>
+      <div class="logic-arrow">&rarr;</div>
+      <div class="logic-step"><div class="logic-step-label" style="color: var(--st-cyan);">So What?</div><div class="logic-step-text">"You're investing blind in skills you can't see"</div></div>
+      <div class="logic-arrow">&rarr;</div>
+      <div class="logic-step"><div class="logic-step-label" style="color: var(--st-green);">Now What?</div><div class="logic-step-text">"Start with 3 roles. Define the profiles."</div></div>
+      <div class="logic-arrow">&rarr;</div>
+      <div class="logic-step"><div class="logic-step-label" style="color: rgba(255,255,255,0.35);">With What?</div><div class="logic-step-text" style="font-size: 11px; color: rgba(255,255,255,0.25);">Studytube only here &mdash; never before</div></div>
+    </div>
+  </div>
+
+  <p style="font-size: 11px; color: rgba(255,255,255,0.2); text-align: center; margin-top: 32px;">
+    L&D Monitor 2026 &middot; Chapter Proposal &middot; Chiel Muurling &middot; Feb 25, 2026
+  </p>
+
+</div>
+
+<script>
+function toggleChapter(el, e) {
+  if (e.target.closest('.ch-body')) return;
+  el.classList.toggle('open');
+}
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Sticky nav active state on scroll
+const sections = ['overview','context','chapters','recurring','pillars','overlap','interactive','division'];
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.nav-pill').forEach((p, i) => {
+        p.classList.toggle('active', sections[i] === id);
+      });
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-80px 0px -50% 0px' });
+sections.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+</script>
+
+</body>
+</html>
