@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L&D Monitor 2026 NL — Interactive Report Wireframe</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+  :root {
+    --black: #1a1a1a;
+    --dark-gray: #4a4a4a;
+    --mid-gray: #888;
+    --light-gray: #ccc;
+    --border: #ddd;
+    --bg: #f5f5f5;
+    --white: #fff;
+    --annotation: #e74c3c;
+    --blue-hint: #e8f0fe;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--black);
+    background: var(--bg);
+  }
+
+  /* === TOP BAR === */
+  .wf-topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white);
+    border-bottom: 2px solid var(--black);
+    padding: 8px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wf-topbar-title {
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .wf-topbar-page {
+    font-size: 11px;
+    color: var(--mid-gray);
+  }
+
+  /* === MAIN === */
+  .wf-main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 120px;
+  }
+
+  /* === SECTION FRAME === */
+  .wf-section {
+    border: 2px solid var(--black);
+    background: var(--white);
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .wf-section-header {
+    background: var(--black);
+    color: var(--white);
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wf-section-header .tag {
+    background: var(--annotation);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .wf-section-body {
+    padding: 24px;
+  }
+
+  /* === BOXES === */
+  .wf-box {
+    border: 2px dashed var(--light-gray);
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .wf-box.solid {
+    border-style: solid;
+    border-color: var(--border);
+  }
+  .wf-box.dark {
+    background: #f0f0f0;
+  }
+  .wf-box-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mid-gray);
+    margin-bottom: 8px;
+  }
+  .wf-box-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .wf-box-desc {
+    font-size: 12px;
+    color: var(--dark-gray);
+    line-height: 1.5;
+  }
+
+  /* === GRIDS === */
+  .wf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .wf-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .wf-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+  /* === PLACEHOLDER === */
+  .wf-placeholder {
+    border: 2px dashed var(--light-gray);
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(0,0,0,0.02) 8px,
+      rgba(0,0,0,0.02) 16px
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mid-gray);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-height: 60px;
+    margin-bottom: 12px;
+  }
+  .wf-placeholder.tall { min-height: 200px; }
+  .wf-placeholder.medium { min-height: 120px; }
+
+  /* === TEXT === */
+  .wf-h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
+  .wf-h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+  .wf-h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .wf-h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .wf-text { font-size: 13px; color: var(--dark-gray); margin-bottom: 12px; line-height: 1.6; }
+  .wf-text-sm { font-size: 11px; color: var(--mid-gray); }
+  .wf-text-hint { font-size: 11px; color: var(--mid-gray); font-style: italic; }
+
+  /* === SEPARATOR === */
+  .wf-sep {
+    border: none;
+    border-top: 1px dashed var(--light-gray);
+    margin: 20px 0;
+  }
+
+  /* === ANNOTATIONS === */
+  .annotation {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--annotation);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    position: absolute;
+    z-index: 10;
+    cursor: help;
+  }
+  .annotation.tl { top: -8px; left: -8px; }
+  .annotation.tr { top: -8px; right: -8px; }
+  .annotation.bl { bottom: -8px; left: -8px; }
+  .annotation.inline {
+    position: relative;
+    display: inline-flex;
+    margin: 0 4px;
+    vertical-align: middle;
+  }
+
+  /* === ANNOTATION KEY === */
+  .annotation-key {
+    border: 2px solid var(--annotation);
+    background: #fdf0ef;
+    padding: 16px 20px;
+    margin-top: 24px;
+  }
+  .annotation-key h4 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--annotation);
+    margin-bottom: 8px;
+  }
+  .annotation-key ul {
+    list-style: none;
+    padding: 0;
+  }
+  .annotation-key li {
+    font-size: 11px;
+    color: var(--dark-gray);
+    padding: 3px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .annotation-key .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px; height: 18px;
+    border-radius: 2px;
+    background: var(--annotation);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    flex-shrink: 0;
+    padding: 0 4px;
+  }
+
+  /* === STAT CARD === */
+  .wf-stat {
+    border: 2px solid var(--border);
+    padding: 12px;
+    text-align: center;
+  }
+  .wf-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .wf-stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid-gray);
+  }
+
+  /* === BAR === */
+  .wf-bar {
+    height: 20px;
+    background: #eee;
+    border: 1px solid var(--border);
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .wf-bar-fill {
+    height: 100%;
+    background: var(--dark-gray);
+  }
+  .wf-bar-label {
+    font-size: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--mid-gray);
+    margin-bottom: 4px;
+  }
+
+  /* === BUTTON === */
+  .wf-btn {
+    border: 2px solid var(--black);
+    background: var(--white);
+    padding: 8px 20px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .wf-btn.filled {
+    background: var(--black);
+    color: var(--white);
+  }
+  .wf-btn.disabled {
+    border-color: var(--light-gray);
+    color: var(--light-gray);
+  }
+
+  /* === PILL === */
+  .wf-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--mid-gray);
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+  .wf-pill.active { border-color: var(--black); color: var(--black); background: #f0f0f0; }
+
+  /* === NAV === */
+  .wf-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--black);
+    margin-bottom: 16px;
+  }
+  .wf-nav-item {
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--mid-gray);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .wf-nav-item.active {
+    color: var(--black);
+    font-weight: 700;
+    border-bottom-color: var(--black);
+  }
+
+  /* === RECURRING ELEMENT HIGHLIGHT === */
+  .wf-recurring {
+    border-left: 4px solid var(--annotation);
+    padding-left: 16px;
+    margin-bottom: 16px;
+  }
+  .wf-recurring-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--annotation);
+    margin-bottom: 4px;
+  }
+
+  /* === FLOW ARROW === */
+  .wf-flow-arrow {
+    text-align: center;
+    padding: 16px;
+    font-size: 24px;
+    color: var(--light-gray);
+  }
+
+  /* === INTERACTIVE TAG === */
+  .wf-interactive-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    background: #e8f0fe;
+    border: 1px solid #b3d1ff;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1a73e8;
+    margin-bottom: 8px;
+  }
+
+  /* === CHAPTER PATTERN === */
+  .chapter-pattern {
+    border: 2px solid var(--black);
+    margin-bottom: 16px;
+    background: var(--white);
+  }
+  .chapter-pattern-header {
+    background: #f8f8f8;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mid-gray);
+  }
+  .chapter-pattern-body {
+    padding: 16px;
+  }
+
+  /* === STICKY ACTION BAR === */
+  .wf-action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border-top: 2px solid var(--black);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+  }
+
+  /* === SCROLL FLOW INDICATOR === */
+  .wf-scroll-indicator {
+    text-align: center;
+    padding: 8px;
+    color: var(--light-gray);
+    font-size: 11px;
+    font-style: italic;
+  }
+
+  /* === TOC === */
+  .wf-toc {
+    columns: 2;
+    column-gap: 24px;
+  }
+  .wf-toc-item {
+    padding: 6px 0;
+    font-size: 12px;
+    break-inside: avoid;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .wf-toc-num {
+    font-weight: 700;
+    min-width: 24px;
+    color: var(--mid-gray);
+  }
+
+  @media (max-width: 700px) {
+    .wf-grid-2, .wf-grid-3, .wf-grid-4 { grid-template-columns: 1fr; }
+    .wf-toc { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="wf-topbar">
+  <div class="wf-topbar-title">L&D Monitor 2026 NL — Interactive Report Wireframe</div>
+  <div class="wf-topbar-page">WIREFRAME · 15 Sections · Scroll Flow</div>
+</div>
+
+<div class="wf-main">
+
+  <!-- ====================================================================
+       TABLE OF CONTENTS
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      Table of Contents — Full Scroll Map
+    </div>
+    <div class="wf-section-body">
+      <p class="wf-text" style="margin-bottom:16px;">This wireframe maps every section of the NL interactive report in scroll order. Each section shows layout, content blocks, interactive elements, and recurring components.</p>
+
+      <div class="wf-toc">
+        <div class="wf-toc-item"><span class="wf-toc-num">01</span> Cover (cinematic, 100vh)</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">02</span> Sticky Nav (appears on scroll)</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">03</span> Voorwoord / Foreword + Video</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">04</span> Management Summary (3-min scan)</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">05</span> Chapter Intro: Benchmark Quiz (Tool 1)</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">06</span> Ch1: The Strategy Paradox + CEO Dashboard</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">07</span> What Now: Ch1</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">08</span> Ch2: The Perception Gap + Predict Game</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">09</span> What Now: Ch2</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">10</span> Ch3: The Skill Visibility Crisis</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">11</span> What Now: Ch3</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">12</span> Ch4: Breaking Out of Reactive + AI</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">13</span> What Now: Ch4</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">14</span> Ch5: What Now? + Gap Prioritizer (Tool 7)</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">15</span> Data Explorer (Bilendi Dashboard link)</div>
+        <div class="wf-toc-item"><span class="wf-toc-num">——</span> Persistent: Action Plan Bar (Tool 9)</div>
+      </div>
+
+      <hr class="wf-sep">
+      <p class="wf-text-sm"><strong>Recurring pattern per chapter:</strong> Chapter Badge → Hook → Data Cascade → So What → Executive Lens → What Now → (optional) NL-DE Callout → (optional) Studytube Bridge</p>
+      <p class="wf-text-sm"><strong>Interactive tools:</strong> Tool 1 (Quiz) in Ch-Intro · Tool 6 (CEO Dashboard) in Ch1 · Tool 8 (Predict Game) in Ch2 · Tool 7 (Gap Prioritizer) in Ch5 · Tool 9 (Action Plan) persistent</p>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       SECTION 01: COVER
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      01 — Cover
+      <span class="tag">100vh</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-placeholder tall" style="position:relative;">
+        <span class="annotation tl">A1</span>
+        FULL-SCREEN COVER · 16:9 PHOTO BG · GRADIENT OVERLAY
+      </div>
+
+      <div class="wf-grid-2">
+        <div>
+          <div class="wf-box">
+            <div class="wf-box-label">Left column (42%)</div>
+            <p class="wf-text-sm">[STUDYTUBE LOGO — white]</p>
+            <p class="wf-text-sm" style="margin-top:8px;">STUDYTUBE RESEARCH</p>
+            <p class="wf-text-sm">[gradient divider line]</p>
+            <div class="wf-h1" style="margin-top:8px;">L&D Monitor<br>2026</div>
+            <p class="wf-text" style="font-style:italic;">Learning is the Only Moat</p>
+            <p class="wf-text-sm">De stand van leren & ontwikkelen in Nederland</p>
+          </div>
+        </div>
+        <div>
+          <div class="wf-box" style="position:relative;">
+            <span class="annotation tr">A2</span>
+            <div class="wf-box-label">Right column — Glass Chart Cards</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div class="wf-stat" style="grid-column:1/-1;">
+                <div class="wf-stat-label">L&D Maturity</div>
+                <div class="wf-stat-value">72%</div>
+                <div class="wf-text-sm">in stage 1-2 · [GAUGE SVG]</div>
+              </div>
+              <div class="wf-stat">
+                <div class="wf-stat-label">Perception Gap</div>
+                <div class="wf-stat-value">17pp</div>
+                <div class="wf-text-sm">[M/E bars]</div>
+              </div>
+              <div class="wf-stat">
+                <div class="wf-stat-label">Skill Transparency</div>
+                <div class="wf-stat-value">8.5%</div>
+                <div class="wf-text-sm">[stacked bar]</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-box" style="text-align:center;">
+        <p class="wf-text-sm">Studytube · Jaarlijks L&D Onderzoek · Bilendi Panel</p>
+        <p class="wf-text-sm">259 HR · 252 Managers · 506 Medewerkers · Nederland 2026</p>
+      </div>
+
+      <div style="text-align:center;margin-top:8px;">
+        <p class="wf-text-sm">↓ Scroll om te beginnen</p>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A1</span> Full-screen cover: photo bg (cover-hero-widescreen.jpg), gradient overlay L→R, shapes pattern, floating particles, glow line. Already built.</li>
+          <li><span class="tag">A2</span> Glass chart overlay cards: live data from Bilendi survey. 3 cards preview key findings. Draw readers in before they scroll.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       SECTION 02: STICKY NAV
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      02 — Sticky Navigation
+      <span class="tag">APPEARS ON SCROLL</span>
+    </div>
+    <div class="wf-section-body">
+      <div class="wf-nav" style="position:relative;">
+        <span class="annotation tl">A3</span>
+        <div class="wf-nav-item">Samenvatting</div>
+        <div class="wf-nav-item">Voorwoord</div>
+        <div class="wf-nav-item active">Jouw Score</div>
+        <div class="wf-nav-item">De Strategie-Paradox</div>
+        <div class="wf-nav-item">De Perceptie-Gap</div>
+        <div class="wf-nav-item">Skill Visibility</div>
+        <div class="wf-nav-item">Doorbreken</div>
+        <div class="wf-nav-item">Wat Nu?</div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A3</span> Sticky nav: slides in after user scrolls past cover (50vh). Horizontal scroll on mobile. Active item highlighted. Click scrolls to section. Already built.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 03: VOORWOORD (FOREWORD)
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      03 — Voorwoord / Foreword
+      <span class="tag">NEW CONTENT</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-box-label">VOORWOORD</div>
+      <div class="wf-h2" style="margin-bottom:12px;">Dit is het 5e jaar dat we de L&D Monitor publiceren</div>
+
+      <div class="wf-grid-2">
+        <div>
+          <div class="wf-text">
+            Opening text from Studytube leadership (Lenny or Homam). Frame: "Things are changing, but not as fast as some people might realize." The consistency year-over-year IS the story — this isn't repetition, this is structural truth.
+          </div>
+          <div class="wf-text">
+            • 5th consecutive year<br>
+            • First time: 3 respondent groups (HR + Managers + Employees)<br>
+            • First time: NL + DE side-by-side<br>
+            • First time: interactive format with self-diagnosis tools<br>
+            • What's new vs 2025 framing
+          </div>
+          <div class="wf-text" style="font-style:italic;">
+            "Last year, skill-based learning was the focus. This year, we measured it. The results are confronting."
+          </div>
+        </div>
+        <div>
+          <div class="wf-box" style="position:relative;">
+            <span class="annotation tr">A4</span>
+            <div class="wf-interactive-tag">INTERACTIVE — VIDEO</div>
+            <div class="wf-placeholder medium">
+              🎬 VIDEO EMBED<br>
+              Introductie L&D Monitor 2026<br>
+              [16:9 · auto-play muted · play button overlay]
+            </div>
+            <p class="wf-text-sm">Video by Homam or Lenny. 60-90 sec intro framing the report.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <div class="wf-box solid" style="text-align:center;">
+        <p class="wf-text-sm"><strong>CTA:</strong> "Benieuwd waar jouw organisatie staat? Begin met de benchmark quiz →"</p>
+        <div class="wf-btn" style="margin-top:8px;">START DE QUIZ</div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A4</span> Video embed in foreword. Placeholder currently in the report. Must decide: embedded YouTube/Vimeo or self-hosted MP4. Auto-play muted with play button overlay. Positioned right of text on desktop, stacked on mobile.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 04: MANAGEMENT SUMMARY
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      04 — Management Summary / 3-Minute Scan
+      <span class="tag">ALREADY BUILT (partial)</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-box-label">01 — SAMENVATTING</div>
+      <div class="wf-h2">De belangrijkste bevindingen in 3 minuten</div>
+      <p class="wf-text">Six stats that tell the core story. Designed for the executive who has 3 minutes.</p>
+
+      <hr class="wf-sep">
+
+      <p class="wf-text"><strong>Narrative intro:</strong> 1,247 respondents. 3 groups. 2 markets. First 360-degree view. Here are the 6 numbers that matter.</p>
+
+      <div class="wf-grid-3" style="position:relative;">
+        <span class="annotation tl">A5</span>
+        <div class="wf-stat">
+          <div class="wf-stat-label">L&D-Strategie</div>
+          <div class="wf-stat-value">41%</div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:41%;"></div></div>
+          <p class="wf-text-sm">heeft een strategie die stuurt</p>
+        </div>
+        <div class="wf-stat">
+          <div class="wf-stat-label">Impact Bewijs</div>
+          <div class="wf-stat-value">62%</div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:62%;"></div></div>
+          <p class="wf-text-sm">kan impact niet aantonen</p>
+        </div>
+        <div class="wf-stat">
+          <div class="wf-stat-label">Budget Benutting</div>
+          <div class="wf-stat-value">54%</div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:54%;"></div></div>
+          <p class="wf-text-sm">gemiddeld besteed</p>
+        </div>
+        <div class="wf-stat">
+          <div class="wf-stat-label">Perceptie-Gap</div>
+          <div class="wf-stat-value">17pp</div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:60%;"></div></div>
+          <p class="wf-text-sm">manager vs. medewerker</p>
+        </div>
+        <div class="wf-stat">
+          <div class="wf-stat-label">Skill Zichtbaarheid</div>
+          <div class="wf-stat-value">8.5%</div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:8.5%;"></div></div>
+          <p class="wf-text-sm">volledig transparant</p>
+        </div>
+        <div class="wf-stat">
+          <div class="wf-stat-label">L&D Volwassenheid</div>
+          <div class="wf-stat-value">72%</div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:72%;"></div></div>
+          <p class="wf-text-sm">vast in reactief/standaard</p>
+        </div>
+      </div>
+
+      <div class="wf-text-hint">Each card animates on scroll (counter + bar fill). Already built.</div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A5</span> Summary stat cards: 6 key findings in scannable format. Each has counter animation + progress bar. Acts as a "story trailer" for the chapters. Lenny's requirement: "42% do X — OK, what does that mean for me?"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 05: CHAPTER INTRO — BENCHMARK QUIZ (TOOL 1)
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      05 — Chapter Intro: Jouw Score — Benchmark Quiz
+      <span class="tag">TOOL 1 · INTERACTIVE</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-interactive-tag">TOOL 1 — PERSONAL BENCHMARK QUIZ</div>
+      <div class="wf-h2">Hoe scoort jouw organisatie?</div>
+      <p class="wf-text">Beantwoord 10 vragen en vergelijk je organisatie met het marktgemiddelde van 1.017 Nederlandse respondenten.</p>
+
+      <hr class="wf-sep">
+
+      <!-- Quiz Card -->
+      <div class="wf-box solid" style="position:relative;max-width:600px;margin:0 auto;">
+        <span class="annotation tr">A6</span>
+
+        <div style="display:flex;gap:6px;justify-content:center;margin-bottom:16px;">
+          <span class="wf-pill active">●</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+          <span class="wf-pill">○</span>
+        </div>
+
+        <div class="wf-h3">Vraag 1 van 10</div>
+        <p class="wf-text" style="font-weight:700;">Heeft jouw organisatie een gedefinieerde leerstrategie?</p>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0;">
+          <div class="wf-pill active" style="display:block;text-align:center;padding:10px;">Ja, actief in gebruik</div>
+          <div class="wf-pill" style="display:block;text-align:center;padding:10px;">Ja, in ontwikkeling</div>
+          <div class="wf-pill" style="display:block;text-align:center;padding:10px;">Nee</div>
+          <div class="wf-pill" style="display:block;text-align:center;padding:10px;">Weet ik niet</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;margin-top:16px;">
+          <div class="wf-btn disabled">← VORIGE</div>
+          <div class="wf-btn filled">VOLGENDE →</div>
+        </div>
+
+        <p class="wf-text-sm" style="text-align:center;margin-top:8px;">Overslaan →</p>
+      </div>
+
+      <hr class="wf-sep">
+
+      <!-- Results Preview -->
+      <div class="wf-box" style="position:relative;">
+        <span class="annotation tl">A7</span>
+        <div class="wf-box-label">RESULTS (shown after 10 questions)</div>
+
+        <div class="wf-grid-2">
+          <div>
+            <div class="wf-placeholder tall">
+              RADAR CHART<br>
+              10 axes · 3 polygons:<br>
+              Jouw score (blue filled) ·<br>
+              NL gemiddelde (dashed navy) ·<br>
+              DE gemiddelde (dashed gray)
+            </div>
+          </div>
+          <div>
+            <div class="wf-h4">Jouw grootste kans:</div>
+            <p class="wf-text" style="font-weight:700;">Skill Transparantie — je scoort 20 punten onder het marktgemiddelde</p>
+            <hr class="wf-sep">
+            <div class="wf-h4">Gap Ranking</div>
+            <div style="font-size:11px;">
+              <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #ddd;"><span>🔴 Skill Transparantie</span><span>-20pp</span></div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #ddd;"><span>🟡 AI Readiness</span><span>-12pp</span></div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #ddd;"><span>🟡 Impact Meting</span><span>-8pp</span></div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #ddd;"><span>🟢 Strategie</span><span>+5pp</span></div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>🟢 Leercultuur</span><span>+8pp</span></div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="wf-sep">
+
+        <!-- Action cards from quiz results -->
+        <div class="wf-h4">Aanbevolen acties voor jouw top gaps:</div>
+        <div class="wf-grid-3" style="margin-top:8px;">
+          <div class="wf-box solid">
+            <p class="wf-text-sm" style="font-weight:700;">1. Start skill-profielen</p>
+            <p class="wf-text-sm">Pick 3 critical roles...</p>
+            <div class="wf-btn" style="margin-top:8px;font-size:10px;padding:4px 8px;">+ VOEG TOE AAN PLAN</div>
+          </div>
+          <div class="wf-box solid">
+            <p class="wf-text-sm" style="font-weight:700;">2. AI pilot starten</p>
+            <p class="wf-text-sm">1 use case this quarter...</p>
+            <div class="wf-btn" style="margin-top:8px;font-size:10px;padding:4px 8px;">+ VOEG TOE AAN PLAN</div>
+          </div>
+          <div class="wf-box solid">
+            <p class="wf-text-sm" style="font-weight:700;">3. Impact meting</p>
+            <p class="wf-text-sm">Build budget impact report...</p>
+            <div class="wf-btn" style="margin-top:8px;font-size:10px;padding:4px 8px;">+ VOEG TOE AAN PLAN</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A6</span> Progressive disclosure quiz: one question at a time, progress dots, skip option, card slide animation. 10 questions mapping to Bilendi survey. Saves to localStorage.</li>
+          <li><span class="tag">A7</span> Results dashboard: SVG radar chart with 3 overlapping polygons (user, NL avg, DE avg). Gap ranking sorted by biggest delta. Auto-generated headline. 3 action cards for top gaps feed into Action Plan (Tool 9). State persisted — returning users see results immediately.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 06: CHAPTER 1 — THE STRATEGY PARADOX
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      06 — Chapter 1: De Strategie-Paradox
+      <span class="tag">FULL NARRATIVE</span>
+    </div>
+    <div class="wf-section-body">
+
+      <!-- CHAPTER SUMMARY BOX (recurring) -->
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Chapter Summary Box</div>
+        <div class="wf-box solid" style="position:relative;">
+          <span class="annotation tr">A8</span>
+          <div class="wf-pill active">HOOFDSTUK 1</div>
+          <div class="wf-h2" style="margin-top:8px;">De Strategie-Paradox</div>
+          <p class="wf-text">Iedereen heeft een strategie en een groeiend budget. Bijna niemand kan de impact bewijzen.</p>
+          <div class="wf-grid-4" style="margin-top:12px;">
+            <div class="wf-stat"><div class="wf-stat-value">73%</div><div class="wf-stat-label">Heeft strategie</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">51%</div><div class="wf-stat-label">Budget groeit</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">8.5%</div><div class="wf-stat-label">Skill zicht</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">72%</div><div class="wf-stat-label">Reactief</div></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <!-- HOOK -->
+      <div class="wf-box">
+        <div class="wf-box-label">1. THE HOOK — The Last Moat</div>
+        <p class="wf-text">Every competitive advantage is eroding. Technology gets replicated in months. Talent is one LinkedIn message away. There is exactly one thing that cannot be copied: how fast your organization learns. We call this learning velocity. And it is the last moat standing.</p>
+        <p class="wf-text-hint">~200 words. Framing, NOT data yet. Pull from Moat Declaration, Wennink, AI Paradox. Sets emotional stakes before numbers.</p>
+      </div>
+
+      <!-- DATA CASCADE -->
+      <div class="wf-box" style="position:relative;">
+        <span class="annotation tl">A9</span>
+        <div class="wf-box-label">2. THE DATA — What We Found</div>
+        <p class="wf-text" style="font-weight:700;">Sequential reveal: each stat builds on the last, constructing the paradox.</p>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
+          <div class="wf-box solid dark" style="display:grid;grid-template-columns:140px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">L&D Strategy</span>
+            <div class="wf-bar" style="margin:0;"><div class="wf-bar-fill" style="width:73%;"></div></div>
+            <span style="font-weight:700;text-align:right;">73%</span>
+          </div>
+          <div class="wf-box solid dark" style="display:grid;grid-template-columns:140px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Business Aligned</span>
+            <div class="wf-bar" style="margin:0;"><div class="wf-bar-fill" style="width:61%;"></div></div>
+            <span style="font-weight:700;text-align:right;">61%</span>
+          </div>
+          <div class="wf-box solid dark" style="display:grid;grid-template-columns:140px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Can Measure Impact</span>
+            <div class="wf-bar" style="margin:0;"><div class="wf-bar-fill" style="width:58%;"></div></div>
+            <span style="font-weight:700;text-align:right;">58%</span>
+          </div>
+          <div class="wf-box solid dark" style="display:grid;grid-template-columns:140px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Full Skill Visibility</span>
+            <div class="wf-bar" style="margin:0;"><div class="wf-bar-fill" style="width:8.5%;background:var(--annotation);"></div></div>
+            <span style="font-weight:700;text-align:right;color:var(--annotation);">8.5%</span>
+          </div>
+          <div class="wf-box solid dark" style="display:grid;grid-template-columns:140px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Budget Growing</span>
+            <div class="wf-bar" style="margin:0;"><div class="wf-bar-fill" style="width:51%;"></div></div>
+            <span style="font-weight:700;text-align:right;">51%</span>
+          </div>
+          <div class="wf-box solid dark" style="display:grid;grid-template-columns:140px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Fully Use Budget</span>
+            <div class="wf-bar" style="margin:0;"><div class="wf-bar-fill" style="width:31%;"></div></div>
+            <span style="font-weight:700;text-align:right;">31%</span>
+          </div>
+        </div>
+        <p class="wf-text-hint" style="margin-top:8px;">Bars animate sequentially on scroll. Each accompanied by 1-2 paragraphs of narrative text. The drop from 73% → 8.5% IS the visual story.</p>
+      </div>
+
+      <!-- KEY TAKEAWAY (recurring) -->
+      <div class="wf-recurring" style="position:relative;">
+        <span class="annotation tr">A10</span>
+        <div class="wf-recurring-label">Recurring: Key Takeaway Module</div>
+        <div class="wf-box solid">
+          <div class="wf-h4">Wat dit betekent voor jou</div>
+          <p class="wf-text">Je hebt een strategie die je niet kunt meten. Een budget dat je niet volledig besteedt. Je ontwikkelt skills die je niet kunt zien. En je investeert elk jaar meer terwijl de naald niet beweegt. Dat is geen strategie. Dat is een papieren tijger.</p>
+          <p class="wf-text-sm" style="font-style:italic;">"73% heeft een strategie. 8.5% kan zien welke skills ze hebben. Dat is geen strategie — dat is een wensenlijst."</p>
+        </div>
+      </div>
+
+      <!-- SO WHAT -->
+      <div class="wf-box">
+        <div class="wf-box-label">3. THE SO WHAT — The Paper Tiger</div>
+        <p class="wf-text">The metaphor: the drawbridge is down. You're building a moat — funding it, planning it, talking about it. But the bridge is wide open because you have no visibility. 2025 said the same thing. A year later: more budget, same problem. The gap isn't closing — it's getting more expensive.</p>
+        <p class="wf-text-hint">~300 words. Reframe + escalation from 2025. The consistency is proof this is structural, not cyclical.</p>
+      </div>
+
+      <!-- EXECUTIVE LENS -->
+      <div class="wf-box" style="position:relative;">
+        <span class="annotation tl">A11</span>
+        <div class="wf-box-label">4. THE EXECUTIVE LENS — Three Conversations</div>
+        <div class="wf-grid-3">
+          <div class="wf-box solid">
+            <div class="wf-h4">CEO</div>
+            <p class="wf-text-sm">Learning Velocity, not Training Hours</p>
+            <hr class="wf-sep">
+            <p class="wf-text-sm" style="font-style:italic;">"Wat is onze leersnelheid — en hoe vergelijkt dat met concurrenten?"</p>
+          </div>
+          <div class="wf-box solid">
+            <div class="wf-h4">CFO</div>
+            <p class="wf-text-sm">Capability Investment, not L&D Budget</p>
+            <hr class="wf-sep">
+            <p class="wf-text-sm" style="font-style:italic;">"Toon me 3 KPI's die dit budget aandrijft."</p>
+          </div>
+          <div class="wf-box solid">
+            <div class="wf-h4">CHRO</div>
+            <p class="wf-text-sm">Accountability Driver, not Strategy Owner</p>
+            <hr class="wf-sep">
+            <p class="wf-text-sm" style="font-style:italic;">"Als het bestuur nu bewijs vraagt — heb ik data of een slide?"</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- NL-DE CALLOUT (recurring) -->
+      <div class="wf-recurring" style="position:relative;">
+        <span class="annotation tr">A12</span>
+        <div class="wf-recurring-label">Recurring: NL-DE Callout (where data differs significantly)</div>
+        <div class="wf-box solid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="text-align:center;"><span style="font-size:11px;">🇳🇱 NL</span><br><span style="font-weight:700;">8.5%</span><br><span style="font-size:10px;">full visibility</span></div>
+          <div style="text-align:center;"><span style="font-size:11px;">🇩🇪 DE</span><br><span style="font-weight:700;">10.5%</span><br><span style="font-size:10px;">full visibility</span></div>
+        </div>
+        <p class="wf-text-sm">Mini comparison card — teaser for separate NL-DE deep dive (released 2-3 months post-launch).</p>
+      </div>
+
+      <hr class="wf-sep">
+
+      <!-- CEO DASHBOARD GENERATOR (TOOL 6) -->
+      <div class="wf-box" style="position:relative;border-color:var(--black);border-style:solid;">
+        <span class="annotation tl">A13</span>
+        <div class="wf-interactive-tag">TOOL 6 — CEO DASHBOARD GENERATOR</div>
+        <div class="wf-h3">Bouw je eigen CEO Dashboard</div>
+        <p class="wf-text">5 vragen over wat jouw CEO belangrijk vindt → krijg een dashboard dat je kunt plakken in je volgende board-presentatie.</p>
+
+        <div class="wf-box dark" style="margin-top:12px;">
+          <p class="wf-text-sm"><strong>Fold-out:</strong> Collapsed by default. Click "Bouw mijn dashboard" to expand.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin:12px 0;">
+            <div class="wf-box solid"><span class="wf-text-sm">Q1: Wat is de belangrijkste strategische prioriteit? [ dropdown ]</span></div>
+            <div class="wf-box solid"><span class="wf-text-sm">Q2: Top 3 skills die het bestuur noemt? [ 3x text input ]</span></div>
+            <div class="wf-box solid"><span class="wf-text-sm">Q3: Gewenste zichtbaarheid 0-100? [ slider ]</span></div>
+            <div class="wf-box solid"><span class="wf-text-sm">Q4: L&D budget range? [ dropdown ]</span></div>
+            <div class="wf-box solid"><span class="wf-text-sm">Q5: Hoeveel medewerkers? [ dropdown ]</span></div>
+          </div>
+          <div class="wf-btn filled" style="margin-top:8px;">GENEREER MIJN DASHBOARD</div>
+        </div>
+
+        <div class="wf-box" style="margin-top:12px;">
+          <div class="wf-box-label">OUTPUT: Generated Dashboard</div>
+          <div class="wf-placeholder medium">
+            PERSONALIZED CEO DASHBOARD<br>
+            [Priority · Skills · Blind Spot Ring · Budget · Velocity]<br>
+            [Copy to clipboard · Email · Print]
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA: Leersnelheid Paradox -->
+      <div class="wf-box solid" style="border-left:4px solid var(--mid-gray);margin-top:16px;position:relative;">
+        <span class="annotation tr">A14</span>
+        <div class="wf-box-label">CTA — GA DIEPER</div>
+        <div class="wf-h4">De Leersnelheid Paradox</div>
+        <p class="wf-text-sm">Waarom juist de meest ervaren mensen het kwetsbaarst zijn voor AI-disruptie — en wat dat betekent voor jouw L&D-strategie.</p>
+        <p class="wf-text-sm" style="font-weight:700;">→ learning-moat/de-leersnelheid-paradox.html</p>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A8</span> Chapter Summary Box (recurring per chapter): headline stat, one-sentence insight, 3-4 key numbers. Scannable in 10 seconds. First thing reader sees in each chapter.</li>
+          <li><span class="tag">A9</span> Data cascade: animated bars that reveal sequentially on scroll. The visual drop from 73% → 8.5% IS the story. Each stat accompanied by 1-2 paragraphs of narrative.</li>
+          <li><span class="tag">A10</span> Key Takeaway Module (recurring): "Wat dit betekent voor jou" — the SO WHAT in highlighted box. ICP-specific framing. Appears after each major data section.</li>
+          <li><span class="tag">A11</span> Executive lens: 3 cards for CEO/CFO/CHRO. Each with reframe + the question they should ask. This is new for 2026 — turns data into leadership conversations.</li>
+          <li><span class="tag">A12</span> NL-DE mini comparison (recurring): only where data differs significantly. Teaser for separate deep dive. Not a full section.</li>
+          <li><span class="tag">A13</span> CEO Dashboard Generator (Tool 6): fold-out within chapter, 5 questions → personalized dashboard. Lenny's idea. Already built.</li>
+          <li><span class="tag">A14</span> Deep-dive CTA: links to existing leersnelheid-paradox article. Extends chapter narrative for readers who want more.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       SECTION 07: WHAT NOW — CH1
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      07 — What Now: Ch1 (Strategy Paradox)
+      <span class="tag">RECURRING PATTERN</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-recurring" style="position:relative;">
+        <span class="annotation tl">A15</span>
+        <div class="wf-recurring-label">Recurring: What Now? Section (end of every chapter)</div>
+
+        <div class="wf-h3" style="margin-bottom:12px;">Wat kun je maandag doen?</div>
+        <p class="wf-text">Elk hoofdstuk eindigt met dezelfde vraag: wat kun je met deze informatie doen op maandagochtend? Niet volgend kwartaal. Maandag.</p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;">
+          <div class="wf-box solid" style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="min-width:28px;height:28px;border:2px solid var(--black);display:flex;align-items:center;justify-content:center;font-weight:700;">1</div>
+            <div>
+              <div class="wf-h4">Run de Strategy-to-KPI Audit</div>
+              <p class="wf-text-sm">Neem je leerstrategie. Schrijf per doel de business-KPI op die het expliciet aanstuurt. Niet "skills verbeteren" maar "onboarding-tijd met 20% verkorten in Q3."</p>
+              <div class="wf-btn" style="margin-top:8px;font-size:10px;padding:4px 8px;">+ VOEG TOE AAN PLAN</div>
+            </div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="min-width:28px;height:28px;border:2px solid var(--black);display:flex;align-items:center;justify-content:center;font-weight:700;">2</div>
+            <div>
+              <div class="wf-h4">Bouw een Budget Impact Report</div>
+              <p class="wf-text-sm">Waar ging het L&D geld vorig jaar heen? Welk effect had het? Map spend naar uitkomsten.</p>
+              <div class="wf-btn" style="margin-top:8px;font-size:10px;padding:4px 8px;">+ VOEG TOE AAN PLAN</div>
+            </div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;align-items:flex-start;">
+            <div style="min-width:28px;height:28px;border:2px solid var(--black);display:flex;align-items:center;justify-content:center;font-weight:700;">3</div>
+            <div>
+              <div class="wf-h4">Start met 3 Skills</div>
+              <p class="wf-text-sm">Kies 3 kritieke rollen. Definieer de skill-profielen. Run een assessment. Nu heb je data — geen aannames.</p>
+              <div class="wf-btn" style="margin-top:8px;font-size:10px;padding:4px 8px;">+ VOEG TOE AAN PLAN</div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="wf-sep">
+
+        <!-- Studytube Bridge (optional, recurring) -->
+        <div class="wf-box dark" style="position:relative;">
+          <span class="annotation tr">A16</span>
+          <div class="wf-box-label">Optional: How Studytube Helps (recurring, max 1 sentence)</div>
+          <p class="wf-text-sm"><strong>Studytube L&D Impact Scan</strong> — Diagnose in 10 minuten waar jouw organisatie staat op de strategie-naar-impact-schaal. → studytube.nl/impact-scan</p>
+        </div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A15</span> What Now section: 3 numbered action cards per chapter. Each has title, description, effort/timeframe tags, and "Add to plan" button (feeds Tool 9). Follows DATA → SO WHAT → NOW WHAT → WITH WHAT pattern. Lenny: "What talented humans are better at than AI."</li>
+          <li><span class="tag">A16</span> Studytube Bridge: ONE sentence + product name. Never pushy. Only in "With What" layer. Link to L&D Impact Scan or relevant product feature.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 08: CHAPTER 2 — THE PERCEPTION GAP
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      08 — Chapter 2: De Perceptie-Gap
+      <span class="tag">NEW IN 2026 · #1 PRESS STAT</span>
+    </div>
+    <div class="wf-section-body">
+
+      <!-- Chapter Summary Box -->
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Chapter Summary Box</div>
+        <div class="wf-box solid">
+          <div class="wf-pill active">HOOFDSTUK 2</div>
+          <div class="wf-h2" style="margin-top:8px;">De Perceptie-Gap</div>
+          <p class="wf-text">Managers denken dat ze mensen ontwikkelen. Medewerkers zijn het niet eens. In Duitsland is de kloof bijna dubbel.</p>
+          <div class="wf-grid-4" style="margin-top:12px;">
+            <div class="wf-stat"><div class="wf-stat-value">17pp</div><div class="wf-stat-label">NL Feedback gap</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">28pp</div><div class="wf-stat-label">DE Feedback gap</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">8pp</div><div class="wf-stat-label">NL Empowerment</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">26pp</div><div class="wf-stat-label">DE Empowerment</div></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <!-- PREDICT GAME (TOOL 8) — Chapter opener -->
+      <div class="wf-box" style="border-style:solid;border-color:var(--black);position:relative;">
+        <span class="annotation tl">A17</span>
+        <div class="wf-interactive-tag">TOOL 8 — PREDICT YOUR EMPLOYEES GAME</div>
+        <div class="wf-h3">Voorspel je medewerkers</div>
+        <p class="wf-text">Managers geven deze scores. Wat denk jij dat medewerkers zeggen? Schuif de sliders en ontdek hoe goed je de perceptie-gap kent.</p>
+
+        <div style="display:flex;gap:8px;margin:12px 0;">
+          <div class="wf-pill active">🇳🇱 NL</div>
+          <div class="wf-pill">🇩🇪 DE</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0;">
+          <div class="wf-box solid" style="display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Feedback loops</span>
+            <div class="wf-bar" style="margin:0;position:relative;"><div class="wf-bar-fill" style="width:60%;background:#888;"></div><span style="position:absolute;left:60%;top:-2px;width:12px;height:24px;background:var(--black);border-radius:3px;"></span></div>
+            <span style="font-weight:700;">Mgr: 72%</span>
+          </div>
+          <div class="wf-box solid" style="display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Actieve leercultuur</span>
+            <div class="wf-bar" style="margin:0;position:relative;"><div class="wf-bar-fill" style="width:50%;background:#888;"></div><span style="position:absolute;left:50%;top:-2px;width:12px;height:24px;background:var(--black);border-radius:3px;"></span></div>
+            <span style="font-weight:700;">Mgr: 66%</span>
+          </div>
+          <div class="wf-box solid" style="display:grid;grid-template-columns:150px 1fr 60px;gap:12px;align-items:center;">
+            <span style="font-size:11px;">Leren van fouten</span>
+            <div class="wf-bar" style="margin:0;position:relative;"><div class="wf-bar-fill" style="width:50%;background:#888;"></div><span style="position:absolute;left:50%;top:-2px;width:12px;height:24px;background:var(--black);border-radius:3px;"></span></div>
+            <span style="font-weight:700;">Mgr: 67%</span>
+          </div>
+        </div>
+
+        <div class="wf-btn filled" style="margin-top:8px;">ONTHUL DE WERKELIJKHEID</div>
+
+        <div class="wf-box" style="margin-top:16px;">
+          <div class="wf-box-label">REVEAL (after button click)</div>
+          <p class="wf-text-sm">Sequential animation: prediction counter → actual employee %. Delta badges: "+Xpp overschat" (red) / "-Xpp onderschat". Aggregate accuracy score. Context: "Managers in NL overschatten gemiddeld 15pp. Jij: Xpp."</p>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <!-- NARRATIVE CONTENT -->
+      <div class="wf-box">
+        <div class="wf-box-label">CHAPTER NARRATIVE</div>
+        <div class="wf-h4">The Manager Mirage</div>
+        <p class="wf-text">Full narrative (~1000 words): The most confrontational chapter. Quantified blind spot across 5 dimensions. NL vs DE comparison. "The manager isn't malicious — the manager is untrained." First time this data exists at this depth.</p>
+
+        <div style="margin-top:12px;">
+          <div class="wf-box-label">Data Tables to Visualize:</div>
+          <div class="wf-grid-2">
+            <div class="wf-box solid">
+              <p class="wf-text-sm" style="font-weight:700;">🇳🇱 NL Perception Gaps (5 dimensions)</p>
+              <p class="wf-text-sm">Feedback: Mgr 72% → Emp 55% = 17pp<br>Culture: 66% → 50% = 16pp<br>Mistakes: 67% → 52% = 16pp<br>Goals: 80% → 66% = 15pp<br>Skills: 69% → 54% = 15pp</p>
+            </div>
+            <div class="wf-box solid">
+              <p class="wf-text-sm" style="font-weight:700;">🇩🇪 DE Perception Gaps (5 dimensions)</p>
+              <p class="wf-text-sm">Feedback: Mgr 68% → Emp 39% = 28pp<br>Empower: 69% → 43% = 26pp<br>Paths: 66% → 40% = 26pp<br>Skills: 70% → 45% = 25pp<br>Culture: 63% → 40% = 23pp</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KEY TAKEAWAY -->
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Key Takeaway Module</div>
+        <div class="wf-box solid">
+          <div class="wf-h4">Wat dit betekent voor jou</div>
+          <p class="wf-text">Er is een 28-punts kloof tussen wat managers denken te doen voor ontwikkeling en wat medewerkers ervaren. Dat is geen misverstand. Dat is een structureel falen. De manager is niet kwaadwillend — de manager is ongetraind.</p>
+        </div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A17</span> Predict Game (Tool 8): NL/DE toggle, 5 slider rows with manager % shown, user drags prediction for employee %. "Reveal" button triggers sequential counter animation. Aggregate accuracy score. Most engaging tool — makes perception gap personal. Already built.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       SECTION 09: WHAT NOW — CH2
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      09 — What Now: Ch2 (Perception Gap)
+    </div>
+    <div class="wf-section-body">
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: What Now? Section</div>
+        <div class="wf-h3">Wat kun je maandag doen?</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">1</div>
+            <div>
+              <div class="wf-h4">Meet de perceptie-gap in je organisatie</div>
+              <p class="wf-text-sm">Stuur dezelfde 5 vragen naar managers EN medewerkers. Vergelijk. Het verschil is je blind spot.</p>
+              <div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div>
+            </div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">2</div>
+            <div>
+              <div class="wf-h4">Manager enablement: specifieke skills, geen generiek leiderschap</div>
+              <p class="wf-text-sm">Ontwikkelgesprekken voeren, skill-gaps herkennen, groei-feedback geven.</p>
+              <div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div>
+            </div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;position:relative;">
+            <span class="annotation tr">A18</span>
+            <div style="min-width:24px;font-weight:700;">3</div>
+            <div>
+              <div class="wf-h4">Influencer perspectief</div>
+              <p class="wf-text-sm">Praktisch advies van [betaalde influencer] — echte tips, niet AI-gegenereerd. Ena's bijdrage.</p>
+              <div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A18</span> Influencer perspective: Ena's contribution per chapter. Real practitioners, not AI-generated. This is the differentiator Lenny called out: "What talented humans are better at than AI."</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 10: CHAPTER 3 — SKILL VISIBILITY CRISIS
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      10 — Chapter 3: De Skill Visibility Crisis
+      <span class="tag">FULL NARRATIVE</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Chapter Summary Box</div>
+        <div class="wf-box solid">
+          <div class="wf-pill active">HOOFDSTUK 3</div>
+          <div class="wf-h2" style="margin-top:8px;">De Skill Visibility Crisis</div>
+          <p class="wf-text">Je vraagt mensen skills te ontwikkelen die je niet kunt zien of meten.</p>
+          <div class="wf-grid-4" style="margin-top:12px;">
+            <div class="wf-stat"><div class="wf-stat-value">8.5%</div><div class="wf-stat-label">Volledig zicht NL</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">37%</div><div class="wf-stat-label">Basis transparantie</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">58%</div><div class="wf-stat-label">Zegt: zelfsturing werkt</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">25pp</div><div class="wf-stat-label">DE Skill clarity gap</div></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <div class="wf-box">
+        <div class="wf-box-label">CHAPTER NARRATIVE</div>
+        <p class="wf-text">The pivot point of the report. "You can't develop what you can't see." 58% of HR says employees self-direct learning — but only 8.5% have full visibility. That's asking people to navigate without a map. Explains why Ch1 (strategy fails), Ch2 (managers/employees disagree), and Ch4 (reactive mode persists).</p>
+        <p class="wf-text" style="font-weight:700;">Key reframe from 2025: "Skill-based learning" was 2025's hero concept. 2026 leads with the number: "We measured it. 8.5% did it."</p>
+      </div>
+
+      <!-- DATA VIZ: Stacked bar or waterfall -->
+      <div class="wf-box" style="position:relative;">
+        <span class="annotation tl">A19</span>
+        <div class="wf-box-label">DATA VISUALIZATION: Skill Transparency Breakdown</div>
+        <div class="wf-placeholder medium">
+          STACKED BAR CHART<br>
+          Full (8.5%) | Mostly (27%) | Partial (36%) | Barely (16%) | None (8%)<br>
+          [Animated reveal on scroll · Blue gradient segments]
+        </div>
+        <p class="wf-text-sm">Same stacked bar pattern as cover card, but full-width with labels and narrative. Make 8.5% visually stark.</p>
+      </div>
+
+      <!-- Key Takeaway -->
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Key Takeaway Module</div>
+        <div class="wf-box solid">
+          <div class="wf-h4">Wat dit betekent voor jou</div>
+          <p class="wf-text">1 op de 10 organisaties kan zien welke skills ze hebben. De rest investeert blind. Als skills het nieuwe kapitaal zijn, heb je een inventaris nodig. En 91.5% heeft die niet.</p>
+        </div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A19</span> Skill transparency breakdown: full-width stacked bar showing 5 levels. The 8.5% "full" segment should be visually tiny — that's the point. Contrast between "58% say self-direction works" and "8.5% can see the skills" creates the narrative tension.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       SECTION 11: WHAT NOW — CH3
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      11 — What Now: Ch3 (Skill Visibility)
+    </div>
+    <div class="wf-section-body">
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: What Now? Section</div>
+        <div class="wf-h3">Wat kun je maandag doen?</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">1</div>
+            <div><div class="wf-h4">Start skill-profielen voor 3 kritieke rollen</div><p class="wf-text-sm">Definieer "wat goed eruitziet" voordat je mensen vraagt te ontwikkelen.</p><div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div></div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">2</div>
+            <div><div class="wf-h4">Bouw een skills dashboard</div><p class="wf-text-sm">Maak skill-niveaus en gaps zichtbaar voor management. Koppel aan business risico.</p><div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div></div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">3</div>
+            <div><div class="wf-h4">Maak skills zichtbaar voor medewerkers</div><p class="wf-text-sm">Als zij weten wat verwacht wordt, kunnen ze hun eigen ontwikkeling sturen.</p><div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 12: CHAPTER 4 — BREAKING OUT OF REACTIVE
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      12 — Chapter 4: Doorbreken uit Reactief
+      <span class="tag">MATURITY + AI (NEW)</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Chapter Summary Box</div>
+        <div class="wf-box solid">
+          <div class="wf-pill active">HOOFDSTUK 4</div>
+          <div class="wf-h2" style="margin-top:8px;">Doorbreken uit Reactief</div>
+          <p class="wf-text">72% zit vast. De 28% die is ontsnapt heeft niet meer budget — maar een ander model.</p>
+          <div class="wf-grid-4" style="margin-top:12px;">
+            <div class="wf-stat"><div class="wf-stat-value">72%</div><div class="wf-stat-label">Reactief/standaard</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">28%</div><div class="wf-stat-label">Geavanceerd/strategisch</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">40%</div><div class="wf-stat-label">Barrière: geen tijd</div></div>
+            <div class="wf-stat"><div class="wf-stat-value">32%</div><div class="wf-stat-label">Gebruikt AI in L&D</div></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <div class="wf-box">
+        <div class="wf-box-label">CHAPTER NARRATIVE: Two parts</div>
+        <div class="wf-grid-2">
+          <div class="wf-box solid">
+            <div class="wf-h4">Part A: The 72% Trap</div>
+            <p class="wf-text-sm">72% stuck in reactive/standardized — identical NL + DE. Half are growing budget. More money, same mode. Time = #1 barrier (40%), not budget. "Think like a product team, not a service desk."</p>
+            <p class="wf-text-sm" style="font-style:italic;">Lenny: "This is new-ish. A pretty interesting storyline. It connects to L&D Impact Model and our use cases."</p>
+          </div>
+          <div class="wf-box solid" style="position:relative;">
+            <span class="annotation tr">A20</span>
+            <div class="wf-h4">Part B: The AI Reality (NEW)</div>
+            <p class="wf-text-sm">Only 32% (NL) / 38% (DE) use AI in L&D. 34% make data-driven decisions. 40% personalize learning via tech. The AI hype is real. The AI adoption isn't. 2025 didn't measure AI at all — this is brand new data.</p>
+            <p class="wf-text-sm" style="font-style:italic;">"1 in 3 actually uses AI. The rest are talking about it at conferences."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA VIZ: Maturity curve -->
+      <div class="wf-box" style="position:relative;">
+        <span class="annotation tl">A21</span>
+        <div class="wf-box-label">DATA VIZ: L&D Maturity Distribution</div>
+        <div class="wf-placeholder medium">
+          MATURITY CURVE<br>
+          Stage 1 (Reactive) | Stage 2 (Standardized) | Stage 3 (Advanced) | Stage 4 (Strategic)<br>
+          [Bell curve shifted left · 72% in stages 1-2 · Only 5.4% at stage 4]
+        </div>
+      </div>
+
+      <!-- AI readiness viz -->
+      <div class="wf-box">
+        <div class="wf-box-label">DATA VIZ: AI & Innovation in L&D (Q19)</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <div class="wf-bar-label"><span>AI integrated in L&D</span><span>32%</span></div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:32%;"></div></div>
+          <div class="wf-bar-label"><span>Data-driven decisions</span><span>34%</span></div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:34%;"></div></div>
+          <div class="wf-bar-label"><span>Personalized learning via tech</span><span>40%</span></div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:40%;"></div></div>
+          <div class="wf-bar-label"><span>Innovative methods</span><span>45%</span></div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:45%;"></div></div>
+          <div class="wf-bar-label"><span>Continuous improvement</span><span>47%</span></div>
+          <div class="wf-bar"><div class="wf-bar-fill" style="width:47%;"></div></div>
+        </div>
+      </div>
+
+      <!-- Key Takeaway -->
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Key Takeaway Module</div>
+        <div class="wf-box solid">
+          <div class="wf-h4">Wat dit betekent voor jou</div>
+          <p class="wf-text">Je L&D budget groeit. Je L&D volwassenheid niet. Meer geld lost dit niet op. De 28% die is ontsnapt experimenteert, automatiseert, en denkt als een product team.</p>
+        </div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A20</span> AI section is completely new for 2026. 2025 didn't measure AI adoption at all. "1 in 3" is provocative in today's AI-everything climate. Lenny sees potential for a separate AI-in-L&D Monitor product.</li>
+          <li><span class="tag">A21</span> L&D Maturity distribution: shows where organizations sit on the 4-stage model. Visually emphasize the 72% bulk at stages 1-2. Only 5.4% at strategic — make this number pop.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       SECTION 13: WHAT NOW — CH4
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      13 — What Now: Ch4 (Breaking Out)
+    </div>
+    <div class="wf-section-body">
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: What Now? Section</div>
+        <div class="wf-h3">Wat kun je maandag doen?</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">1</div>
+            <div><div class="wf-h4">Blokkeer 20% strategische tijd</div><p class="wf-text-sm">Als 100% van je week operationeel is, ontsnap je nooit. Behandel strategie-tijd als een meeting die niet verplaatst kan worden.</p><div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div></div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">2</div>
+            <div><div class="wf-h4">Start met 1 AI use case</div><p class="wf-text-sm">Content aanbeveling, skill assessment, of learning path personalisatie. Bewijs waarde, dan opschalen.</p><div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div></div>
+          </div>
+          <div class="wf-box solid" style="display:flex;gap:16px;">
+            <div style="min-width:24px;font-weight:700;">3</div>
+            <div><div class="wf-h4">Bouw een L&D product roadmap</div><p class="wf-text-sm">Stop met ordertaker zijn. Maak een kwartaalroadmap met gedefinieerde uitkomsten, zoals een product team.</p><div class="wf-btn" style="margin-top:6px;font-size:10px;padding:4px 8px;">+ VOEG TOE</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 14: CHAPTER 5 — WHAT NOW? + GAP PRIORITIZER
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      14 — Chapter 5: Wat Nu? + Gap Prioritizer
+      <span class="tag">TOOL 7 · INTERACTIVE</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-recurring">
+        <div class="wf-recurring-label">Recurring: Chapter Summary Box</div>
+        <div class="wf-box solid">
+          <div class="wf-pill active">HOOFDSTUK 5</div>
+          <div class="wf-h2" style="margin-top:8px;">Wat Nu?</div>
+          <p class="wf-text">Van marktdata naar persoonlijk actieplan. Waar staat jouw organisatie?</p>
+        </div>
+      </div>
+
+      <p class="wf-text">The closing chapter turns the reader from observer into participant. This is the "shopping list" Lenny described — everything flagged throughout the chapters comes together here.</p>
+
+      <hr class="wf-sep">
+
+      <!-- GAP PRIORITIZER (TOOL 7) -->
+      <div class="wf-box" style="border-style:solid;border-color:var(--black);position:relative;">
+        <span class="annotation tl">A22</span>
+        <div class="wf-interactive-tag">TOOL 7 — GAP PRIORITIZER</div>
+        <div class="wf-h3">Jouw Grootste Gap</div>
+        <p class="wf-text">10 vragen. Welke gap verdient in jouw organisatie de meeste aandacht?</p>
+
+        <div class="wf-box dark" style="margin-top:12px;">
+          <p class="wf-text-sm"><strong>Pre-fill from Tool 1:</strong> If benchmark quiz was completed, answers are suggested (dismissible badge).</p>
+
+          <div style="display:flex;flex-direction:column;gap:8px;margin:12px 0;">
+            <div class="wf-box solid" style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="wf-text-sm">Heb je een actieve leerstrategie?</span>
+              <div style="display:flex;gap:4px;">
+                <span class="wf-pill active">Ja</span>
+                <span class="wf-pill">Deels</span>
+                <span class="wf-pill">Nee</span>
+              </div>
+            </div>
+            <div class="wf-box solid" style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="wf-text-sm">Kun je de impact van L&D aantonen?</span>
+              <div style="display:flex;gap:4px;">
+                <span class="wf-pill">Ja</span>
+                <span class="wf-pill">Deels</span>
+                <span class="wf-pill active">Nee</span>
+              </div>
+            </div>
+            <p class="wf-text-hint">... 8 more questions (all Ja/Deels/Nee)</p>
+          </div>
+
+          <div class="wf-btn filled" style="margin-top:8px;">TOON MIJN PRIORITEITEN</div>
+        </div>
+
+        <div class="wf-box" style="margin-top:16px;position:relative;">
+          <span class="annotation tr">A23</span>
+          <div class="wf-box-label">RESULTS: Priority Cards (FLIP animated sort)</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="wf-box solid" style="border-left:4px solid var(--annotation);">
+              <div style="display:flex;justify-content:space-between;"><span style="font-weight:700;">#1 Strategy-Impact Gap</span><span style="color:var(--annotation);font-weight:700;">85%</span></div>
+              <p class="wf-text-sm">Je strategie is er, maar de connectie naar impact ontbreekt. Prioriteit nummer 1.</p>
+            </div>
+            <div class="wf-box solid" style="border-left:4px solid #d97706;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-weight:700;">#2 Skill Visibility</span><span style="color:#d97706;font-weight:700;">72%</span></div>
+              <p class="wf-text-sm">Je kunt niet ontwikkelen wat je niet kunt zien.</p>
+            </div>
+            <div class="wf-box solid" style="border-left:4px solid #059669;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-weight:700;">#3 Manager Blind Spot</span><span style="color:#059669;font-weight:700;">58%</span></div>
+              <p class="wf-text-sm">Er is een kloof tussen wat managers denken en wat medewerkers ervaren.</p>
+            </div>
+          </div>
+
+          <hr class="wf-sep">
+          <div class="wf-h4">Top 3 — Begin hier</div>
+          <div class="wf-grid-3" style="margin-top:8px;">
+            <div class="wf-box solid">
+              <p class="wf-text-sm" style="font-weight:700;">Waarom het ertoe doet</p>
+              <p class="wf-text-sm">[benchmark stat]</p>
+              <p class="wf-text-sm">[start-this-week action]</p>
+              <div class="wf-btn" style="font-size:10px;padding:4px 8px;">+ VOEG TOE</div>
+            </div>
+            <div class="wf-box solid">
+              <p class="wf-text-sm" style="font-weight:700;">[Action card 2]</p>
+              <div class="wf-btn" style="font-size:10px;padding:4px 8px;">+ VOEG TOE</div>
+            </div>
+            <div class="wf-box solid">
+              <p class="wf-text-sm" style="font-weight:700;">[Action card 3]</p>
+              <div class="wf-btn" style="font-size:10px;padding:4px 8px;">+ VOEG TOE</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:16px;">
+            <div class="wf-btn">BEKIJK ALS PAGINA</div>
+            <div class="wf-btn">DEEL VIA EMAIL</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- L&D Impact Scan CTA -->
+      <div class="wf-box solid" style="text-align:center;margin-top:16px;padding:24px;border:2px solid var(--black);position:relative;">
+        <span class="annotation tl">A24</span>
+        <div class="wf-h3">Wil je dieper diagnosticeren?</div>
+        <p class="wf-text">De L&D Impact Scan geeft je een volledig persoonlijk benchmark rapport in 10 minuten.</p>
+        <div class="wf-btn filled" style="margin-top:12px;">START DE IMPACT SCAN →</div>
+        <p class="wf-text-sm" style="margin-top:8px;">scan.studytube.nl</p>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A22</span> Gap Prioritizer (Tool 7): 10 yes/partly/no questions displayed as list. Pre-fills from Tool 1 quiz. Submit → FLIP animated sort of 6 hypothesis cards by priority score. Color-coded borders (red/amber/green).</li>
+          <li><span class="tag">A23</span> Priority results: ranked cards + top 3 action cards with "Add to plan" buttons. Export options: print-friendly page, email. This is the "shopping list" culmination.</li>
+          <li><span class="tag">A24</span> L&D Impact Scan CTA: the funnel bridge. Report → self-diagnosis → personalized benchmark → conversation. This is where the report converts to leads.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       SECTION 15: DATA EXPLORER
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      15 — Data Explorer (Bilendi Dashboard)
+    </div>
+    <div class="wf-section-body">
+      <div class="wf-h2" style="text-align:center;">Het volledige Bilendi Dashboard</div>
+      <p class="wf-text" style="text-align:center;">Alle ruwe data — interactief, filteerbaar per markt, vergelijkbaar per respondentgroep.</p>
+
+      <div class="wf-grid-3" style="margin-top:16px;">
+        <div class="wf-stat"><div class="wf-stat-value">1,017</div><div class="wf-stat-label">NL respondenten</div></div>
+        <div class="wf-stat"><div class="wf-stat-value">1,815</div><div class="wf-stat-label">DE respondenten</div></div>
+        <div class="wf-stat"><div class="wf-stat-value">50+</div><div class="wf-stat-label">dimensies</div></div>
+      </div>
+
+      <div class="wf-box solid" style="text-align:center;margin-top:16px;">
+        <div class="wf-btn filled">OPEN HET INTERACTIEVE DASHBOARD →</div>
+        <p class="wf-text-sm" style="margin-top:8px;">→ lnd-monitor-2026-bilendi-dashboard-nl.html</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wf-flow-arrow">↓</div>
+
+
+  <!-- ====================================================================
+       PERSISTENT: ACTION PLAN BAR (TOOL 9)
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header">
+      Persistent — Action Plan Bar (Tool 9)
+      <span class="tag">FIXED BOTTOM</span>
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-box solid" style="position:relative;">
+        <span class="annotation tl">A25</span>
+        <div class="wf-box-label">FIXED BOTTOM BAR (56px, glass bg)</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 16px;border:2px solid var(--black);">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>📋</span>
+            <span style="font-weight:700;font-size:12px;">Mijn actieplan</span>
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--black);color:var(--white);border-radius:50%;font-size:10px;font-weight:700;">5</span>
+          </div>
+          <div class="wf-btn filled" style="font-size:10px;padding:6px 12px;">BEKIJK PLAN</div>
+        </div>
+      </div>
+
+      <div class="wf-box" style="margin-top:16px;position:relative;">
+        <span class="annotation tr">A26</span>
+        <div class="wf-box-label">SLIDE-UP PANEL (max 70vh, scrollable)</div>
+
+        <div class="wf-box solid" style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <p class="wf-text-sm" style="font-weight:700;">Run de Strategy-to-KPI Audit</p>
+              <p class="wf-text-sm">De Strategie-Paradox · Laag effort · Deze week</p>
+            </div>
+            <span style="cursor:pointer;color:var(--annotation);">✕</span>
+          </div>
+        </div>
+        <div class="wf-box solid" style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <p class="wf-text-sm" style="font-weight:700;">Meet de perceptie-gap</p>
+              <p class="wf-text-sm">De Perceptie-Gap · Medium effort · Deze maand</p>
+            </div>
+            <span style="cursor:pointer;color:var(--annotation);">✕</span>
+          </div>
+        </div>
+        <div class="wf-box solid" style="margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <p class="wf-text-sm" style="font-weight:700;">Start skill-profielen voor 3 rollen</p>
+              <p class="wf-text-sm">Skill Visibility Crisis · Medium effort · Deze maand</p>
+            </div>
+            <span style="cursor:pointer;color:var(--annotation);">✕</span>
+          </div>
+        </div>
+
+        <hr class="wf-sep">
+        <div style="display:flex;gap:8px;">
+          <span class="wf-pill active">Per hoofdstuk</span>
+          <span class="wf-pill">Op effort</span>
+          <span class="wf-pill">Op tijdslijn</span>
+        </div>
+
+        <hr class="wf-sep">
+        <div style="display:flex;gap:8px;">
+          <div class="wf-btn">KOPIEER</div>
+          <div class="wf-btn">EMAIL</div>
+          <div class="wf-btn">PRINT</div>
+        </div>
+
+        <div class="wf-box" style="margin-top:12px;">
+          <p class="wf-text-sm"><strong>Custom action:</strong> [ Voeg een eigen actie toe... ] [+]</p>
+        </div>
+      </div>
+
+      <div class="annotation-key">
+        <h4>Annotation Key</h4>
+        <ul>
+          <li><span class="tag">A25</span> Action Plan Bar: fixed 56px at bottom, slides up when first item added. Badge pulses on add. On mobile (&lt;640px): FAB button instead. Already built. Persists across page refresh via localStorage.</li>
+          <li><span class="tag">A26</span> Slide-up panel: max 70vh, scrollable list. Items from ALL tools + chapter "What Now" sections. Sort by chapter/effort/timeframe. Export: copy (plain text), email (mailto), print (new window). Custom action input. Reset with confirmation. Already built.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       MASTER ANNOTATION SUMMARY
+       ==================================================================== -->
+  <div class="wf-section">
+    <div class="wf-section-header" style="background:var(--annotation);">
+      Master Summary — Recurring Elements & Content Needs
+    </div>
+    <div class="wf-section-body">
+
+      <div class="wf-h3" style="margin-bottom:16px;">Recurring Elements (appears every chapter)</div>
+      <div class="wf-grid-2">
+        <div class="wf-box solid">
+          <div class="wf-h4">1. Chapter Summary Box</div>
+          <p class="wf-text-sm">Opening card: headline stat, one-sentence insight, 3-4 key numbers. Scannable in 10 seconds.</p>
+        </div>
+        <div class="wf-box solid">
+          <div class="wf-h4">2. Key Takeaway Module</div>
+          <p class="wf-text-sm">"Wat dit betekent voor jou" — the SO WHAT in a highlighted box. ICP-specific framing.</p>
+        </div>
+        <div class="wf-box solid">
+          <div class="wf-h4">3. What Now? Section</div>
+          <p class="wf-text-sm">3 numbered actions + "Add to plan" buttons + optional influencer perspective (Ena). Builds shopping list.</p>
+        </div>
+        <div class="wf-box solid">
+          <div class="wf-h4">4. NL-DE Callout (optional)</div>
+          <p class="wf-text-sm">Mini comparison where data differs &gt;5pp. Teaser for separate deep dive.</p>
+        </div>
+        <div class="wf-box solid">
+          <div class="wf-h4">5. Studytube Bridge (optional)</div>
+          <p class="wf-text-sm">ONE sentence. Never pushy. Product connection in "With What" layer only.</p>
+        </div>
+        <div class="wf-box solid">
+          <div class="wf-h4">6. Chapter Connections</div>
+          <p class="wf-text-sm">End-of-chapter links to related chapters. Already built in Ch1.</p>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <div class="wf-h3" style="margin-bottom:16px;">Content Still Needed</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="wf-box solid" style="border-left:4px solid var(--annotation);">
+          <p class="wf-text-sm"><strong>Foreword text</strong> — Studytube leadership intro (Lenny or Homam). ~300 words.</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid var(--annotation);">
+          <p class="wf-text-sm"><strong>Video</strong> — 60-90 sec intro video for foreword section.</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid var(--annotation);">
+          <p class="wf-text-sm"><strong>Chapter 2 full narrative</strong> — ~1000 words. The perception gap story. Data tables. C-level hook. (Chiel to write, like Ch1)</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid var(--annotation);">
+          <p class="wf-text-sm"><strong>Chapter 3 full narrative</strong> — ~800 words. Skill visibility crisis. The "you can't develop what you can't see" story.</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid var(--annotation);">
+          <p class="wf-text-sm"><strong>Chapter 4 full narrative</strong> — ~1000 words. Breaking out of reactive + AI section. Two-part structure.</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid var(--annotation);">
+          <p class="wf-text-sm"><strong>Influencer "What Now" content</strong> — Ena's contribution: practical recommendations from paid influencers per chapter (Ch2, Ch3, Ch4).</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid #059669;">
+          <p class="wf-text-sm"><strong>Chapter 1 — DONE</strong> — Full narrative text exists at <code>chapters/chapter-1-the-strategy-paradox.md</code>. CEO Dashboard built. What Now built.</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid #059669;">
+          <p class="wf-text-sm"><strong>Interactive tools — DONE</strong> — All 5 tools built: Quiz, Predict Game, CEO Dashboard, Gap Prioritizer, Action Plan.</p>
+        </div>
+        <div class="wf-box solid" style="border-left:4px solid #059669;">
+          <p class="wf-text-sm"><strong>Management Summary — DONE</strong> — 6 stat cards with animations built.</p>
+        </div>
+      </div>
+
+      <hr class="wf-sep">
+
+      <div class="wf-h3" style="margin-bottom:16px;">Chapter → Content Pattern Flow</div>
+      <div class="wf-box dark" style="font-size:11px;line-height:2;">
+        <code>
+        DATA → SO WHAT? → NOW WHAT? → WITH WHAT?<br><br>
+        "8.5% have full    "You're investing    "Start with 3 roles.    [Studytube bridge -<br>
+         skill visibility"  blind in skills       Define the profiles."    max 1 sentence]<br>
+                            you can't see"
+        </code>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Fake bottom bar for wireframe -->
+<div class="wf-action-bar">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span>📋</span>
+    <span style="font-weight:700;font-size:12px;">Mijn actieplan (persistent · Tool 9)</span>
+    <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:var(--black);color:var(--white);border-radius:50%;font-size:10px;font-weight:700;">0</span>
+  </div>
+  <div class="wf-btn filled" style="font-size:10px;padding:6px 12px;">BEKIJK PLAN</div>
+</div>
+
+</body>
+</html>
