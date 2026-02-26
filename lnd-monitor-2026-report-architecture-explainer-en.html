@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>L&D Monitor 2026 — Report Architecture</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 720px;
+    margin: 40px auto;
+    padding: 0 24px;
+    color: #1a1a1a;
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  h2 { font-size: 17px; margin-top: 32px; margin-bottom: 8px; border-bottom: 2px solid #056DFF; padding-bottom: 4px; }
+  h3 { font-size: 15px; margin-top: 20px; margin-bottom: 6px; }
+  p { margin: 8px 0; }
+  .subtitle { color: #555; font-size: 13px; margin-bottom: 24px; }
+  .callout {
+    background: #f0f6ff;
+    border-left: 4px solid #056DFF;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .callout p { margin: 4px 0; }
+  .callout strong { color: #056DFF; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 13px;
+  }
+  th {
+    background: #11295A;
+    color: #fff;
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f9fafb; }
+  .arc-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .arc-shock { background: #EF4444; }
+  .arc-confrontation { background: #F59E0B; }
+  .arc-diagnosis { background: #059669; }
+  .arc-wayout { background: #056DFF; }
+  .arc-action { background: #7c3aed; }
+  .links { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
+  .links a { color: #056DFF; text-decoration: none; font-size: 13px; }
+  .links a:hover { text-decoration: underline; }
+  ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<h1>L&D Monitor 2026 — Report Architecture</h1>
+<p class="subtitle">Internal overview: structure, choices, tools and link-outs</p>
+
+<div class="callout">
+  <p><strong>TL;DR</strong></p>
+  <p>The report reads like a funnel. We open with a shock, confront the reader, diagnose the root cause, show the way out, and close with a personal action plan. Every chapter follows the same pattern: <strong>Data → So What? → Now What? → (only then) Studytube</strong>.</p>
+</div>
+
+<h2>The Big Idea</h2>
+
+<p>Two clocks are diverging. <strong>L&D is investing more and standing still</strong> — budgets are growing (+51%), strategies exist (73%), but nothing has actually moved: 72% are still reactive, only 8.5% have skill visibility.</p>
+
+<p><strong>Meanwhile, the outside world is accelerating</strong> — skills depreciate in ~2.5 years, AI compresses tasks 12x, 39% of skills will be obsolete by 2030.</p>
+
+<p>The gap isn't closing. It's accelerating open. <em>That's the red thread through every chapter.</em></p>
+
+<h2>The 5 Chapters</h2>
+
+<table>
+  <tr>
+    <th>#</th>
+    <th>Chapter</th>
+    <th>Arc</th>
+    <th>What it does</th>
+  </tr>
+  <tr>
+    <td><strong>1</strong></td>
+    <td><strong>The Strategy Paradox</strong></td>
+    <td><span class="arc-tag arc-shock">SHOCK</span></td>
+    <td>Opens with the big numbers: 73% have a strategy, 8.5% can prove impact. More money in, same results out.</td>
+  </tr>
+  <tr>
+    <td><strong>2</strong></td>
+    <td><strong>The Perception Gap</strong></td>
+    <td><span class="arc-tag arc-confrontation">CONFRONTATION</span></td>
+    <td>Managers think they develop people. Employees disagree — by 17pp (NL) to 28pp (DE). First time quantified.</td>
+  </tr>
+  <tr>
+    <td><strong>3</strong></td>
+    <td><strong>The Visibility Crisis</strong></td>
+    <td><span class="arc-tag arc-diagnosis">DIAGNOSIS</span></td>
+    <td>The root cause: you can't develop what you can't see. 91.5% are investing blind.</td>
+  </tr>
+  <tr>
+    <td><strong>4</strong></td>
+    <td><strong>Breaking Out</strong></td>
+    <td><span class="arc-tag arc-wayout">WAY OUT</span></td>
+    <td>The 28% that escaped aren't spending more — they have a different model. Plus: only 32% use AI in L&D (new in 2026).</td>
+  </tr>
+  <tr>
+    <td><strong>5</strong></td>
+    <td><strong>Your Next Step</strong></td>
+    <td><span class="arc-tag arc-action">ACTION</span></td>
+    <td>From market data to personal action plan. All interactive tools converge here.</td>
+  </tr>
+</table>
+
+<h2>Deep Dive Blog Posts (per chapter)</h2>
+
+<p>Each chapter links out to a dedicated article that goes deeper than the report can:</p>
+
+<table>
+  <tr>
+    <th>Ch</th>
+    <th>Blog Post</th>
+    <th>What it adds</th>
+  </tr>
+  <tr>
+    <td><strong>Ch1</strong></td>
+    <td><strong>The Two Clocks</strong></td>
+    <td>The velocity gap metaphor with external disruption data (WEF, Anthropic, Lancet)</td>
+  </tr>
+  <tr>
+    <td><strong>Ch2</strong></td>
+    <td><strong>The Manager Mirage</strong></td>
+    <td>Full 5-dimension perception gap analysis NL vs DE</td>
+  </tr>
+  <tr>
+    <td><strong>Ch3</strong></td>
+    <td><strong>Meta-Skills + From Operator to Director</strong></td>
+    <td>Which skills compound and how to reposition — both the portfolio and the people managing it</td>
+  </tr>
+  <tr>
+    <td><strong>Ch4</strong></td>
+    <td><strong>The Shadow AI Problem</strong></td>
+    <td>Why only 32% use AI in L&D while employees are already using it</td>
+  </tr>
+  <tr>
+    <td><strong>Ch5</strong></td>
+    <td><strong>Organisation of the Future</strong></td>
+    <td>Skill-based teams as the 2030 destination</td>
+  </tr>
+</table>
+
+<h2>Interactive Tools</h2>
+
+<table>
+  <tr>
+    <th>Tool</th>
+    <th>Where</th>
+    <th>What it does</th>
+  </tr>
+  <tr>
+    <td><strong>Benchmark Quiz</strong></td>
+    <td>Ch1 → results in Ch5</td>
+    <td>10 questions → radar chart: you vs. NL vs. DE</td>
+  </tr>
+  <tr>
+    <td><strong>Predict Your Employees</strong></td>
+    <td>Ch2</td>
+    <td>Guess what your employees think → reveal the actual gap</td>
+  </tr>
+  <tr>
+    <td><strong>CEO Dashboard Generator</strong></td>
+    <td>Ch1/Ch5</td>
+    <td>5 questions → ready-to-paste dashboard for your CEO</td>
+  </tr>
+  <tr>
+    <td><strong>Gap Prioritizer</strong></td>
+    <td>Ch5</td>
+    <td>10 questions → prioritized action cards (exportable)</td>
+  </tr>
+  <tr>
+    <td><strong>Action Plan Bar</strong></td>
+    <td>Persistent</td>
+    <td>Shopping list that builds up as you read</td>
+  </tr>
+</table>
+
+<h2>Key Design Choices</h2>
+
+<ul>
+  <li><strong>Studytube only appears in the "With What?" layer</strong> — never before. Data first, always.</li>
+  <li><strong>Every data point answers "So what does this mean for me?"</strong> — Lenny's lesson from 2025.</li>
+  <li><strong>NL vs DE comparisons throughout</strong> — teaser for a separate deep dive later.</li>
+  <li><strong>Foreword with video</strong> — 60-90s, with animated diverging lines (the two clocks).</li>
+  <li><strong>3-minute AI summary</strong> — role-toggle: CHRO / L&D Manager / CEO view.</li>
+</ul>
+
+<div class="links">
+  <p><strong>Interactive versions:</strong></p>
+  <p><a href="https://shareables-gray.vercel.app/lnd-monitor-2026-report-architecture.html">→ Full interactive blueprint</a></p>
+  <p><a href="https://shareables-gray.vercel.app/lnd-monitor-2026-wireframes.html">→ Wireframes</a></p>
+  <p><a href="https://shareables-gray.vercel.app/lnd-monitor-2026-predict-game.html">→ Predict Game prototype</a></p>
+</div>
+
+</body>
+</html>
