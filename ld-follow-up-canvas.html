@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L&D Follow-Up Canvas | StudyTube</title>
+
+  <!-- Euclid Circular B - StudyTube Official Font -->
+  <style>
+    @font-face {
+      font-family: 'Euclid Circular B';
+      src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Regular.woff2') format('woff2');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Euclid Circular B';
+      src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Medium.woff2') format('woff2');
+      font-weight: 500;
+    }
+    @font-face {
+      font-family: 'Euclid Circular B';
+      src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-SemiBold.woff2') format('woff2');
+      font-weight: 600;
+    }
+    @font-face {
+      font-family: 'Euclid Circular B';
+      src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Bold.woff2') format('woff2');
+      font-weight: 700;
+    }
+  </style>
+
+  <style>
+    :root {
+      --st-blue-100: #D7EBFF;
+      --st-blue-200: #B9DCFF;
+      --st-blue-300: #7ABDFF;
+      --st-blue-400: #50A7FF;
+      --st-blue-500: #056DFF;
+      --st-blue-600: #0A5CEB;
+      --st-blue-700: #0F4ABE;
+      --st-blue-900: #11295A;
+      --st-gray-50: #F5F7F9;
+      --st-gray-75: #F9FAFB;
+      --st-gray-100: #F2F5F8;
+      --st-gray-200: #E9EDF1;
+      --st-gray-300: #D1D9E0;
+      --st-gray-400: #AFBBC6;
+      --st-gray-500: #8694A2;
+      --st-gray-600: #545E69;
+      --st-gray-700: #434A51;
+      --st-orange: #FF8229;
+      --st-success: #16A34A;
+      --st-cyan: #05D5FF;
+      --font-family: 'Euclid Circular B', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--st-gray-50);
+      color: var(--st-blue-900);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      border-bottom: 1px solid var(--st-gray-200);
+      padding: 0 24px;
+      height: 64px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 32px;
+      width: auto;
+    }
+
+    /* Badge */
+    .follow-up-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--st-orange);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--st-blue-900) 0%, var(--st-blue-700) 100%);
+      padding: 120px 24px 80px;
+      color: white;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-text {
+      max-width: 560px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--st-cyan);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 24px;
+    }
+
+    .scan-notice {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .scan-notice a {
+      color: var(--st-cyan);
+      text-decoration: underline;
+    }
+
+    /* Registration Form */
+    .registration-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .registration-card h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--st-blue-900);
+      margin-bottom: 8px;
+    }
+
+    .registration-card .subtitle {
+      font-size: 14px;
+      color: var(--st-gray-600);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--st-blue-900);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 2px solid var(--st-gray-200);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      color: var(--st-blue-900);
+      background: white;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--st-blue-500);
+      box-shadow: 0 0 0 3px rgba(5, 109, 255, 0.1);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font-family);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--st-orange);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #E5741F;
+      transform: translateY(-1px);
+    }
+
+    .consent-text {
+      font-size: 12px;
+      color: var(--st-gray-500);
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 80px 24px;
+      background: white;
+    }
+
+    .features-content {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--st-blue-900);
+      margin-bottom: 12px;
+    }
+
+    .features .subtitle {
+      text-align: center;
+      font-size: 18px;
+      color: var(--st-gray-600);
+      margin-bottom: 48px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--st-blue-100);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--st-blue-900);
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--st-gray-600);
+    }
+
+    /* Audience Section */
+    .audience {
+      padding: 80px 24px;
+      background: var(--st-gray-50);
+    }
+
+    .audience-content {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .audience h2 {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--st-blue-900);
+      margin-bottom: 48px;
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .audience-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid var(--st-gray-200);
+    }
+
+    .audience-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--st-blue-900);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .audience-card p {
+      font-size: 14px;
+      color: var(--st-gray-600);
+    }
+
+    /* Preview Section */
+    .preview {
+      padding: 80px 24px;
+      background: white;
+    }
+
+    .preview-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .preview h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--st-blue-900);
+      margin-bottom: 12px;
+    }
+
+    .preview .subtitle {
+      font-size: 18px;
+      color: var(--st-gray-600);
+      margin-bottom: 32px;
+    }
+
+    .preview-image {
+      background: var(--st-gray-100);
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--st-gray-200);
+    }
+
+    .preview-image img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .canvas-preview-placeholder {
+      background: linear-gradient(135deg, var(--st-blue-100) 0%, var(--st-blue-200) 100%);
+      border-radius: 12px;
+      padding: 60px 40px;
+      color: var(--st-blue-900);
+    }
+
+    .canvas-preview-placeholder h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .canvas-preview-placeholder p {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    /* CTA Section */
+    .cta {
+      padding: 80px 24px;
+      background: var(--st-blue-900);
+      color: white;
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .cta p {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 32px;
+    }
+
+    .cta .btn {
+      width: auto;
+      display: inline-flex;
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--st-blue-900);
+    }
+
+    .btn-white:hover {
+      background: var(--st-gray-100);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 40px 24px;
+      background: var(--st-gray-50);
+      text-align: center;
+      font-size: 14px;
+      color: var(--st-gray-600);
+    }
+
+    .footer a {
+      color: var(--st-blue-500);
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-text {
+        text-align: center;
+        max-width: 100%;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .features-grid,
+      .audience-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">
+        <img src="studytube-logo.png" alt="StudyTube" />
+      </a>
+      <div class="follow-up-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        L&D Scan Follow-Up
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="eyebrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+          Follow-Up Canvas
+        </div>
+        <h1>Van diagnose naar actie met het L&D Follow-Up Canvas</h1>
+        <p>Gebruik dit interactieve canvas om samen met je team de scan-resultaten te vertalen naar concrete verbeteringen. Perfect voor een workshop of strategiesessie.</p>
+
+        <div class="scan-notice">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span>Nog geen scan ingevuld? <a href="index.html">Vul eerst de L&D Impact Scan in</a> voor de beste ervaring.</span>
+        </div>
+      </div>
+
+      <div class="registration-card">
+        <h2>Download het Canvas</h2>
+        <p class="subtitle">Vul je gegevens in om direct toegang te krijgen tot het interactieve canvas.</p>
+
+        <form id="registration-form" onsubmit="handleRegistration(event)">
+          <div class="form-group">
+            <label class="form-label">Naam</label>
+            <input type="text" class="form-input" id="reg-name" placeholder="Je naam" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">E-mailadres</label>
+            <input type="email" class="form-input" id="reg-email" placeholder="naam@bedrijf.nl" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Organisatie</label>
+            <input type="text" class="form-input" id="reg-org" placeholder="Bedrijfsnaam" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rol</label>
+            <select class="form-input" id="reg-role" required>
+              <option value="">Selecteer je rol</option>
+              <option value="ld_manager">L&D Manager</option>
+              <option value="hr_manager">HR Manager</option>
+              <option value="hr_director">HR Director</option>
+              <option value="ceo_founder">CEO / Founder</option>
+              <option value="other">Anders</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Open het Canvas
+          </button>
+        </form>
+        <p class="consent-text">We gebruiken je gegevens alleen om je te helpen met je L&D strategie.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="features-content">
+      <h2>Wat bevat het Canvas?</h2>
+      <p class="subtitle">Een gestructureerde aanpak om van scan-resultaten naar concrete actie te gaan.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--st-blue-500)" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <h3>Reflectie</h3>
+          <p>Analyseer je sterktes, verbeterpunten en verrassingen uit de scan met je team.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--st-blue-500)" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <h3>Prioritering</h3>
+          <p>Gebruik de Impact-Effort matrix om te bepalen welke verbeteringen je eerst aanpakt.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--st-blue-500)" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <h3>90-Dagen Plan</h3>
+          <p>Vertaal prioriteiten naar concrete acties met eigenaren, deadlines en succes-indicatoren.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Audience Section -->
+  <section class="audience">
+    <div class="audience-content">
+      <h2>Voor wie is dit Canvas?</h2>
+
+      <div class="audience-grid">
+        <div class="audience-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--st-blue-500)" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            L&D Teams
+          </h3>
+          <p>Gebruik het canvas om samen de scan-resultaten te bespreken en een gezamenlijk actieplan op te stellen.</p>
+        </div>
+
+        <div class="audience-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--st-blue-500)" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            HR Managers
+          </h3>
+          <p>Faciliteer een strategische discussie over L&D prioriteiten met het MT of directie.</p>
+        </div>
+
+        <div class="audience-card">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--st-blue-500)" stroke-width="2">
+              <path d="M12 20V10"></path>
+              <path d="M18 20V4"></path>
+              <path d="M6 20v-4"></path>
+            </svg>
+            Consultants
+          </h3>
+          <p>Gebruik het canvas als werkblad tijdens workshops met klanten over hun L&D strategie.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview Section -->
+  <section class="preview">
+    <div class="preview-content">
+      <h2>Canvas Preview</h2>
+      <p class="subtitle">Een gestructureerd werkblad voor je team workshop</p>
+
+      <div class="preview-image">
+        <div class="canvas-preview-placeholder">
+          <h3>L&D Follow-Up Canvas</h3>
+          <p>Interactief A3 werkblad met secties voor: Sterktes & Verbeterpunten, Context & Constraints, Impact-Effort Matrix, 90-Dagen Actieplan en Team Commitment</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="cta-content">
+      <h2>Klaar om aan de slag te gaan?</h2>
+      <p>Download het canvas en plan een workshop met je team om de resultaten te bespreken.</p>
+      <a href="#" class="btn btn-white" onclick="document.getElementById('reg-name').focus(); window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Download het Canvas
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>L&D Follow-Up Canvas | <a href="https://studytube.nl" target="_blank">StudyTube</a> | <a href="mailto:hello@studytube.nl">hello@studytube.nl</a></p>
+  </footer>
+
+  <script>
+    // Pre-fill from localStorage if available
+    document.addEventListener('DOMContentLoaded', function() {
+      const resultsData = localStorage.getItem('ldScanResults');
+      if (resultsData) {
+        try {
+          const parsed = JSON.parse(resultsData);
+          if (parsed.contact) {
+            document.getElementById('reg-name').value = parsed.contact.naam || '';
+            document.getElementById('reg-email').value = parsed.contact.email || '';
+            document.getElementById('reg-org').value = parsed.contact.organisatie || '';
+          }
+        } catch (e) {
+          console.log('No scan data found');
+        }
+      }
+    });
+
+    function handleRegistration(event) {
+      event.preventDefault();
+
+      const formData = {
+        name: document.getElementById('reg-name').value,
+        email: document.getElementById('reg-email').value,
+        organisation: document.getElementById('reg-org').value,
+        role: document.getElementById('reg-role').value,
+        registeredAt: new Date().toISOString(),
+        source: 'canvas-landing'
+      };
+
+      // Store registration
+      localStorage.setItem('canvasRegistration', JSON.stringify(formData));
+
+      // Log for debugging
+      console.log('Canvas registration:', formData);
+
+      // Redirect to the canvas
+      window.location.href = 'impact-scan-followup-canvas.html';
+    }
+  </script>
+</body>
+</html>
