@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L&D Monitor 2026 — Report Architecture v8 (EN)</title>
+<style>
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Regular.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Bold.woff2') format('woff2'); font-weight: 700; }
+
+  :root {
+    --st-blue: #056DFF; --st-cyan: #00C2FF; --st-green: #10B981;
+    --st-yellow: #F59E0B; --st-red: #EF4444; --st-navy: #11295A;
+    --bg-dark: #0f172a;
+    --glass-bg: rgba(255,255,255,0.05); --glass-border: rgba(255,255,255,0.1);
+    --text-primary: #e2e8f0; --text-secondary: rgba(255,255,255,0.55);
+    --text-muted: rgba(255,255,255,0.35); --text-dim: rgba(255,255,255,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Euclid Circular B', system-ui, -apple-system, sans-serif; background: var(--bg-dark); color: var(--text-primary); line-height: 1.6; }
+  .container { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(5,109,255,0.12); border: 1px solid rgba(5,109,255,0.25); border-radius: 20px; padding: 4px 14px; font-size: 11px; color: var(--st-blue); font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
+  .badge-green { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.25); color: var(--st-green); }
+  .badge-yellow { background: rgba(245,158,11,0.12); border-color: rgba(245,158,11,0.25); color: var(--st-yellow); }
+  .badge-purple { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.25); color: #a78bfa; }
+
+  /* Part divider */
+  .part-divider { margin: 56px 0 40px; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+  .part-label { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; }
+  .part-title { font-size: 20px; font-weight: 700; color: #fff; }
+  .part-desc { font-size: 13px; color: var(--text-secondary); max-width: 560px; margin: 8px auto 0; }
+
+  /* Section headings */
+  .section-heading { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .section-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+  /* Arc */
+  .arc-row { display: flex; align-items: stretch; gap: 0; margin: 40px 0 12px; }
+  .arc-step { flex: 1; padding: 16px 12px; text-align: center; border-bottom: 2px solid rgba(255,255,255,0.06); }
+  .arc-step.active { border-bottom-color: var(--st-blue); }
+  .arc-num { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-bottom: 6px; background: rgba(255,255,255,0.06); color: var(--text-muted); }
+  .arc-step.active .arc-num { color: #fff; }
+  .arc-step:nth-child(1) .arc-num { background: var(--st-blue); }
+  .arc-step:nth-child(3) .arc-num { background: var(--st-cyan); }
+  .arc-step:nth-child(5) .arc-num { background: var(--st-green); }
+  .arc-step:nth-child(7) .arc-num { background: #d97706; }
+  .arc-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+  .arc-step.active .arc-label { color: rgba(255,255,255,0.7); }
+  .arc-connector { width: 24px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); font-size: 14px; padding-top: 10px; }
+
+  /* Section flow */
+  .section-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 12px 0 20px; font-size: 11px; font-weight: 600; }
+  .flow-box { padding: 6px 10px; border-radius: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text-muted); white-space: nowrap; }
+  .flow-box.active { background: rgba(5,109,255,0.15); color: var(--st-blue); border-color: rgba(5,109,255,0.25); }
+  .flow-arrow { color: rgba(255,255,255,0.12); font-size: 10px; }
+
+  /* Chapters */
+  .chapter { border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 20px; overflow: hidden; background: var(--glass-bg); transition: all 0.3s; }
+  .chapter:hover { border-color: rgba(255,255,255,0.15); }
+  .chapter-head { display: flex; align-items: flex-start; gap: 16px; padding: 24px 24px 0; cursor: pointer; user-select: none; }
+  .ch-num { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: #fff; }
+  .ch-num.ch1 { background: linear-gradient(135deg, #056DFF, #3B8FFF); }
+  .ch-num.ch2 { background: linear-gradient(135deg, #00b4d8, var(--st-cyan)); }
+  .ch-num.ch3 { background: linear-gradient(135deg, #059669, #34d399); }
+  .ch-num.ch4 { background: linear-gradient(135deg, #d97706, #fbbf24); }
+  .ch-meta { flex: 1; }
+  .ch-arc { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .ch-title { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.3; }
+  .ch-subtitle { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.4; }
+  .ch-toggle { width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3); font-size: 14px; transition: all 0.3s; margin-top: 4px; }
+  .chapter.open .ch-toggle { transform: rotate(180deg); color: var(--st-blue); }
+  .ch-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+  .chapter.open .ch-body { max-height: 4000px; }
+  .ch-inner { padding: 20px 24px 24px; }
+
+  /* Data Anchor */
+  .data-anchor { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .data-anchor-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .data-anchor-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+  .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; text-align: center; }
+  .stat-num { font-size: 26px; font-weight: 700; color: #fff; line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.3; }
+
+  /* Story & Hooks */
+  .ch-story { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; max-width: 680px; }
+  .ch-story strong { color: rgba(255,255,255,0.85); font-weight: 700; }
+  .hook { border-left: 3px solid var(--st-blue); padding: 12px 16px; background: rgba(5,109,255,0.05); border-radius: 0 10px 10px 0; margin-bottom: 16px; }
+  .hook-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--st-blue); font-weight: 700; margin-bottom: 4px; }
+  .hook-text { font-size: 14px; color: rgba(255,255,255,0.75); font-style: italic; line-height: 1.5; }
+  .hook-green { border-left-color: var(--st-green); background: rgba(16,185,129,0.05); }
+  .hook-green .hook-label { color: var(--st-green); }
+
+  /* Actions */
+  .actions-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+  .action-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .action-row:last-child { border-bottom: none; }
+  .action-icon { width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .action-text { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .action-text strong { color: rgba(255,255,255,0.85); }
+
+  /* Layer tags */
+  .layer-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .layer-tag { font-size: 10px; padding: 3px 10px; border-radius: 6px; font-weight: 700; letter-spacing: 0.3px; }
+  .layer-tag.interactive { background: rgba(0,194,255,0.1); color: var(--st-cyan); }
+  .layer-tag.role { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+
+  /* Bridge */
+  .bridge { margin: 0 0 20px; padding: 20px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.12); background: rgba(255,255,255,0.02); position: relative; }
+  .bridge::before { content: ''; position: absolute; left: 50%; top: -11px; width: 22px; height: 22px; border-radius: 50%; background: var(--bg-dark); border: 1px dashed rgba(255,255,255,0.12); transform: translateX(-50%); }
+  .bridge-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); font-weight: 700; margin-bottom: 6px; text-align: center; }
+  .bridge-text { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; text-align: center; font-style: italic; max-width: 600px; margin: 0 auto; }
+
+  /* Framework box */
+  .framework-box { background: rgba(0,194,255,0.04); border: 1px solid rgba(0,194,255,0.12); border-radius: 14px; padding: 20px; margin: 16px 0; }
+  .framework-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--st-cyan); font-weight: 700; margin-bottom: 12px; }
+  .maturity-row { display: flex; gap: 8px; }
+  .maturity-step { flex: 1; padding: 12px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.06); }
+  .maturity-pct { font-size: 22px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .maturity-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .maturity-desc { font-size: 10px; color: var(--text-muted); line-height: 1.3; }
+
+  /* Structural principles */
+  .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .principle-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; }
+  .principle-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--st-blue); font-weight: 700; margin-bottom: 6px; }
+  .principle-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Climax tags */
+  .climax-tag { display: inline-flex; align-items: center; gap: 4px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: var(--st-red); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .support-tag { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text-muted); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Feedback tracker */
+  .feedback-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .feedback-item:last-child { border-bottom: none; }
+  .fb-num { width: 28px; height: 28px; border-radius: 8px; background: rgba(16,185,129,0.1); color: var(--st-green); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .fb-content { flex: 1; }
+  .fb-ask { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .fb-response { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .fb-where { font-size: 11px; color: var(--st-cyan); margin-top: 4px; font-weight: 700; }
+
+  /* Tables (for specs section) */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+  th { background: rgba(255,255,255,0.06); color: var(--text-muted); text-align: left; padding: 8px 12px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; color: var(--text-secondary); }
+  td strong { color: #fff; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Status tags */
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
+  .tag-built { background: rgba(16,185,129,0.15); color: var(--st-green); }
+  .tag-new { background: rgba(0,194,255,0.15); color: var(--st-cyan); font-size: 9px; margin-left: 4px; vertical-align: middle; }
+
+  /* Callouts */
+  .callout { background: rgba(5,109,255,0.06); border: 1px solid rgba(5,109,255,0.15); border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+  .callout p { margin: 4px 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .callout strong { color: var(--st-blue); }
+  .callout-green { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15); border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+  .callout-green p { margin: 4px 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .callout-green strong { color: var(--st-green); }
+  .callout-amber { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15); border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+  .callout-amber p { margin: 4px 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .callout-amber strong { color: var(--st-yellow); }
+
+  /* Spec items */
+  .spec-list { list-style: none; padding: 0; }
+  .spec-list li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+  .spec-list li:last-child { border-bottom: none; }
+  .spec-list li strong { color: rgba(255,255,255,0.85); }
+  code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 3px; font-size: 12px; color: var(--st-cyan); }
+
+  /* Links */
+  a { color: var(--st-blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Grid for spec cards */
+  .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .spec-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px; }
+  .spec-card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; }
+
+  @media (max-width: 640px) {
+    .arc-row { flex-wrap: wrap; gap: 4px; }
+    .arc-connector { display: none; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .maturity-row { flex-direction: column; }
+    .principle-grid, .spec-grid { grid-template-columns: 1fr; }
+    .section-flow { gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ================================================================ -->
+  <!-- HEADER                                                           -->
+  <!-- ================================================================ -->
+  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+    <span class="badge">Report Architecture</span>
+    <span class="badge badge-green">v8 &mdash; Mar 11</span>
+    <span class="badge badge-purple">Combined</span>
+  </div>
+  <h1 style="font-size: 30px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 8px;">
+    L&D Monitor 2026 &mdash; Full Report Architecture
+  </h1>
+  <p style="font-size: 15px; color: rgba(255,255,255,0.45); max-width: 680px; margin-bottom: 8px;">
+    Story structure, interactive tools, design system, and build specs in one document. 4 chapters, one causal chain, NL data (n=1,017).
+  </p>
+  <p style="font-size: 13px; color: var(--text-muted); max-width: 680px;">
+    Each chapter follows: <strong style="color: rgba(255,255,255,0.7);">data anchor block &rarr; narrative interpretation &rarr; warm bridge &rarr; role-specific action &rarr; interactive tools.</strong>
+  </p>
+
+  <div class="callout" style="margin-top: 20px;">
+    <p><strong>The core logic in 30 seconds</strong></p>
+    <p>Strategy exists &rarr; doesn&rsquo;t translate &rarr; operations stuck in survival mode &rarr; culture your people barely recognize &rarr; no clear path to what comes next. <strong>A self-reinforcing pattern.</strong></p>
+    <p style="margin-top: 6px; font-size: 12px; color: var(--text-muted);">Every chapter opens with a data anchor block. The maturity framework is introduced in Ch2 as a compass. Each chapter has one climax. Explicit bridges connect chapters. Not every org hits them in the same order &mdash; the pattern matters, the sequence is yours.</p>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- NARRATIVE ARC                                                    -->
+  <!-- ================================================================ -->
+  <div class="arc-row">
+    <div class="arc-step active"><div class="arc-num">1</div><div class="arc-label">Strategy Stalls</div></div>
+    <div class="arc-connector">&rarr;</div>
+    <div class="arc-step active"><div class="arc-num">2</div><div class="arc-label">Operations Stuck</div></div>
+    <div class="arc-connector">&rarr;</div>
+    <div class="arc-step active"><div class="arc-num">3</div><div class="arc-label">Culture Patchy</div></div>
+    <div class="arc-connector">&rarr;</div>
+    <div class="arc-step active"><div class="arc-num">4</div><div class="arc-label">No Path Forward</div></div>
+  </div>
+  <p style="font-size: 12px; color: var(--text-dim); text-align: center; margin: 4px 0 20px;">
+    Thread: Strategy that doesn&rsquo;t translate &rarr; operations stuck in survival mode &rarr; a culture employees barely recognize &rarr; and no clear path to what comes next.
+  </p>
+
+  <!-- ================================================================ -->
+  <!-- SECTION FLOW                                                     -->
+  <!-- ================================================================ -->
+  <div style="margin-bottom: 40px;">
+    <div class="section-flow">
+      <span class="flow-box active">Cover</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box">Summary</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box">Foreword</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box">Research</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box">Quiz (4Q)</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box active">Ch1</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box active">Ch2</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box active">Ch3</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box active">Ch4</span>
+      <span class="flow-arrow">&rarr;</span>
+      <span class="flow-box">Conclusion</span>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!--  PART 1: STORY ARCHITECTURE                                      -->
+  <!-- ================================================================ -->
+  <div class="part-divider">
+    <div class="part-label">Part 1</div>
+    <div class="part-title">Story Architecture</div>
+    <div class="part-desc">The chapter-by-chapter narrative: data anchors, bridges, climax structure, and role-specific actions.</div>
+  </div>
+
+  <!-- ========== CHAPTER 1 ========== -->
+  <div class="chapter open" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch1">1</div>
+      <div class="ch-meta">
+        <div class="ch-arc">Arc position: The Setup</div>
+        <div class="ch-title">The Strategy That Never Left the Slide Deck</div>
+        <div class="ch-subtitle">73% of organizations have a learning strategy. Only 18% link it to business goals. Only 15% measure impact.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body">
+      <div class="ch-inner">
+        <div class="data-anchor">
+          <div class="data-anchor-label">Chapter 1 in numbers</div>
+          <div class="stat-grid">
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-blue);">73%</div><div class="stat-label">have an L&D strategy</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">44%</div><div class="stat-label">vaguely linked to business</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-green);">18%</div><div class="stat-label">measurably linked</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">15%</div><div class="stat-label">systematically measure impact</div></div>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.5;">#1 barrier (HR): business goals aren&rsquo;t defined clearly enough to connect learning to them. Two-sided gap: goals vague on one side, L&D translation skill missing on the other.</p>
+        </div>
+        <div class="ch-story">
+          <strong>The narrative argument:</strong> Most organizations don&rsquo;t lack strategy &mdash; they lack prioritization. 73 &rarr; 44 &rarr; 18 &rarr; 15 is a cascade. Each step halves the previous one. When business goals are vague, learning becomes broad. When learning is broad, measurement is impossible. When measurement is impossible, learning becomes activity, not impact.
+        </div>
+        <div class="hook">
+          <div class="hook-label">Chapter climax</div>
+          <div class="hook-text">The strategy exists. It just never leaves the slide deck. It gets presented once, and then everyone goes back to ordering training catalogues.</div>
+        </div>
+        <div class="actions-label">Role-specific actions</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,109,255,0.1); color: var(--st-blue);">B</div>
+          <div class="action-text"><strong>In the boardroom:</strong> Book a 30-min meeting with your L&D lead. Bring your annual plan. Ask: which 3 business goals depend on our people learning something new?</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(16,185,129,0.1); color: var(--st-green);">L</div>
+          <div class="action-text"><strong>Run L&D:</strong> Next time you present, open with a business goal, not a training update. One slide, three numbers.</div>
+        </div>
+        <div class="layer-row">
+          <span class="layer-tag interactive">Transfer Canvas (download)</span>
+          <span class="layer-tag interactive">Executive 2-Pager</span>
+          <span class="layer-tag interactive">Benchmark gauge: Strategy</span>
+          <span class="layer-tag interactive">Expert Opinion Box</span>
+          <span class="layer-tag interactive">AI Co-Reader</span>
+          <span class="layer-tag role">Boardroom &middot; L&D</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRIDGE 1→2 -->
+  <div class="bridge">
+    <div class="bridge-label">Transition 1 &rarr; 2</div>
+    <div class="bridge-text">Strategy exists on paper. But what happens when it has to travel? When the slide deck closes and the daily reality takes over? Chapter 2 follows the strategy downstream &mdash; into the teams that have to execute it.</div>
+  </div>
+
+  <!-- ========== CHAPTER 2 ========== -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch2">2</div>
+      <div class="ch-meta">
+        <div class="ch-arc">Arc position: The Trap</div>
+        <div class="ch-title">The Ambition Trap</div>
+        <div class="ch-subtitle">L&D teams want to be strategic. Their daily reality won&rsquo;t let them. 72% operate in survival mode.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body">
+      <div class="ch-inner">
+        <div class="data-anchor">
+          <div class="data-anchor-label">Chapter 2 in numbers</div>
+          <div class="stat-grid">
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">29%</div><div class="stat-label">ad hoc / reactive</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">43%</div><div class="stat-label">standardized / centralized</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-blue);">23%</div><div class="stat-label">talent-focused</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-green);">5%</div><div class="stat-label">transformational</div></div>
+          </div>
+          <div class="stat-grid" style="margin-top: 8px;">
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">53%</div><div class="stat-label">ops overrides learning time</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">34%</div><div class="stat-label">make data-driven decisions</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-green);">51%</div><div class="stat-label">growing L&D budget</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">19%</div><div class="stat-label">use their full budget</div></div>
+          </div>
+        </div>
+        <!-- MATURITY FRAMEWORK -->
+        <div class="framework-box">
+          <div class="framework-label">The Maturity Map &mdash; introduced here, referenced throughout</div>
+          <div class="maturity-row">
+            <div class="maturity-step" style="border-color: rgba(239,68,68,0.2);"><div class="maturity-pct" style="color: var(--st-red);">29%</div><div class="maturity-name" style="color: var(--st-red);">Reactive</div><div class="maturity-desc">Ad hoc. Nobody steers.</div></div>
+            <div class="maturity-step" style="border-color: rgba(245,158,11,0.2);"><div class="maturity-pct" style="color: var(--st-yellow);">43%</div><div class="maturity-name" style="color: var(--st-yellow);">Standardized</div><div class="maturity-desc">Catalogue, onboarding, compliance.</div></div>
+            <div class="maturity-step" style="border-color: rgba(5,109,255,0.2);"><div class="maturity-pct" style="color: var(--st-blue);">23%</div><div class="maturity-name" style="color: var(--st-blue);">Talent-focused</div><div class="maturity-desc">Connected to talent. Skills emerging.</div></div>
+            <div class="maturity-step" style="border-color: rgba(16,185,129,0.2);"><div class="maturity-pct" style="color: var(--st-green);">5%</div><div class="maturity-name" style="color: var(--st-green);">Transformational</div><div class="maturity-desc">Data-driven. Impact measured.</div></div>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.5; text-align: center;">This becomes the reader&rsquo;s compass. The benchmark quiz places them on it. Subsequent chapters add context.</p>
+        </div>
+        <div class="ch-story">
+          <strong>The narrative argument:</strong> When strategy (Ch1) doesn&rsquo;t translate into clear priorities, operations default to survival mode. 72% are stuck. Not because they don&rsquo;t care &mdash; because nobody gave them priorities to break out. Budget paradox: 51% growing, only 19% use full budget, only 17% individual. More money into the same system. Inertia wins by default.
+        </div>
+        <div class="hook">
+          <div class="hook-label">Chapter climax</div>
+          <div class="hook-text">The ambition is real. But the money goes to the same places it always went. The 72% aren&rsquo;t there because they don&rsquo;t care. They&rsquo;re there because the budget structure keeps funding what already exists.</div>
+        </div>
+        <div class="actions-label">Role-specific actions</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,109,255,0.1); color: var(--st-blue);">B</div>
+          <div class="action-text"><strong>In the boardroom:</strong> Your L&D team has the budget. What they need is direction. Name the 3 business goals. Ask: does our current learning spend connect to any of them?</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(0,194,255,0.1); color: var(--st-cyan);">M</div>
+          <div class="action-text"><strong>Manage a team:</strong> Schedule a 15-minute development conversation with each direct report. Not a performance review. A &ldquo;where do you want to grow?&rdquo; conversation.</div>
+        </div>
+        <div class="layer-row">
+          <span class="layer-tag interactive">Maturity distribution visualization</span>
+          <span class="layer-tag interactive">Budget paradox trio (51% / 17% / 19%)</span>
+          <span class="layer-tag interactive">AI Co-Reader</span>
+          <span class="layer-tag role">Boardroom &middot; Team Managers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRIDGE 2→3 (strengthened in v8) -->
+  <div class="bridge" style="border-color: rgba(245,158,11,0.2);">
+    <div class="bridge-label" style="color: var(--st-yellow);">Transition 2 &rarr; 3 &mdash; Strengthened in v8</div>
+    <div class="bridge-text">We&rsquo;ve seen how strategy stalls and operations default to survival mode. But what does that actually feel like for the people on the receiving end? Chapter 3 follows the signal downstream &mdash; to the employees it was meant to reach.</div>
+  </div>
+
+  <!-- ========== CHAPTER 3 ========== -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch3">3</div>
+      <div class="ch-meta">
+        <div class="ch-arc">Arc position: The Consequence</div>
+        <div class="ch-title">Learning Culture &mdash; Please Mind the Gap</div>
+        <div class="ch-subtitle">HR cares. Managers care. But employees experience something quite different.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body">
+      <div class="ch-inner">
+        <div class="data-anchor">
+          <div class="data-anchor-label">Chapter 3 in numbers &mdash; The Perception Gap</div>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-num" style="color: var(--st-yellow);">&minus;14pp</div>
+              <div class="stat-label">dev conversations</div>
+              <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">Mgr 80% &middot; Emp 66%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" style="color: var(--st-yellow);">&minus;17pp</div>
+              <div class="stat-label">systematic feedback</div>
+              <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">Mgr 72% &middot; Emp 55%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num" style="color: var(--st-yellow);">&minus;16pp</div>
+              <div class="stat-label">active learning culture</div>
+              <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">Mgr 66% &middot; Emp 50%</div>
+            </div>
+          </div>
+          <div class="stat-grid" style="margin-top: 8px;">
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-green);">88%</div><div class="stat-label">HR confirms budget exists</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">41%</div><div class="stat-label">employees don&rsquo;t know</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">46%</div><div class="stat-label">priorities unclear (emp)</div></div>
+          </div>
+        </div>
+        <div class="ch-story">
+          <strong>The narrative argument:</strong> Inconsistent operations (Ch2) create inconsistent experiences. The perception gap repeats on every dimension. HR allocated the money. Managers may know it&rsquo;s there. But 41% of employees don&rsquo;t even know about it. <strong>Self-directed learning bridge:</strong> 40% of HR says self-direction is a 2026 focus, but 50% say employees lack guidance, 46% say priorities are unclear. Asking people to drive their own development without a map.
+        </div>
+        <div class="hook">
+          <div class="hook-label">Chapter climax</div>
+          <div class="hook-text">Strategy that doesn&rsquo;t travel (Ch1) and operations stuck in survival mode (Ch2) produce a learning culture that lives on paper but not in reality. When the culture doesn&rsquo;t reach employees, asking them to take ownership shifts responsibility without providing direction.</div>
+        </div>
+        <div class="actions-label">Role-specific actions</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(16,185,129,0.1); color: var(--st-green);">L</div>
+          <div class="action-text"><strong>Run L&D:</strong> Most employees don&rsquo;t know what you built. Make what you already have visible. Can every employee find their budget, options, and next step in under 2 minutes?</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(0,194,255,0.1); color: var(--st-cyan);">M</div>
+          <div class="action-text"><strong>Manage a team:</strong> Don&rsquo;t assume your team feels supported. Ask them this week: &ldquo;Do you feel like you have a clear development path here?&rdquo;</div>
+        </div>
+        <div class="layer-row">
+          <span class="layer-tag interactive">Perception Game (iframe)</span>
+          <span class="layer-tag interactive">Benchmark gauges: Managerial + Ownership</span>
+          <span class="layer-tag interactive">Learning Co-Creation Canvas</span>
+          <span class="layer-tag interactive">AI Co-Reader</span>
+          <span class="layer-tag role">L&D &middot; Team Managers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRIDGE 3→4 -->
+  <div class="bridge">
+    <div class="bridge-label">Transition 3 &rarr; 4</div>
+    <div class="bridge-text">The first three chapters show a pattern inside the organization. What&rsquo;s changed is the clock outside it. The deadline isn&rsquo;t internal anymore &mdash; it&rsquo;s structural, and it&rsquo;s 2030.</div>
+  </div>
+
+  <!-- ========== CHAPTER 4 ========== -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num ch4">4</div>
+      <div class="ch-meta">
+        <div class="ch-arc">Arc position: The Deadline</div>
+        <div class="ch-title">From Reactive to Future-Proof</div>
+        <div class="ch-subtitle">39% of skills transform by 2030. Only 9% have visibility. The window is 2026&ndash;2030.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body">
+      <div class="ch-inner">
+        <div class="data-anchor">
+          <div class="data-anchor-label">Chapter 4 in numbers</div>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-num" style="color: var(--st-red);">39%</div>
+              <div class="stat-label">skills transform by 2030</div>
+              <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">WEF estimate</div>
+            </div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-red);">9%</div><div class="stat-label">full skill visibility</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-yellow);">34%</div><div class="stat-label">use AI in L&D</div></div>
+            <div class="stat-card"><div class="stat-num" style="color: var(--st-blue);">40%</div><div class="stat-label">personalized learning paths</div></div>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px; line-height: 1.5;">Wennink report: &euro;151&ndash;187 billion to close the Dutch productivity gap by 2035. Roughly &euro;1,600&ndash;2,000 per employee, per year, not being invested.</p>
+        </div>
+        <!-- CLIMAX STRUCTURE -->
+        <div style="margin-bottom: 16px;">
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Three beats, one climax:</p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15); border-radius: 10px;">
+              <span class="climax-tag">Peak</span>
+              <div>
+                <div style="font-size: 14px; font-weight: 700; color: #fff;">The skills deadline</div>
+                <div style="font-size: 12px; color: var(--text-muted);">39% transform by 2030. 9% visibility. Can&rsquo;t close a gap you can&rsquo;t see. Your most experienced people are most exposed.</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <span class="support-tag">Bridge</span>
+              <div>
+                <div style="font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.7);">AI as the way forward</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Gives lean L&D teams capacity to stop surviving and start steering. The bridge between Ch2&rsquo;s ambition and the future-proof org.</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;">
+              <span class="support-tag">Coda</span>
+              <div>
+                <div style="font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.7);">The 2030 organization</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Brief. Every element exists today. The difference is infrastructure, not ambition. One or two decisions away.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ch-story">
+          <strong>The narrative argument:</strong> The first three chapters are an internal pattern. This chapter adds the external deadline. 39% of skills transform by 2030, but only 9% have visibility. AI is the first realistic answer to the capacity problem from Ch2. The 2030 organization is brief: it exists today, the difference is deciding the current setup isn&rsquo;t working.
+        </div>
+        <div class="hook">
+          <div class="hook-label">Chapter climax</div>
+          <div class="hook-text">The window to turn slides into systems is 2026&ndash;2030. The organizations that start now get a head start. The ones that wait will be playing catch-up with a workforce they can no longer see clearly.</div>
+        </div>
+        <div class="actions-label">Role-specific actions (all 3 roles)</div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(5,109,255,0.1); color: var(--st-blue);">B</div>
+          <div class="action-text"><strong>In the boardroom:</strong> Map each role: which tasks will AI handle, which require human judgment? Start with one department, a whiteboard, an honest conversation.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(16,185,129,0.1); color: var(--st-green);">L</div>
+          <div class="action-text"><strong>Run L&D:</strong> How much of your budget goes toward skills AI will do better within two years? Shift toward judgment, synthesis, curation &mdash; capabilities that compound.</div>
+        </div>
+        <div class="action-row">
+          <div class="action-icon" style="background: rgba(0,194,255,0.1); color: var(--st-cyan);">M</div>
+          <div class="action-text"><strong>Manage a team:</strong> Track learning speed, not completion. How quickly do your people pick up new skills when the context changes?</div>
+        </div>
+        <div class="layer-row">
+          <span class="layer-tag interactive">Benchmark gauge: AI Usage</span>
+          <span class="layer-tag interactive">Wennink investment calculation</span>
+          <span class="layer-tag interactive">AI Co-Reader</span>
+          <span class="layer-tag role">All 3 roles</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CONCLUSION ========== -->
+  <div class="chapter" onclick="toggleChapter(this, event)">
+    <div class="chapter-head">
+      <div class="ch-num" style="background: linear-gradient(135deg, #475569, #64748b);">&Sigma;</div>
+      <div class="ch-meta">
+        <div class="ch-arc">Closing</div>
+        <div class="ch-title">A Self-Reinforcing Pattern</div>
+        <div class="ch-subtitle">Not a chain. A pattern. Every organization enters at a different point. The benchmark shows yours.</div>
+      </div>
+      <div class="ch-toggle">&#9662;</div>
+    </div>
+    <div class="ch-body">
+      <div class="ch-inner">
+        <div class="ch-story">
+          These problems reinforce each other. But not every organization hits them in the same order. <strong>The pattern matters &mdash; the sequence is yours.</strong> The benchmark quiz places you on the maturity map from Chapter 2 and shows where your biggest gap is. Radar chart + breakdown table + prioritized action plan.
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+          <div style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: rgba(5,109,255,0.06); border: 1px solid rgba(5,109,255,0.15); border-radius: 10px;">
+            <span style="font-size: 20px;">&#128202;</span>
+            <div>
+              <div style="font-size: 14px; font-weight: 700; color: #fff;">Radar Summary + Action Plan</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.45);">4-axis radar: your scores vs. NL market average. Breakdown table. Weakest dimension &rarr; prioritized 3-step action plan.</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15); border-radius: 10px;">
+            <span style="font-size: 20px;">&#128196;</span>
+            <div>
+              <div style="font-size: 14px; font-weight: 700; color: #fff;">Downloads</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.45);">Management Summary (2-pager) + Full Bilendi Dashboard (every question, filterable by role &amp; theme).</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: rgba(0,194,255,0.06); border: 1px solid rgba(0,194,255,0.15); border-radius: 10px;">
+            <span style="font-size: 20px;">&#128269;</span>
+            <div>
+              <div style="font-size: 14px; font-weight: 700; color: #fff;">L&D Impact Scan CTA</div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.45);">Free &middot; 5 minutes &middot; Instant results. The natural next step from self-assessment to action.</div>
+            </div>
+          </div>
+        </div>
+        <div class="hook hook-green">
+          <div class="hook-label" style="color: var(--st-green);">Funnel logic</div>
+          <div class="hook-text">Report data &rarr; inline benchmark (4 questions) &rarr; gauges per chapter &rarr; radar + action plan &rarr; downloads &rarr; L&D Impact Scan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- STRUCTURAL PRINCIPLES                                            -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">Structural Principles</div>
+    <p class="section-desc">The design rules behind the architecture.</p>
+    <div class="principle-grid">
+      <div class="principle-card">
+        <div class="principle-label">Data first, interpretation second</div>
+        <div class="principle-text">Each chapter opens with a data anchor block &mdash; the key numbers presented together, before any editorial. Research publication, not thought piece.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-label">One climax per chapter</div>
+        <div class="principle-text">Each chapter has one argument at its peak. Ch4 peaks on the skills deadline; AI and 2030 vision serve it.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-label">Maturity map from Ch2 onward</div>
+        <div class="principle-text">The 29/43/23/5 distribution introduced as a named framework in Ch2. Reader can place themselves. Benchmark quiz feeds into it.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-label">Explicit chapter bridges</div>
+        <div class="principle-text">Each transition has a bridging paragraph. Ch2&rarr;3 specifically strengthened to move from system-level to human-level.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-label">Trust the data to land</div>
+        <div class="principle-text">Research register, not keynote register. Where the numbers are alarming, the editorial steps back. Punchlines reserved for where data alone doesn&rsquo;t convey the implication.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-label">No Studytube in the narrative</div>
+        <div class="principle-text">No &ldquo;organizations we work with&rdquo; in analytical chapters. Credibility depends on the reader trusting we&rsquo;re presenting research, not making a case.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-label">Warm bridge to advice</div>
+        <div class="principle-text">A transitional sentence before each &ldquo;What to do about it&rdquo; section. Smooths the register change from analytical to prescriptive.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-label">Pattern, not chain</div>
+        <div class="principle-text">The conclusion frames 4 chapters as a self-reinforcing pattern. Different organizations enter at different points. The benchmark shows yours.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- CHAPTER RHYTHM                                                   -->
+  <!-- ================================================================ -->
+  <div style="border: 1px dashed rgba(5,109,255,0.2); border-radius: 16px; padding: 24px; margin-top: 40px; background: rgba(5,109,255,0.03);">
+    <div style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">The rhythm inside every chapter</div>
+    <div style="display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 140px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; text-align: center;">
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted);">Data Anchor</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Stats together.<br>Reader forms view.</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; width: 32px; color: rgba(255,255,255,0.15); font-size: 16px;">&rarr;</div>
+      <div style="flex: 1; min-width: 140px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; text-align: center;">
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; color: var(--st-blue);">Narrative</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">We interpret.<br>One argument, one climax.</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; width: 32px; color: rgba(255,255,255,0.15); font-size: 16px;">&rarr;</div>
+      <div style="flex: 1; min-width: 140px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; text-align: center;">
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; color: var(--st-green);">Action</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Role-specific.<br>Warm bridge first.</div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; width: 32px; color: rgba(255,255,255,0.15); font-size: 16px;">&rarr;</div>
+      <div style="flex: 1; min-width: 140px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; text-align: center;">
+        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; color: var(--st-cyan);">Interactive</div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">Tools, gauges, games.<br>Make it personal.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!--  PART 2: BUILD SPECS                                             -->
+  <!-- ================================================================ -->
+  <div class="part-divider">
+    <div class="part-label">Part 2</div>
+    <div class="part-title">Build Specs</div>
+    <div class="part-desc">Interactive tools, AI Co-Reader mechanics, design system, sidebar, cover design, and file breakdown.</div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- INTERACTIVE TOOLS                                                -->
+  <!-- ================================================================ -->
+  <div class="section-heading">Interactive Tools (11)</div>
+  <p class="section-desc">Every interactive element, where it lives, and current build status.</p>
+
+  <table>
+    <tr><th style="width: 30%;">Tool</th><th>Location</th><th>What it does</th><th style="width: 60px;">State</th></tr>
+    <tr>
+      <td><strong>1. Role Summary</strong></td>
+      <td>Summary</td>
+      <td>2-minute personalized summary by role. Reader selects their function (&ldquo;In the boardroom&rdquo; / &ldquo;Run L&D&rdquo; / &ldquo;Manage a team&rdquo;) and sees tailored key findings, starting points, and first actions. Role feeds into AI Co-Reader prompts throughout the report.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>2. 6 Stat Cards</strong></td>
+      <td>Summary</td>
+      <td>2&times;3 grid, animated counters + bars. Each stat links to its chapter. Tells the chain story visually.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>3. Benchmark Quiz</strong></td>
+      <td>Pre-Ch1</td>
+      <td>4 questions (one per chapter dimension: Strategy, Operations, Culture, Future-Readiness) for personalization. Each answer feeds into per-chapter gauges, radar chart, maturity level, and AI Co-Reader prompts. <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-personalization-poc.html">POC preview &rarr;</a></td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>4. Executive 2-Pager</strong></td>
+      <td>Chapter 1</td>
+      <td>C-level executive summary: key findings, strategic implications, and action priorities in a shareable 2-page format for leadership presentations. <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-exec-summary.html">Preview &rarr;</a></td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>5. Perception Game</strong> <span class="tag tag-new">NEW</span></td>
+      <td>Chapter 3</td>
+      <td>5-slider predict-and-reveal game. Reader guesses what % of employees agree with statements. Reveals: your guess vs. managers vs. employees with gap visualization. NL/DE toggle. <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-predict-game.html">Live preview &rarr;</a></td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>6. Co-Creation Canvas</strong></td>
+      <td>Chapter 3</td>
+      <td>Blurred preview of the 3-actor canvas. Email gate to download 32-page L&D Workbook. Blur lifts on submit.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>7. AI Co-Reader</strong> <span class="tag" style="background: rgba(245,158,11,0.15); color: var(--st-yellow);">OPTIONAL</span></td>
+      <td>Sidebar + chapters</td>
+      <td>Dynamic prompt assembly: pulls role, benchmark scores, and culture radar at click time. ChatGPT (URL deep-link), Claude (clipboard + new tab), Copy for any agent.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>8. Scroll-Spy Nav</strong></td>
+      <td>Sidebar</td>
+      <td>Fixed 260px dark sidebar. Active chapter highlighting. Progress bar at top. Score counter badge.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>9. Reveal Animations</strong></td>
+      <td>Throughout</td>
+      <td>IntersectionObserver-based fade-in. Counter animations. Bar fills. Radar polygon animation on scroll.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>10. Print Prep</strong></td>
+      <td>Global</td>
+      <td><code>beforeprint</code> handler: forces all bars/counters to final values, reveals all content, hides sidebar/progress.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+    <tr>
+      <td><strong>11. Full Data Dashboard</strong> <span class="tag tag-new">NEW</span></td>
+      <td>Conclusion</td>
+      <td>Full Bilendi survey data &mdash; every question, filterable by market (NL/DE), role (HR/Manager/Employee), and theme. Complete transparency: readers can explore the raw data behind every stat in the report.</td>
+      <td><span class="tag tag-built">BUILT</span></td>
+    </tr>
+  </table>
+
+  <!-- ================================================================ -->
+  <!-- INTERACTIVE LAYER TABLE                                          -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 32px;">
+    <div class="section-heading">Interactive Layer by Section</div>
+    <p class="section-desc">What the reader encounters in each part of the report.</p>
+
+    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 0; font-size: 13px;">
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Where</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Element</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Type</div>
+
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--st-cyan);">Pre-Ch1</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6);">4-question Benchmark Quiz</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);">Inline quiz</div>
+
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--st-blue);">Ch 1</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6);">Strategy gauge &middot; Transfer Canvas &middot; Executive 2-Pager &middot; Expert Opinion</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);">Gauge + Download + 2-Pager + Quote</div>
+
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--st-cyan);">Ch 2</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6);">Maturity distribution &middot; Budget paradox trio</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);">Data viz + Stat grid</div>
+
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--st-green);">Ch 3</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6);">Managerial gauge &middot; Perception Game &middot; Ownership gauge &middot; Co-Creation Canvas</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);">Gauges + iframe + Gauge + Email gate</div>
+
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #fbbf24;">Ch 4</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6);">AI gauge &middot; Wennink investment calculation</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);">Gauge + Callout</div>
+
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.5);">Conclusion</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6);">Radar chart &middot; Breakdown table &middot; Action plan &middot; Full Data Dashboard &middot; Downloads &middot; Impact Scan CTA</div>
+      <div style="padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-muted);">SVG + Table + Cards + Dashboard + Links</div>
+
+      <div style="padding: 10px 16px; color: rgba(255,255,255,0.5);">Throughout</div>
+      <div style="padding: 10px 16px; color: rgba(255,255,255,0.6);">AI Co-Reader buttons (per chapter) &middot; Role toggle (summary) &middot; Scroll-spy sidebar</div>
+      <div style="padding: 10px 16px; color: var(--text-muted);">Buttons + Toggle + Navigation</div>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- AI CO-READER                                                     -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">AI Co-Reader &mdash; How It Works</div>
+
+    <div class="callout-green">
+      <p><strong>Dynamic, not static.</strong> Every reader gets a personalized prompt based on what they&rsquo;ve done in the report.</p>
+    </div>
+
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">The AI Co-Reader builds prompts at click time from 2 data sources:</p>
+
+    <table>
+      <tr><th>Data Source</th><th>What it adds to the prompt</th><th>When available</th></tr>
+      <tr>
+        <td><strong>Role Selection</strong></td>
+        <td>&ldquo;I am in the boardroom / I run L&D / I manage a team. Tailor to my perspective.&rdquo;</td>
+        <td>After selecting role in the summary</td>
+      </tr>
+      <tr>
+        <td><strong>Benchmark Scores</strong></td>
+        <td>All 4 self-assessment answers with market averages and maturity level</td>
+        <td>After completing the 4-question quiz</td>
+      </tr>
+    </table>
+
+    <p style="font-size: 14px; color: var(--text-secondary); margin: 16px 0 8px;"><strong style="color: #fff;">Prompt structure:</strong></p>
+    <ol style="padding-left: 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+      <li><strong style="color: rgba(255,255,255,0.85);">Chapter title + source</strong> (Bilendi panel, sample sizes)</li>
+      <li><strong style="color: rgba(255,255,255,0.85);">Market data</strong> (the actual stats from that chapter)</li>
+      <li><strong style="color: rgba(255,255,255,0.85);">Key insight</strong> (the narrative takeaway)</li>
+      <li><strong style="color: rgba(255,255,255,0.85);">Personal context</strong> (role + benchmark scores + culture radar)</li>
+      <li><strong style="color: rgba(255,255,255,0.85);">Specific instruction</strong> (compare my scores, identify 3 biggest gaps, 90-day action plan)</li>
+    </ol>
+
+    <p style="font-size: 13px; color: var(--text-muted); margin: 12px 0;">If no self-assessment is completed, the prompt says: <em>&ldquo;Ask me about my industry, company size, and role to personalize your analysis.&rdquo;</em></p>
+
+    <p style="font-size: 14px; color: var(--text-secondary); margin: 16px 0 8px;"><strong style="color: #fff;">Three output channels:</strong></p>
+    <ul class="spec-list">
+      <li><strong>ChatGPT</strong> &mdash; compact prompt, opens <code>chatgpt.com/?q=...</code> as URL (length-aware)</li>
+      <li><strong>Claude</strong> &mdash; full markdown prompt copied to clipboard, opens <code>claude.ai/new</code></li>
+      <li><strong>Copy for agent</strong> &mdash; full markdown to clipboard for any AI tool</li>
+    </ul>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!-- LEARNING CO-CREATION CANVAS                                      -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">Learning Co-Creation Canvas</div>
+
+    <div class="callout-amber">
+      <p><strong>Lead magnet.</strong> Email-gated download of the 32-page L&D Workbook &ldquo;Learning Unplugged&rdquo;.</p>
+    </div>
+
+    <ul class="spec-list">
+      <li><strong>Narrative bridge:</strong> &ldquo;Closing the perception gap requires more than measurement &mdash; it requires designing learning together.&rdquo;</li>
+      <li><strong>Visual:</strong> HTML/CSS canvas preview with 3 actor columns (Employee / Manager / L&D) + 5-step framework row. Behind <code>backdrop-filter: blur(5px)</code> with lock icon.</li>
+      <li><strong>On email submit:</strong> form hides, success message appears, blur fades out (0.4s). Workbook includes: Canvas, L&D to C-Suite Pitchbox (5-step), Three-Actor Model.</li>
+    </ul>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- COVER DESIGN                                                     -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">Cover Design (v3)</div>
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">Cinematic 100vh dark cover with 4 glass cards in a grid:</p>
+
+    <table>
+      <tr><th>Card</th><th>Content</th></tr>
+      <tr><td><strong>Strategy Chain</strong> (full width)</td><td>73% have a strategy &rarr; 18% linked to goals &rarr; 15% can measure &mdash; animated cascade with arrows</td></tr>
+      <tr><td><strong>Perception Gap</strong></td><td>14pp gap with mini bars (Managers 80% vs Employees 66%)</td></tr>
+      <tr><td><strong>L&D Maturity</strong></td><td>72% stuck in reactive/standard with progress bar</td></tr>
+      <tr><td><strong>Benchmark Radar</strong> (full width)</td><td>5-axis pentagon (Strategy, Skills, Culture, Tech, Impact) with NL average + &ldquo;Your org&rdquo; dashed line</td></tr>
+    </table>
+
+    <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;"><strong style="color: rgba(255,255,255,0.7);">Bottom bar:</strong> Studytube &middot; Annual L&D Research &middot; Bilendi Panel &middot; 259 HR &middot; 252 Managers &middot; 506 Employees &middot; Netherlands 2026</p>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- SUMMARY STAT CARDS                                               -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">6 Summary Stat Cards</div>
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">2&times;3 grid in the summary section. Each with animated counter, bar fill, description, and chapter link:</p>
+
+    <table>
+      <tr><th>Row</th><th>Stat</th><th>Value</th><th>Ch</th><th>Story role</th></tr>
+      <tr><td>1</td><td>Have a learning strategy</td><td>73%</td><td>1</td><td>The promising start</td></tr>
+      <tr><td>1</td><td>Linked to business goals</td><td>18%</td><td>1</td><td>The first drop</td></tr>
+      <tr><td>1</td><td>Stuck in survival mode</td><td>72%</td><td>2</td><td>The ambition trap</td></tr>
+      <tr><td>2</td><td>Perception gap</td><td>14pp</td><td>3</td><td>Managers overestimate</td></tr>
+      <tr><td>2</td><td>Employees unaware of budget</td><td>41%</td><td>3</td><td>Money invisible</td></tr>
+      <tr><td>2</td><td>Real skill visibility</td><td>9%</td><td>4</td><td>Flying blind</td></tr>
+    </table>
+
+    <p style="font-size: 12px; color: var(--text-muted);">Read left to right, top to bottom: strategy exists &rarr; doesn&rsquo;t translate &rarr; survival mode &rarr; people don&rsquo;t feel it &rarr; budget invisible &rarr; capabilities invisible.</p>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DRIP CAMPAIGN ASSETS                                             -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">Drip Campaign Assets (per chapter)</div>
+    <p class="section-desc">Post-download nurture content &mdash; one asset per chapter theme, extending the report&rsquo;s narrative.</p>
+
+    <table>
+      <tr><th>Ch</th><th>Asset</th><th>What it adds beyond the report</th></tr>
+      <tr><td><strong>1</strong></td><td><strong>The Two Clocks</strong></td><td>The velocity gap metaphor with external disruption data (WEF, Anthropic, Lancet)</td></tr>
+      <tr><td><strong>2</strong></td><td><strong>The Shadow AI Problem</strong></td><td>Why only 34% use AI in L&D while employees already use it daily</td></tr>
+      <tr><td><strong>3</strong></td><td><strong>The Manager Mirage</strong></td><td>Full perception gap analysis: all 6 dimensions, NL vs DE comparison</td></tr>
+      <tr><td><strong>4</strong></td><td><strong>Meta-Skills + Operator to Director</strong></td><td>Which skills compound &amp; how to reposition the capability map for 2030</td></tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- DESIGN SYSTEM                                                    -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">Design System</div>
+
+    <table>
+      <tr><th>Element</th><th>Spec</th></tr>
+      <tr><td>Font</td><td><strong>Euclid Circular B</strong> (400 + 700) via HubSpot CDN</td></tr>
+      <tr><td>Background</td><td><code>#0f172a</code> (dark mode throughout)</td></tr>
+      <tr><td>Blue</td><td><code>#056DFF</code> (primary actions, bars, links)</td></tr>
+      <tr><td>Cyan</td><td><code>#00C2FF</code> (accents, user scores, gradients)</td></tr>
+      <tr><td>Green</td><td><code>#10B981</code> (positive, employee data)</td></tr>
+      <tr><td>Red</td><td><code>#EF4444</code> (danger, largest gaps)</td></tr>
+      <tr><td>Yellow</td><td><code>#F59E0B</code> (warning, medium gaps)</td></tr>
+      <tr><td>Navy</td><td><code>#11295A</code> (sidebar bg: <code>#1a2942</code>)</td></tr>
+      <tr><td>Glass cards</td><td><code>rgba(255,255,255,0.05)</code> bg, <code>backdrop-filter: blur(16px)</code>, <code>rgba(255,255,255,0.1)</code> border</td></tr>
+      <tr><td>Sidebar</td><td>260px fixed left, dark navy, scroll-spy, collapsible AI section</td></tr>
+      <tr><td>Progress bar</td><td>4px fixed top, blue&rarr;cyan gradient, fills on scroll</td></tr>
+    </table>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- SIDEBAR NAVIGATION                                               -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">Sidebar Navigation</div>
+    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">Fixed 260px left sidebar (<code>#1a2942</code>) with:</p>
+    <ul class="spec-list">
+      <li>STUDYTUBE wordmark at top</li>
+      <li>8 nav items (Foreword through Conclusion) with scroll-spy highlighting</li>
+      <li><strong>&ldquo;Read with AI&rdquo; section</strong> (collapsible): ChatGPT button (OpenAI logo SVG), Claude button (starburst logo SVG), Copy for agent button</li>
+      <li>Score counter: &ldquo;0/4 scores loaded&rdquo; (updates after benchmark quiz)</li>
+      <li>&ldquo;Download as PDF&rdquo; button at bottom</li>
+    </ul>
+    <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Cover is not in the nav &mdash; it&rsquo;s the landing state. First nav item is Foreword.</p>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- FILE & SIZE                                                      -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px;">
+    <div class="section-heading">File &amp; Size</div>
+
+    <table>
+      <tr><th>Component</th><th>Lines (approx)</th></tr>
+      <tr><td>CSS (all styles)</td><td>~530</td></tr>
+      <tr><td>HTML (cover through conclusion)</td><td>~1,400</td></tr>
+      <tr><td>JavaScript (all interactions)</td><td>~500</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>~2,400 lines</strong></td></tr>
+    </table>
+
+    <p style="font-size: 13px; color: var(--text-muted);">Single self-contained HTML file. No external dependencies except Euclid Circular B font (HubSpot CDN). All SVGs inline. Print-ready via <code>@media print</code> + <code>beforeprint</code> handler.</p>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!--  PART 3: FEEDBACK TRACKER                                        -->
+  <!-- ================================================================ -->
+  <div class="part-divider">
+    <div class="part-label">Part 3</div>
+    <div class="part-title">v7 Feedback &rarr; v8 Changes</div>
+    <div class="part-desc">Every structural point from the v7 review, and how v8 addresses it.</div>
+  </div>
+
+  <div class="feedback-item">
+    <div class="fb-num">1</div>
+    <div class="fb-content">
+      <div class="fb-ask">Let the data lead the story</div>
+      <div class="fb-response">Each chapter now opens with a &ldquo;Chapter X in numbers&rdquo; data anchor block. Stats are presented together before any editorial interpretation. Research publication rhythm, not thought piece.</div>
+      <div class="fb-where">&rarr; All 4 chapters: data anchor blocks</div>
+    </div>
+  </div>
+
+  <div class="feedback-item">
+    <div class="fb-num">2</div>
+    <div class="fb-content">
+      <div class="fb-ask">Ch2 &rarr; Ch3 handoff is the weakest link</div>
+      <div class="fb-response">Explicit bridge paragraph: &ldquo;We&rsquo;ve seen how strategy stalls and operations default to survival mode. But what does that actually feel like for the people on the receiving end?&rdquo;</div>
+      <div class="fb-where">&rarr; Bridge between Ch2 and Ch3</div>
+    </div>
+  </div>
+
+  <div class="feedback-item">
+    <div class="fb-num">3</div>
+    <div class="fb-content">
+      <div class="fb-ask">Introduce the maturity framework earlier</div>
+      <div class="fb-response">The 29/43/23/5 maturity distribution is now introduced as a named, visual framework in Chapter 2. The benchmark quiz places the reader on it. Each subsequent chapter adds context. Compass from the start.</div>
+      <div class="fb-where">&rarr; Ch2: Maturity Map framework box</div>
+    </div>
+  </div>
+
+  <div class="feedback-item">
+    <div class="fb-num">4</div>
+    <div class="fb-content">
+      <div class="fb-ask">Decide on one climax for Chapter 4</div>
+      <div class="fb-response">Skills deadline is the peak. AI becomes the bridge/solution. The 2030 organization becomes the coda. Clear argument: the window is closing, you can&rsquo;t close a gap you can&rsquo;t see.</div>
+      <div class="fb-where">&rarr; Ch4: Peak / Bridge / Coda structure</div>
+    </div>
+  </div>
+
+  <div class="feedback-item">
+    <div class="fb-num">5</div>
+    <div class="fb-content">
+      <div class="fb-ask">Remove Studytube references from the narrative</div>
+      <div class="fb-response">&ldquo;Organizations we work with&rdquo; and &ldquo;our own customer base&rdquo; removed from the analytical chapters. Studytube appears only in cover, footer, and CTA &mdash; never in the argument.</div>
+      <div class="fb-where">&rarr; Ch4 narrative: Studytube refs removed</div>
+    </div>
+  </div>
+
+  <div class="feedback-item">
+    <div class="fb-num" style="background: rgba(245,158,11,0.1); color: var(--st-yellow);">+</div>
+    <div class="fb-content">
+      <div class="fb-ask">Copy-level adjustments (register, bridges, punchlines)</div>
+      <div class="fb-response">Warmer bridging sentences before each advice block. Keynote-register lines reviewed &mdash; where the data is alarming, the editorial steps back. Documented as structural principles for the v8 copy pass.</div>
+      <div class="fb-where">&rarr; Principles: &ldquo;Trust the data to land&rdquo; + &ldquo;Warm bridge to advice&rdquo;</div>
+    </div>
+  </div>
+
+
+  <!-- ================================================================ -->
+  <!-- FOOTER                                                           -->
+  <!-- ================================================================ -->
+  <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.04);">
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;"><strong style="color: rgba(255,255,255,0.6);">Related files:</strong></p>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px;">
+      <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-predict-game.html">&rarr; Perception Game (live preview)</a>
+      <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-report-architecture.html">&rarr; Full interactive blueprint (NL)</a>
+      <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-wireframes-en.html">&rarr; Wireframes (EN)</a>
+      <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-bilendi-dashboard-nl.html">&rarr; Bilendi Dashboard (NL)</a>
+      <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-bilendi-dashboard-DE.html">&rarr; Bilendi Dashboard (DE)</a>
+    </div>
+  </div>
+
+  <div style="margin-top: 24px; text-align: center;">
+    <p style="font-size: 11px; color: var(--text-dim);">L&D Monitor 2026 &mdash; Full Report Architecture v8 &mdash; Studytube &middot; March 2026</p>
+    <p style="font-size: 11px; color: rgba(255,255,255,0.15); margin-top: 4px;">NL n=1,017 (HR 259 &middot; Managers 252 &middot; Employees 506) &middot; DE n=1,815 (available in full dashboard)</p>
+  </div>
+
+</div>
+
+<script>
+function toggleChapter(el, e) {
+  if (e.target.closest('.ch-body')) return;
+  el.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

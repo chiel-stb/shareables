@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L&D Monitor 2026 — Benchmark Yourself</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Regular.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'Euclid Circular B'; src: url('https://f.hubspotusercontent30.net/hubfs/515235/DiamondTube/fonts/EuclidCircularB-Bold.woff2') format('woff2'); font-weight: 700; }
+
+  :root {
+    --bg-dark: #0f172a;
+    --bg-darker: #0a1020;
+    --glass-bg: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.1);
+    --glass-bg-light: rgba(255,255,255,0.08);
+    --st-blue: #056DFF;
+    --st-cyan: #00C2FF;
+    --st-green: #10B981;
+    --st-yellow: #F59E0B;
+    --st-red: #EF4444;
+    --st-purple: #7c3aed;
+    --st-amber: #d97706;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Euclid Circular B', system-ui, -apple-system, sans-serif;
+    background: var(--bg-dark);
+    color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Glass card */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-light {
+    background: var(--glass-bg-light);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.5s ease-out both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .slide-in { animation: slideIn 0.4s ease-out both; }
+
+  @keyframes fillBar {
+    from { width: 0; }
+  }
+  .animate-fill { animation: fillBar 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .scale-in { animation: scaleIn 0.5s ease-out both; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Quiz */
+  .quiz-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+  .quiz-container { max-width: 640px; width: 100%; padding: 24px; }
+
+  .quiz-step { display: none; }
+  .quiz-step.active { display: block; }
+
+  .option-card {
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 1.5px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    background: var(--glass-bg);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .option-card:hover {
+    border-color: rgba(5,109,255,0.4);
+    background: rgba(5,109,255,0.06);
+  }
+  .option-card.selected {
+    border-color: var(--st-blue);
+    background: rgba(5,109,255,0.12);
+  }
+
+  .option-letter {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.4);
+    flex-shrink: 0;
+    transition: all 0.25s;
+  }
+  .option-card.selected .option-letter {
+    background: var(--st-blue);
+    color: #fff;
+  }
+
+  .market-pill {
+    padding: 10px 28px; border-radius: 100px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.25s;
+    border: 1.5px solid var(--glass-border);
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    user-select: none;
+  }
+  .market-pill:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); }
+  .market-pill.active { background: var(--st-blue); border-color: var(--st-blue); color: #fff; }
+
+  /* Progress bar */
+  .progress-track {
+    height: 4px; border-radius: 100px;
+    background: rgba(255,255,255,0.07);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--st-blue), var(--st-cyan));
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Chapter sections */
+  .chapter-section {
+    padding: 80px 24px;
+    max-width: 800px;
+    margin: 0 auto;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .chapter-num {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: #fff;
+  }
+
+  /* Gauge */
+  .gauge-track {
+    height: 12px; border-radius: 100px;
+    background: rgba(255,255,255,0.07);
+    position: relative;
+    overflow: visible;
+  }
+  .gauge-fill {
+    height: 100%; border-radius: 100px;
+    position: absolute; left: 0; top: 0;
+    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .gauge-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--st-blue);
+    position: absolute; top: 50%; transform: translateY(-50%);
+    transition: left 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .gauge-marker {
+    position: absolute; top: -8px; bottom: -8px;
+    width: 2px;
+    border-left: 2px dashed rgba(255,255,255,0.3);
+    transition: left 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 5;
+  }
+  .gauge-marker-label {
+    position: absolute; top: -26px;
+    transform: translateX(-50%);
+    font-size: 10px; font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+    transition: left 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Stat number */
+  .stat-big {
+    font-size: 56px; font-weight: 700; line-height: 1;
+    background: linear-gradient(135deg, var(--st-blue), var(--st-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Eyebrow */
+  .eyebrow {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--st-blue);
+  }
+
+  /* Maturity pill */
+  .maturity-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 100px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .maturity-reactive { background: rgba(239,68,68,0.12); color: var(--st-red); }
+  .maturity-developing { background: rgba(245,158,11,0.12); color: var(--st-yellow); }
+  .maturity-advanced { background: rgba(5,109,255,0.12); color: var(--st-blue); }
+  .maturity-leading { background: rgba(16,185,129,0.12); color: var(--st-green); }
+
+  /* Radar chart */
+  .radar-container { position: relative; width: 480px; height: 480px; margin: 0 auto; }
+  @media (max-width: 640px) { .radar-container { width: 320px; height: 320px; } }
+
+  /* (score ring removed — confirmation is lightweight now) */
+
+  /* Gap indicator */
+  .gap-up { color: var(--st-green); }
+  .gap-down { color: var(--st-red); }
+  .gap-same { color: rgba(255,255,255,0.3); }
+
+  /* Action plan card */
+  .action-card {
+    border-left: 3px solid var(--st-blue);
+    border-radius: 0 14px 14px 0;
+    padding: 24px;
+    background: rgba(5,109,255,0.04);
+  }
+
+  /* Report body hidden until quiz done */
+  #reportBody { display: none; }
+
+  /* Quiz overlay */
+  #quizSection { display: none; }
+
+  /* Intro section */
+  .intro-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 80px 24px 0;
+  }
+
+  /* CTA banner */
+  .cta-banner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 28px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(5,109,255,0.12) 0%, rgba(0,194,255,0.08) 100%);
+    border: 1px solid rgba(5,109,255,0.2);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .cta-banner:hover {
+    border-color: rgba(5,109,255,0.4);
+    background: linear-gradient(135deg, rgba(5,109,255,0.18) 0%, rgba(0,194,255,0.12) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(5,109,255,0.12);
+  }
+
+  /* Quiz confirmation toast */
+  .quiz-confirmation {
+    text-align: center;
+    animation: fadeIn 0.4s ease-out both;
+  }
+  .checkmark-circle {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(16,185,129,0.12);
+    border: 2px solid #10B981;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  /* Smooth scroll */
+  html { scroll-behavior: smooth; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .stat-big { font-size: 40px; }
+    .chapter-section { padding: 48px 16px; }
+  }
+</style>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { 'st': ['Euclid Circular B', 'system-ui', 'sans-serif'] }
+      }
+    }
+  }
+</script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SECTION 0: REPORT INTRO                             -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="introSection">
+  <div class="intro-section">
+
+    <!-- PoC badge -->
+    <div class="flex justify-center mb-8 pt-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg" style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.15);">
+        <span style="font-size:10px; font-weight:700; color:#F59E0B; text-transform:uppercase; letter-spacing:0.06em;">PoC Demo</span>
+        <span style="font-size:10px; color:rgba(255,255,255,0.3);">—</span>
+        <span style="font-size:10px; color:rgba(255,255,255,0.35);">Final version: separate NL &amp; DE reports</span>
+      </div>
+    </div>
+
+    <!-- Report header -->
+    <div class="eyebrow mb-4">L&D Monitor 2026</div>
+    <h1 class="text-3xl md:text-4xl font-bold text-white mb-4" style="line-height:1.15;">
+      The Year Learning Stopped Pretending
+    </h1>
+    <p class="text-lg mb-6" style="color:rgba(255,255,255,0.5); font-weight:700;">
+      Most organizations have a learning strategy. Almost none can prove it's working.
+    </p>
+
+    <!-- Intro paragraph (abbreviated) -->
+    <p class="text-sm mb-4" style="color:rgba(255,255,255,0.5); max-width:640px; line-height:1.7;">
+      We surveyed 2,832 professionals across the Netherlands and Germany — HR leaders, managers, and employees — and found something we didn't expect. Organizations invest in learning. Budgets are stable or growing. Strategies exist. Good intentions are everywhere.
+    </p>
+    <p class="text-sm mb-10" style="color:rgba(255,255,255,0.5); max-width:640px; line-height:1.7;">
+      And yet too little of it reaches the people it's meant for. That gap runs deeper than any single failure. It's a chain — and this report maps all four links.
+    </p>
+
+    <!-- CTA Banner: Personalize this report -->
+    <div class="cta-banner mb-12" onclick="startQuiz()">
+      <div style="flex-shrink:0; width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, #056DFF, #05D5FF); display:flex; align-items:center; justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+          <line x1="18" y1="8" x2="23" y2="8"/>
+          <line x1="20.5" y1="5.5" x2="20.5" y2="10.5"/>
+        </svg>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div class="text-sm font-bold text-white" style="margin-bottom:2px;">Personalize this report</div>
+        <div class="text-xs" style="color:rgba(255,255,255,0.4);">Answer 4 questions and see how your organization compares to the market throughout the report. Takes 2 minutes.</div>
+      </div>
+      <div style="flex-shrink:0; color:var(--st-blue); font-weight:700; font-size:14px;">
+        Start →
+      </div>
+    </div>
+
+    <!-- What you'll read -->
+    <div class="flex flex-wrap gap-3 mb-12">
+      <div class="flex items-center gap-2 px-3 py-2 rounded-lg" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06);">
+        <div style="width:8px; height:8px; border-radius:2px; background:linear-gradient(135deg,#056DFF,#3B8FFF);"></div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.4);">Ch 1 — Strategy</span>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-2 rounded-lg" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06);">
+        <div style="width:8px; height:8px; border-radius:2px; background:linear-gradient(135deg,#059669,#34d399);"></div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.4);">Ch 3 — Learning Culture</span>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-2 rounded-lg" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06);">
+        <div style="width:8px; height:8px; border-radius:2px; background:linear-gradient(135deg,#7c3aed,#a78bfa);"></div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.4);">Ch 3→4 — Ownership</span>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-2 rounded-lg" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06);">
+        <div style="width:8px; height:8px; border-radius:2px; background:linear-gradient(135deg,#d97706,#fbbf24);"></div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.4);">Ch 4 — Future-Proof</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SECTION 1: QUIZ (overlay)                           -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="quizSection" class="quiz-section">
+  <div class="quiz-container">
+
+    <!-- Market Selection (PoC only — final version will have separate NL and DE builds) -->
+    <div id="stepMarket" class="quiz-step active">
+      <div class="fade-in" style="text-align:center;">
+        <div class="eyebrow mb-4">L&D Monitor 2026 · Benchmark</div>
+        <h1 class="text-2xl md:text-3xl font-bold text-white mb-3" style="line-height:1.15;">
+          Benchmark yourself<br>against the market
+        </h1>
+        <p class="text-sm mb-8" style="color:rgba(255,255,255,0.4); max-width:420px; margin:0 auto 32px;">
+          4 questions. Personalized insights throughout the report.
+        </p>
+        <p class="text-xs font-bold mb-4" style="color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.08em;">Select your market</p>
+        <div class="flex gap-3 justify-center">
+          <button class="market-pill" onclick="selectMarket('nl', this)">
+            <span style="margin-right:6px;">🇳🇱</span> Netherlands
+          </button>
+          <button class="market-pill" onclick="selectMarket('de', this)">
+            <span style="margin-right:6px;">🇩🇪</span> Germany
+          </button>
+        </div>
+        <p id="marketHint" class="text-xs mt-3" style="color:rgba(255,255,255,0.2); opacity:0; transition: opacity 0.3s;">
+          Compared to <span id="marketPeerCount"></span> peers
+        </p>
+      </div>
+    </div>
+
+    <!-- Progress bar (visible during questions) -->
+    <div id="progressWrap" class="mb-8" style="display:none;">
+      <div class="flex justify-between items-center mb-2">
+        <span class="eyebrow" id="progressLabel">Question 1 of 4</span>
+        <span class="text-xs" style="color:rgba(255,255,255,0.3);" id="progressDim"></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:25%;"></div>
+      </div>
+    </div>
+
+    <!-- Question 1: Strategy -->
+    <div id="step1" class="quiz-step">
+      <div class="slide-in">
+        <div class="inline-flex items-center gap-2 mb-5">
+          <div class="chapter-num" style="background:linear-gradient(135deg,#056DFF,#3B8FFF); width:32px; height:32px; font-size:13px;">1</div>
+          <span class="text-xs font-bold" style="color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.06em;">Chapter 1 · Strategy</span>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-6" style="line-height:1.25;">
+          How would you describe your organization's learning strategy?
+        </h2>
+        <div id="options1"></div>
+      </div>
+    </div>
+
+    <!-- Question 2: Managerial Influence -->
+    <div id="step2" class="quiz-step">
+      <div class="slide-in">
+        <div class="inline-flex items-center gap-2 mb-5">
+          <div class="chapter-num" style="background:linear-gradient(135deg,#059669,#34d399); width:32px; height:32px; font-size:13px;">3</div>
+          <span class="text-xs font-bold" style="color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.06em;">Chapter 3 · Learning Culture</span>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-6" style="line-height:1.25;">
+          How would you describe how managers in your organization support employee development?
+        </h2>
+        <div id="options2"></div>
+      </div>
+    </div>
+
+    <!-- Question 3: Ownership -->
+    <div id="step3" class="quiz-step">
+      <div class="slide-in">
+        <div class="inline-flex items-center gap-2 mb-5">
+          <div class="chapter-num" style="background:linear-gradient(135deg,#7c3aed,#a78bfa); width:32px; height:32px; font-size:13px;">↔</div>
+          <span class="text-xs font-bold" style="color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.06em;">Chapter 3→4 · Ownership</span>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-6" style="line-height:1.25;">
+          To what extent do employees in your organization take ownership of their own development?
+        </h2>
+        <div id="options3"></div>
+      </div>
+    </div>
+
+    <!-- Question 4: AI -->
+    <div id="step4" class="quiz-step">
+      <div class="slide-in">
+        <div class="inline-flex items-center gap-2 mb-5">
+          <div class="chapter-num" style="background:linear-gradient(135deg,#d97706,#fbbf24); width:32px; height:32px; font-size:13px;">4</div>
+          <span class="text-xs font-bold" style="color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.06em;">Chapter 4 · Future-Proof</span>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-6" style="line-height:1.25;">
+          How does your organization currently use AI in learning &amp; development?
+        </h2>
+        <div id="options4"></div>
+      </div>
+    </div>
+
+    <!-- Confirmation (brief, auto-advances) -->
+    <div id="stepResults" class="quiz-step">
+      <div class="quiz-confirmation">
+        <div class="checkmark-circle">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <p class="text-base font-bold text-white mb-2">You're all set</p>
+        <p class="text-sm" style="color:rgba(255,255,255,0.4); max-width:360px; margin:0 auto;">
+          Your answers are captured. You'll see personalized benchmarks throughout the report.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- SECTION 2: REPORT BODY (chapters + gauges)          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="reportBody">
+
+  <!-- Chapter 1: Strategy -->
+  <div class="chapter-section fade-in">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="chapter-num" style="background:linear-gradient(135deg,#056DFF,#3B8FFF);">1</div>
+      <div>
+        <div class="text-xs font-bold" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">Chapter 1</div>
+        <h2 class="text-2xl font-bold text-white" style="line-height:1.2;">The Strategy That Stops at the Boardroom</h2>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <div class="stat-big" id="ch1Stat">73%</div>
+      <p class="text-sm mt-1" style="color:rgba(255,255,255,0.4);">of organizations have a learning strategy</p>
+    </div>
+
+    <p class="text-sm mb-6" style="color:rgba(255,255,255,0.55); max-width:640px;">
+      On paper, that sounds reassuring. Now test it. Is learning directly linked to business goals, with outcomes you can measure? Only <strong class="text-white" id="ch1Linked">18%</strong> say yes. The largest group describes something vaguer: a general connection that hasn't been translated into concrete priorities.
+    </p>
+
+    <!-- Gauge block -->
+    <div class="glass rounded-2xl p-6 mt-6" id="gauge1">
+      <div class="eyebrow mb-3">Your benchmark</div>
+      <p class="text-sm text-white mb-1">You said: <span class="font-bold" id="gauge1Answer">—</span></p>
+      <div class="flex items-center gap-3 mb-2 mt-4">
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">0</span>
+        <div class="gauge-track flex-1" style="height:12px;">
+          <div class="gauge-fill" id="gauge1Fill" style="width:0%; background: linear-gradient(90deg, #056DFF, #3B8FFF); border-radius:100px;"></div>
+          <div class="gauge-dot" id="gauge1Dot" style="left:0%;"></div>
+          <div class="gauge-marker" id="gauge1Marker" style="left:53%;"></div>
+          <div class="gauge-marker-label" id="gauge1MarkerLabel" style="left:53%;">Market avg: 53</div>
+        </div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">100</span>
+      </div>
+      <div class="flex items-center justify-between mt-3">
+        <span id="gauge1Maturity" class="maturity-pill maturity-developing">Developing</span>
+        <span class="text-xs font-bold" style="color:rgba(255,255,255,0.3);" id="gauge1Score">50 / 100</span>
+      </div>
+      <p class="text-xs mt-4" style="color:rgba(255,255,255,0.4); line-height:1.5;" id="gauge1Insight"></p>
+    </div>
+  </div>
+
+  <!-- Chapter 3: Managerial Influence -->
+  <div class="chapter-section fade-in">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="chapter-num" style="background:linear-gradient(135deg,#059669,#34d399);">3</div>
+      <div>
+        <div class="text-xs font-bold" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">Chapter 3</div>
+        <h2 class="text-2xl font-bold text-white" style="line-height:1.2;">Learning Culture — Please Mind the Gap</h2>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <div class="stat-big" id="ch3Stat" style="background:linear-gradient(135deg,#059669,#34d399); -webkit-background-clip:text; background-clip:text;">80%</div>
+      <p class="text-sm mt-1" style="color:rgba(255,255,255,0.4);">of managers say they discuss development goals — but only <strong class="text-white" id="ch3EmpStat">66%</strong> of employees agree</p>
+    </div>
+
+    <p class="text-sm mb-6" style="color:rgba(255,255,255,0.55); max-width:640px;">
+      That's a <strong class="text-white" id="ch3Gap">14</strong>-point perception gap on something as basic as a conversation. The pattern repeats everywhere: managers rate their support significantly higher than their teams experience it.
+    </p>
+
+    <!-- Gauge block -->
+    <div class="glass rounded-2xl p-6 mt-6" id="gauge2">
+      <div class="eyebrow mb-3" style="color:#34d399;">Your benchmark</div>
+      <p class="text-sm text-white mb-1">You said: <span class="font-bold" id="gauge2Answer">—</span></p>
+      <div class="flex items-center gap-3 mb-2 mt-4">
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">0</span>
+        <div class="gauge-track flex-1" style="height:12px;">
+          <div class="gauge-fill" id="gauge2Fill" style="width:0%; background: linear-gradient(90deg, #059669, #34d399); border-radius:100px;"></div>
+          <div class="gauge-dot" id="gauge2Dot" style="left:0%; border-color:#059669;"></div>
+          <div class="gauge-marker" id="gauge2Marker" style="left:64%;"></div>
+          <div class="gauge-marker-label" id="gauge2MarkerLabel" style="left:64%;">Market avg: 64</div>
+        </div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">100</span>
+      </div>
+      <div class="flex items-center justify-between mt-3">
+        <span id="gauge2Maturity" class="maturity-pill maturity-developing">Developing</span>
+        <span class="text-xs font-bold" style="color:rgba(255,255,255,0.3);" id="gauge2Score">50 / 100</span>
+      </div>
+      <p class="text-xs mt-4" style="color:rgba(255,255,255,0.4); line-height:1.5;" id="gauge2Insight"></p>
+    </div>
+  </div>
+
+  <!-- Chapter 3→4 Bridge: Ownership -->
+  <div class="chapter-section fade-in">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="chapter-num" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">↔</div>
+      <div>
+        <div class="text-xs font-bold" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">Chapter 3 → 4</div>
+        <h2 class="text-2xl font-bold text-white" style="line-height:1.2;">Self-Directed Learning Without Direction</h2>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <div class="stat-big" id="ch34Stat" style="background:linear-gradient(135deg,#7c3aed,#a78bfa); -webkit-background-clip:text; background-clip:text;">46%</div>
+      <p class="text-sm mt-1" style="color:rgba(255,255,255,0.4);">of employees say their development priorities are unclear</p>
+    </div>
+
+    <p class="text-sm mb-6" style="color:rgba(255,255,255,0.55); max-width:640px;">
+      40% of HR leaders say empowering self-directed learning is their 2026 focus. But <strong class="text-white" id="ch34Unaware">41%</strong> of employees don't even know their development budget exists. You can't ask people to own their growth when they can't see what's available.
+    </p>
+
+    <!-- Gauge block -->
+    <div class="glass rounded-2xl p-6 mt-6" id="gauge3">
+      <div class="eyebrow mb-3" style="color:#a78bfa;">Your benchmark</div>
+      <p class="text-sm text-white mb-1">You said: <span class="font-bold" id="gauge3Answer">—</span></p>
+      <div class="flex items-center gap-3 mb-2 mt-4">
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">0</span>
+        <div class="gauge-track flex-1" style="height:12px;">
+          <div class="gauge-fill" id="gauge3Fill" style="width:0%; background: linear-gradient(90deg, #7c3aed, #a78bfa); border-radius:100px;"></div>
+          <div class="gauge-dot" id="gauge3Dot" style="left:0%; border-color:#7c3aed;"></div>
+          <div class="gauge-marker" id="gauge3Marker" style="left:61%;"></div>
+          <div class="gauge-marker-label" id="gauge3MarkerLabel" style="left:61%;">Market avg: 61</div>
+        </div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">100</span>
+      </div>
+      <div class="flex items-center justify-between mt-3">
+        <span id="gauge3Maturity" class="maturity-pill maturity-developing">Developing</span>
+        <span class="text-xs font-bold" style="color:rgba(255,255,255,0.3);" id="gauge3Score">50 / 100</span>
+      </div>
+      <p class="text-xs mt-4" style="color:rgba(255,255,255,0.4); line-height:1.5;" id="gauge3Insight"></p>
+    </div>
+  </div>
+
+  <!-- Chapter 4: AI Usage -->
+  <div class="chapter-section fade-in">
+    <div class="flex items-center gap-3 mb-6">
+      <div class="chapter-num" style="background:linear-gradient(135deg,#d97706,#fbbf24);">4</div>
+      <div>
+        <div class="text-xs font-bold" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">Chapter 4</div>
+        <h2 class="text-2xl font-bold text-white" style="line-height:1.2;">The L&D Organization of 2030</h2>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <div class="stat-big" id="ch4Stat" style="background:linear-gradient(135deg,#d97706,#fbbf24); -webkit-background-clip:text; background-clip:text;">32%</div>
+      <p class="text-sm mt-1" style="color:rgba(255,255,255,0.4);">of organizations use AI in their L&D processes</p>
+    </div>
+
+    <p class="text-sm mb-6" style="color:rgba(255,255,255,0.55); max-width:640px;">
+      AI dominates every L&D conference agenda. On the ground? Only <strong class="text-white" id="ch4DataDriven">34%</strong> make data-driven learning decisions. The gap between "AI is the future of L&D" and "we're actually using AI" is massive. The organizations that have adopted AI aren't replacing their teams — they're multiplying their capacity.
+    </p>
+
+    <!-- Gauge block -->
+    <div class="glass rounded-2xl p-6 mt-6" id="gauge4">
+      <div class="eyebrow mb-3" style="color:#fbbf24;">Your benchmark</div>
+      <p class="text-sm text-white mb-1">You said: <span class="font-bold" id="gauge4Answer">—</span></p>
+      <div class="flex items-center gap-3 mb-2 mt-4">
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">0</span>
+        <div class="gauge-track flex-1" style="height:12px;">
+          <div class="gauge-fill" id="gauge4Fill" style="width:0%; background: linear-gradient(90deg, #d97706, #fbbf24); border-radius:100px;"></div>
+          <div class="gauge-dot" id="gauge4Dot" style="left:0%; border-color:#d97706;"></div>
+          <div class="gauge-marker" id="gauge4Marker" style="left:48%;"></div>
+          <div class="gauge-marker-label" id="gauge4MarkerLabel" style="left:48%;">Market avg: 48</div>
+        </div>
+        <span class="text-xs" style="color:rgba(255,255,255,0.25);">100</span>
+      </div>
+      <div class="flex items-center justify-between mt-3">
+        <span id="gauge4Maturity" class="maturity-pill maturity-developing">Developing</span>
+        <span class="text-xs font-bold" style="color:rgba(255,255,255,0.3);" id="gauge4Score">50 / 100</span>
+      </div>
+      <p class="text-xs mt-4" style="color:rgba(255,255,255,0.4); line-height:1.5;" id="gauge4Insight"></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SECTION 3: RADAR CHART + ACTION PLAN                -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="chapter-section" style="border-bottom:none; padding-bottom:120px;">
+    <div style="text-align:center;" class="mb-10">
+      <div class="eyebrow mb-3">Your complete benchmark</div>
+      <h2 class="text-2xl md:text-3xl font-bold text-white" style="line-height:1.2;">How You Compare</h2>
+      <p class="text-sm mt-2" style="color:rgba(255,255,255,0.4);">Your scores across all 4 dimensions vs. <span id="radarMarketLabel">Dutch</span> market average</p>
+    </div>
+
+    <!-- Radar SVG -->
+    <div class="radar-container mb-10">
+      <svg id="radarSvg" viewBox="0 0 480 440" style="width:100%; height:100%;"></svg>
+    </div>
+
+    <!-- Breakdown table -->
+    <div class="glass rounded-2xl overflow-hidden mb-10">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+            <th class="text-left text-xs font-bold p-4" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">Dimension</th>
+            <th class="text-center text-xs font-bold p-4" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">You</th>
+            <th class="text-center text-xs font-bold p-4" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">Market</th>
+            <th class="text-center text-xs font-bold p-4" style="color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.06em;">Gap</th>
+          </tr>
+        </thead>
+        <tbody id="breakdownTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Action plan -->
+    <div id="actionPlan">
+      <div class="eyebrow mb-3">Your biggest gap</div>
+      <div class="action-card" id="actionCard">
+        <h3 class="text-lg font-bold text-white mb-2" id="actionTitle">—</h3>
+        <p class="text-sm mb-4" style="color:rgba(255,255,255,0.5);" id="actionDesc"></p>
+        <div id="actionSteps"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center; padding:32px 24px 64px; border-top:1px solid rgba(255,255,255,0.04);">
+    <div class="eyebrow mb-2">L&D Monitor 2026</div>
+    <p class="text-xs" style="color:rgba(255,255,255,0.25);">Studytube · 2,832 respondents · Netherlands & Germany</p>
+    <p class="text-xs mt-1" style="color:rgba(255,255,255,0.15);">Proof of concept — personalization layer</p>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<script>
+// ── DATA ──────────────────────────────────────────────
+
+const BENCHMARKS = {
+  nl: { strategy: 53, managerial: 64, ownership: 61, ai: 48 },
+  de: { strategy: 51, managerial: 56, ownership: 56, ai: 52 }
+};
+
+const MARKET_LABELS = { nl: 'Dutch', de: 'German' };
+const MARKET_PEERS = { nl: '1,017 Dutch', de: '1,815 German' };
+
+const QUESTIONS = [
+  {
+    id: 'strategy',
+    options: [
+      "We don't have a defined learning strategy",
+      "We have a strategy, but it's not clearly linked to business goals",
+      "Our strategy is linked to business goals, but we don't systematically measure impact",
+      "Our strategy is directly linked to business goals with measurable outcomes"
+    ]
+  },
+  {
+    id: 'managerial',
+    options: [
+      "Managers are not actively involved in employee development",
+      "Some managers support development, but it's inconsistent",
+      "Most managers have regular development conversations with their team",
+      "Managers systematically support development using data, tools, and structured check-ins"
+    ]
+  },
+  {
+    id: 'ownership',
+    options: [
+      "Employees rarely take initiative in their own development",
+      "We encourage ownership, but employees lack clarity on priorities and options",
+      "Employees have access to learning and many take initiative, but guidance is limited",
+      "Employees actively drive their development with clear priorities, visible budgets, and available guidance"
+    ]
+  },
+  {
+    id: 'ai',
+    options: [
+      "We don't use AI in L&D",
+      "We're exploring or piloting AI in some L&D processes",
+      "AI is used in several L&D processes (e.g., personalization, recommendations)",
+      "AI is systematically integrated across L&D — from skill mapping to personalized paths to impact measurement"
+    ]
+  }
+];
+
+const INSIGHTS = {
+  strategy: {
+    nl: {
+      1: "You're among the 27% of Dutch organizations without a defined strategy. But here's the thing — having a strategy alone doesn't help. 73% of your peers have one. Only 18% have linked it to measurable business goals.",
+      2: "You have a strategy — like 73% of your peers. But you're in the largest group: 44% describe a general connection to business, without concrete priorities. That's where the chain breaks.",
+      3: "You're ahead of most — only 18% of Dutch organizations have directly linked learning to business goals. The next step is measurement: just 15% systematically track whether learning moves the needle.",
+      4: "You're in the top ~11%. Most organizations never get here. Your challenge is different: maintaining this connection as the business evolves — and making it visible to employees (only 8.5% have full skill transparency)."
+    },
+    de: {
+      1: "You're among the 29% of German organizations without a defined strategy. 71% of your peers have one — but only 21% have linked it to measurable business goals.",
+      2: "You have a strategy — like 71% of your peers. But 45% describe a vague connection to business, without concrete priorities or measurable outcomes.",
+      3: "You're ahead of most — only 21% of German organizations have directly linked learning to business goals. The next step: just 15% systematically measure impact.",
+      4: "You're in the top tier. Only 6% of German organizations have reached a data-driven, transformational model. Your challenge: sustaining this while 39% of skills transform by 2030."
+    }
+  },
+  managerial: {
+    nl: {
+      1: "Without manager involvement, development depends on self-initiative alone. 41% of Dutch employees don't even know a development budget exists.",
+      2: "This is where most organizations sit. Here's the perception gap: 80% of managers say they discuss development goals. Only 66% of employees agree — a 14-point blind spot.",
+      3: "Regular conversations are a strong foundation. But are they landing? 72% of managers describe feedback as systematic — only 55% of employees recognize it.",
+      4: "You're in a small minority. The data shows what you're up against: even in organizations that invest in development, only 50% of employees say the learning culture is actively lived."
+    },
+    de: {
+      1: "Without manager involvement, development depends on self-initiative alone. 61% of German employees don't even know a development budget exists.",
+      2: "This is where most organizations sit. The German perception gap is dramatic: 68% of managers say they support development. Only 37% of employees agree — a 31-point gap.",
+      3: "Regular conversations matter. But in Germany, 68% of managers describe feedback as systematic — only 39% of employees agree. That's a 29-point disconnect.",
+      4: "You're in a small minority. Even in organizations that invest, only 38% of German employees say the learning culture is actively lived."
+    }
+  },
+  ownership: {
+    nl: {
+      1: "You're not alone — but 40% of HR leaders say empowering self-directed learning is their 2026 priority. The gap between intention and reality is what this chapter maps.",
+      2: "This is the most common answer — and the most telling. 46% of Dutch employees say their development priorities are unclear. You can't ask for ownership without a map.",
+      3: "Access is step one. But 50% of HR say employees lack guidance or don't know their options. Infrastructure without direction creates the illusion of empowerment.",
+      4: "If your employees truly have clarity and visibility, you've solved what 66% of organizations haven't. The test: ask 5 random employees to name their development priorities."
+    },
+    de: {
+      1: "You're not alone — but 40% of HR leaders say empowering self-directed learning is their 2026 priority. The disconnect between intent and reality runs deep.",
+      2: "This is the most common answer. 55% of German employees say their development priorities are unclear. And 61% don't even know their budget exists.",
+      3: "Access is step one. But 43% of HR say employees lack guidance. Infrastructure without direction creates the illusion of empowerment — especially with a 25-point empowerment gap.",
+      4: "If your employees truly have clarity, you've solved what most haven't. In Germany, the empowerment perception gap is 25 points. That's the biggest gap we measured."
+    }
+  },
+  ai: {
+    nl: {
+      1: "You're with the majority: ~68% of Dutch organizations don't use AI in L&D yet. But the capacity problem from Chapter 2 — lean teams drowning in compliance — is exactly what AI solves.",
+      2: "You're past the starting line. 26% of organizations plan to use more AI tools. The question: are you experimenting with intent or just testing the waters?",
+      3: "You're ahead of 2 in 3 Dutch peers. Organizations at this level use AI for what was previously impossible: personalized paths at scale, live skill maps, automated compliance.",
+      4: "You're in the top ~5% of Dutch organizations. AI isn't a feature for you — it's capacity. The question: are you training people for roles AI is creating, or roles it's replacing?"
+    },
+    de: {
+      1: "You're with the majority: ~62% of German organizations don't use AI in L&D. But 38% already do — Germany actually leads the Netherlands here.",
+      2: "You're past the starting line. 26% plan more AI tools. Germany scores higher on AI adoption (38%) than the Netherlands (32%), so the peer pressure is real.",
+      3: "You're ahead of 3 in 5 German peers. The organizations at this level are automating compliance, personalizing at scale, and surfacing risks before performance reviews.",
+      4: "You're in the top ~7% of German organizations. You already know: AI is capacity. Your question: are you training for roles AI creates, or roles it replaces?"
+    }
+  }
+};
+
+const CHAPTER_STATS = {
+  nl: {
+    ch1Stat: '73%', ch1Linked: '18%',
+    ch3Stat: '80%', ch3EmpStat: '66%', ch3Gap: '14',
+    ch34Stat: '46%', ch34Unaware: '41%',
+    ch4Stat: '32%', ch4DataDriven: '34%'
+  },
+  de: {
+    ch1Stat: '71%', ch1Linked: '21%',
+    ch3Stat: '68%', ch3EmpStat: '37%', ch3Gap: '31',
+    ch34Stat: '55%', ch34Unaware: '61%',
+    ch4Stat: '38%', ch4DataDriven: '35%'
+  }
+};
+
+const ACTION_PLANS = {
+  strategy: {
+    title: "Your biggest gap: Strategy isn't reaching the floor.",
+    desc: "Your learning strategy either doesn't exist or isn't connected to what the business actually needs. Without that link, everything downstream — manager conversations, employee ownership, technology — operates without direction.",
+    steps: [
+      "Book a 30-minute meeting with your L&D lead this week. Bring the annual business plan. Ask: which 3 business goals depend on people learning something new?",
+      "Next time L&D presents to leadership, open with a business goal — not a training update. One slide, three numbers.",
+      "Set one measurable L&D outcome for this quarter. Not 'more training hours' — an outcome tied to business results."
+    ]
+  },
+  managerial: {
+    title: "Your biggest gap: Managers aren't landing as developers of people.",
+    desc: "Development conversations may be happening — but employees don't feel them. The perception gap is the single most common blind spot in the data.",
+    steps: [
+      "Run a 5-question perception gap pulse this month. Ask managers and direct reports the same questions about development support. Compare.",
+      "Schedule a 15-minute development check-in per direct report, separate from performance reviews. One question: 'Where do you want to grow?'",
+      "Add 'learning enablement' to manager objectives. If it's not measured, it doesn't happen."
+    ]
+  },
+  ownership: {
+    title: "Your biggest gap: Employees can't own what they can't see.",
+    desc: "You may encourage self-directed learning — but employees lack the clarity, visibility, and guidance to act on it.",
+    steps: [
+      "Make the development budget visible. Send one email this week explaining what's available and how to access it.",
+      "Give every employee a one-page view: their role, expected skills, current gaps, and available options. If they can't find this in 2 minutes, it doesn't exist.",
+      "Ask 5 employees: 'What are your development priorities this year?' If they can't answer, the problem isn't motivation — it's navigation."
+    ]
+  },
+  ai: {
+    title: "Your biggest gap: You're solving 2026 problems with 2020 tools.",
+    desc: "The capacity problem — lean teams drowning in compliance, no time for strategy, can't personalize at scale — is exactly what AI was built to solve.",
+    steps: [
+      "Pick one AI use case. Just one: content recommendation, skill gap identification, or compliance automation. Prove value in 30 days.",
+      "Audit your data readiness. AI needs fuel — skill profiles, completion data, performance metrics.",
+      "Set a concrete target: 'By end of Q3, at least 2 L&D processes will be AI-augmented.'"
+    ]
+  }
+};
+
+const MATURITY_LABELS = {
+  reactive: { label: 'Reactive', class: 'maturity-reactive', color: '#EF4444' },
+  developing: { label: 'Developing', class: 'maturity-developing', color: '#F59E0B' },
+  advanced: { label: 'Advanced', class: 'maturity-advanced', color: '#056DFF' },
+  leading: { label: 'Leading', class: 'maturity-leading', color: '#10B981' }
+};
+
+const MATURITY_SUMMARIES = {
+  reactive: "Your L&D function is operating on autopilot. You're in good company — 72% of organizations are here. But this report shows what it costs.",
+  developing: "You've started building, but the pieces aren't connected yet. Strategy, managers, ownership, and technology are developing in silos. The biggest unlock: connecting any two dimensions.",
+  advanced: "You're ahead of most peers. The data confirms what you've built — and shows where the next 20% of impact comes from.",
+  leading: "You're in the top tier. The patterns in this report will feel familiar. Your challenge: sustaining this while the landscape shifts. Chapter 4 is where your attention should go."
+};
+
+const DIM_ORDER = ['strategy', 'managerial', 'ownership', 'ai'];
+const DIM_LABELS = { strategy: 'Strategy', managerial: 'Managerial Influence', ownership: 'Ownership', ai: 'AI Usage' };
+const DIM_COLORS = {
+  strategy: '#056DFF',
+  managerial: '#10B981',
+  ownership: '#7c3aed',
+  ai: '#d97706'
+};
+
+// ── STATE ─────────────────────────────────────────────
+
+let state = {
+  market: null,
+  answers: [0, 0, 0, 0],  // raw 1-4
+  scores: [0, 0, 0, 0],   // normalized 25-100
+  step: 0                  // 0=market, 1-4=questions, 5=results
+};
+
+// ── QUIZ LOGIC ────────────────────────────────────────
+
+function startQuiz() {
+  document.getElementById('introSection').style.display = 'none';
+  document.getElementById('quizSection').style.display = 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectMarket(market, btn) {
+  state.market = market;
+  document.querySelectorAll('.market-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.getElementById('marketPeerCount').textContent = MARKET_PEERS[market];
+  document.getElementById('marketHint').style.opacity = '1';
+
+  setTimeout(() => {
+    goToStep(1);
+  }, 500);
+}
+
+function goToStep(step) {
+  state.step = step;
+
+  // Hide all steps
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+
+  if (step >= 1 && step <= 4) {
+    document.getElementById('progressWrap').style.display = 'block';
+    document.getElementById('progressLabel').textContent = `Question ${step} of 4`;
+    document.getElementById('progressDim').textContent = DIM_LABELS[DIM_ORDER[step - 1]];
+    document.getElementById('progressFill').style.width = (step * 25) + '%';
+    document.getElementById(`step${step}`).classList.add('active');
+  } else if (step === 5) {
+    document.getElementById('progressWrap').style.display = 'none';
+    showResults();
+    document.getElementById('stepResults').classList.add('active');
+  } else {
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('stepMarket').classList.add('active');
+  }
+}
+
+function selectOption(questionIdx, answerIdx) {
+  state.answers[questionIdx] = answerIdx + 1;
+  state.scores[questionIdx] = (answerIdx + 1) * 25;
+
+  // Highlight selected
+  const container = document.getElementById(`options${questionIdx + 1}`);
+  container.querySelectorAll('.option-card').forEach((c, i) => {
+    c.classList.toggle('selected', i === answerIdx);
+  });
+
+  // Advance
+  setTimeout(() => {
+    if (questionIdx < 3) {
+      goToStep(questionIdx + 2);
+    } else {
+      goToStep(5);
+    }
+  }, 400);
+}
+
+function renderOptions() {
+  QUESTIONS.forEach((q, qi) => {
+    const container = document.getElementById(`options${qi + 1}`);
+    const letters = ['A', 'B', 'C', 'D'];
+    container.innerHTML = q.options.map((opt, oi) => `
+      <div class="option-card" onclick="selectOption(${qi}, ${oi})">
+        <div class="option-letter">${letters[oi]}</div>
+        <div class="text-sm" style="color:rgba(255,255,255,0.7); line-height:1.45;">${opt}</div>
+      </div>
+    `).join('');
+  });
+}
+
+// ── RESULTS ───────────────────────────────────────────
+
+function getMaturityLevel(score) {
+  if (score <= 37) return 'reactive';
+  if (score <= 56) return 'developing';
+  if (score <= 75) return 'advanced';
+  return 'leading';
+}
+
+function showResults() {
+  // Brief confirmation, then auto-advance to the report
+  setTimeout(() => {
+    showReport();
+  }, 1500);
+}
+
+// ── REPORT ────────────────────────────────────────────
+
+function showReport() {
+  document.getElementById('quizSection').style.display = 'none';
+  document.getElementById('reportBody').style.display = 'block';
+
+  updateChapterStats();
+  updateGauges();
+  renderRadar();
+  renderBreakdownTable();
+  renderActionPlan();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateChapterStats() {
+  const stats = CHAPTER_STATS[state.market];
+  Object.keys(stats).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = stats[id];
+  });
+  document.getElementById('radarMarketLabel').textContent = MARKET_LABELS[state.market];
+}
+
+function updateGauges() {
+  const benchmarks = BENCHMARKS[state.market];
+  const dims = DIM_ORDER;
+  const market = state.market;
+
+  dims.forEach((dim, i) => {
+    const score = state.scores[i];
+    const avg = benchmarks[dim];
+    const answer = state.answers[i];
+    const level = getMaturityLevel(score);
+    const m = MATURITY_LABELS[level];
+    const n = i + 1;
+
+    // Answer text
+    document.getElementById(`gauge${n}Answer`).textContent = QUESTIONS[i].options[answer - 1];
+
+    // Fill
+    document.getElementById(`gauge${n}Fill`).style.width = score + '%';
+
+    // Dot position
+    document.getElementById(`gauge${n}Dot`).style.left = `calc(${score}% - 10px)`;
+
+    // Market marker
+    document.getElementById(`gauge${n}Marker`).style.left = avg + '%';
+    document.getElementById(`gauge${n}MarkerLabel`).style.left = avg + '%';
+    document.getElementById(`gauge${n}MarkerLabel`).textContent = `Market avg: ${avg}`;
+
+    // Maturity pill
+    const pill = document.getElementById(`gauge${n}Maturity`);
+    pill.className = `maturity-pill ${m.class}`;
+    pill.textContent = m.label;
+
+    // Score
+    document.getElementById(`gauge${n}Score`).textContent = `${score} / 100`;
+
+    // Insight text
+    document.getElementById(`gauge${n}Insight`).textContent = INSIGHTS[dim][market][answer];
+  });
+}
+
+// ── RADAR CHART ───────────────────────────────────────
+
+function renderRadar() {
+  const svg = document.getElementById('radarSvg');
+  const cx = 240, cy = 190, maxR = 120;
+  const benchmarks = BENCHMARKS[state.market];
+  const dims = DIM_ORDER;
+  const n = dims.length;
+
+  // Angles: top, right, bottom, left
+  const angles = dims.map((_, i) => (Math.PI * 2 * i / n) - Math.PI / 2);
+
+  function polarToXY(angle, radius) {
+    return {
+      x: cx + radius * Math.cos(angle),
+      y: cy + radius * Math.sin(angle)
+    };
+  }
+
+  let html = '';
+
+  // Grid rings
+  [25, 50, 75, 100].forEach(level => {
+    const r = (level / 100) * maxR;
+    const points = angles.map(a => polarToXY(a, r));
+    const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+    html += `<path d="${d}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+  });
+
+  // Grid labels (along top axis only)
+  [25, 50, 75, 100].forEach(level => {
+    const r = (level / 100) * maxR;
+    html += `<text x="${cx + 6}" y="${cy - r + 3}" fill="rgba(255,255,255,0.15)" font-size="9" font-family="'Euclid Circular B', sans-serif">${level}</text>`;
+  });
+
+  // Axis lines
+  angles.forEach(a => {
+    const p = polarToXY(a, maxR);
+    html += `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`;
+  });
+
+  // Market average polygon (dashed)
+  const marketPoints = dims.map((dim, i) => {
+    const r = (benchmarks[dim] / 100) * maxR;
+    return polarToXY(angles[i], r);
+  });
+  const marketD = marketPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+  html += `<path d="${marketD}" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+
+  // User polygon (filled)
+  const userPoints = dims.map((dim, i) => {
+    const r = (state.scores[i] / 100) * maxR;
+    return polarToXY(angles[i], r);
+  });
+  const userD = userPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+  html += `<path d="${userD}" fill="rgba(5,109,255,0.15)" stroke="#056DFF" stroke-width="2"/>`;
+
+  // User dots
+  userPoints.forEach(p => {
+    html += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#056DFF" stroke="#fff" stroke-width="2"/>`;
+  });
+
+  // Market dots
+  marketPoints.forEach(p => {
+    html += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="rgba(255,255,255,0.3)" stroke="none"/>`;
+  });
+
+  // Axis labels — positioned well outside the chart
+  const labels = [
+    { text: 'Strategy', dx: 0, dy: -18, anchor: 'middle' },
+    { text: 'Managerial Influence', dx: 22, dy: 5, anchor: 'start' },
+    { text: 'Ownership', dx: 0, dy: 22, anchor: 'middle' },
+    { text: 'AI Usage', dx: -22, dy: 5, anchor: 'end' }
+  ];
+
+  dims.forEach((dim, i) => {
+    const p = polarToXY(angles[i], maxR + 28);
+    const l = labels[i];
+    html += `<text x="${p.x + l.dx}" y="${p.y + l.dy}" fill="${DIM_COLORS[dim]}" font-size="12" font-weight="700" font-family="'Euclid Circular B', sans-serif" text-anchor="${l.anchor}">${l.text}</text>`;
+  });
+
+  // Legend — centered below chart
+  const legendY = cy + maxR + 60;
+  html += `
+    <g transform="translate(${cx - 100}, ${legendY})">
+      <line x1="0" y1="0" x2="20" y2="0" stroke="#056DFF" stroke-width="2"/>
+      <circle cx="10" cy="0" r="3" fill="#056DFF"/>
+      <text x="28" y="4" fill="rgba(255,255,255,0.5)" font-size="11" font-family="'Euclid Circular B', sans-serif">Your score</text>
+    </g>
+    <g transform="translate(${cx + 10}, ${legendY})">
+      <line x1="0" y1="0" x2="20" y2="0" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text x="28" y="4" fill="rgba(255,255,255,0.5)" font-size="11" font-family="'Euclid Circular B', sans-serif">Market avg</text>
+    </g>
+  `;
+
+  svg.innerHTML = html;
+}
+
+// ── BREAKDOWN TABLE ───────────────────────────────────
+
+function renderBreakdownTable() {
+  const benchmarks = BENCHMARKS[state.market];
+  const tbody = document.getElementById('breakdownTable');
+
+  let html = '';
+  DIM_ORDER.forEach((dim, i) => {
+    const score = state.scores[i];
+    const avg = benchmarks[dim];
+    const diff = score - avg;
+    const gapClass = diff > 0 ? 'gap-up' : diff < 0 ? 'gap-down' : 'gap-same';
+    const gapIcon = diff > 0 ? '▲' : diff < 0 ? '▼' : '—';
+    const gapText = diff === 0 ? '—' : `${gapIcon} ${Math.abs(diff)}`;
+
+    html += `
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+        <td class="p-4">
+          <div class="flex items-center gap-2">
+            <div style="width:8px; height:8px; border-radius:2px; background:${DIM_COLORS[dim]};"></div>
+            <span class="text-sm text-white font-bold">${DIM_LABELS[dim]}</span>
+          </div>
+        </td>
+        <td class="text-center p-4 text-sm font-bold text-white">${score}</td>
+        <td class="text-center p-4 text-sm" style="color:rgba(255,255,255,0.4);">${avg}</td>
+        <td class="text-center p-4 text-sm font-bold ${gapClass}">${gapText}</td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
+
+// ── ACTION PLAN ───────────────────────────────────────
+
+function renderActionPlan() {
+  // Find weakest dimension
+  let minScore = Infinity;
+  let weakestIdx = 0;
+  state.scores.forEach((s, i) => {
+    if (s < minScore) { minScore = s; weakestIdx = i; }
+  });
+
+  const dim = DIM_ORDER[weakestIdx];
+  const plan = ACTION_PLANS[dim];
+  const color = DIM_COLORS[dim];
+
+  document.getElementById('actionCard').style.borderLeftColor = color;
+  document.getElementById('actionTitle').textContent = plan.title;
+  document.getElementById('actionDesc').textContent = plan.desc;
+
+  document.getElementById('actionSteps').innerHTML = plan.steps.map((step, i) => `
+    <div class="flex gap-3 mb-3">
+      <div style="width:24px; height:24px; border-radius:6px; background:${color}22; color:${color}; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">${i + 1}</div>
+      <p class="text-sm" style="color:rgba(255,255,255,0.6); line-height:1.5;">${step}</p>
+    </div>
+  `).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────
+
+renderOptions();
+</script>
+
+</body>
+</html>
