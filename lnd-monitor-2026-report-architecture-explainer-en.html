@@ -2,22 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>L&D Monitor 2026 — Report Architecture</title>
+<title>L&D Monitor 2026 — Report Architecture (EN Build)</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
   body {
-    font-family: Arial, Helvetica, sans-serif;
-    max-width: 720px;
+    font-family: 'Inter', system-ui, sans-serif;
+    max-width: 780px;
     margin: 40px auto;
     padding: 0 24px;
     color: #1a1a1a;
-    line-height: 1.6;
+    line-height: 1.65;
     font-size: 14px;
+    background: #fafbfc;
   }
-  h1 { font-size: 22px; margin-bottom: 4px; }
-  h2 { font-size: 17px; margin-top: 32px; margin-bottom: 8px; border-bottom: 2px solid #056DFF; padding-bottom: 4px; }
-  h3 { font-size: 15px; margin-top: 20px; margin-bottom: 6px; }
+  h1 { font-size: 24px; margin-bottom: 4px; color: #11295A; }
+  h2 { font-size: 17px; margin-top: 36px; margin-bottom: 10px; border-bottom: 2px solid #056DFF; padding-bottom: 4px; color: #11295A; }
+  h3 { font-size: 15px; margin-top: 22px; margin-bottom: 6px; color: #11295A; }
   p { margin: 8px 0; }
-  .subtitle { color: #555; font-size: 13px; margin-bottom: 24px; }
+  .subtitle { color: #555; font-size: 13px; margin-bottom: 6px; }
+  .updated { color: #999; font-size: 12px; margin-bottom: 28px; }
   .callout {
     background: #f0f6ff;
     border-left: 4px solid #056DFF;
@@ -27,6 +30,22 @@
   }
   .callout p { margin: 4px 0; }
   .callout strong { color: #056DFF; }
+  .callout-green {
+    background: #f0fdf4;
+    border-left: 4px solid #10B981;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .callout-green strong { color: #059669; }
+  .callout-amber {
+    background: #fffbeb;
+    border-left: 4px solid #F59E0B;
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .callout-amber strong { color: #d97706; }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -38,9 +57,9 @@
     color: #fff;
     text-align: left;
     padding: 8px 12px;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
   }
   td {
     padding: 8px 12px;
@@ -52,169 +71,558 @@
     display: inline-block;
     padding: 2px 8px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: #fff;
+    letter-spacing: 0.3px;
   }
-  .arc-shock { background: #EF4444; }
-  .arc-confrontation { background: #F59E0B; }
-  .arc-diagnosis { background: #059669; }
-  .arc-wayout { background: #056DFF; }
-  .arc-action { background: #7c3aed; }
-  .links { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
+  .tag-blue { background: #056DFF; }
+  .tag-green { background: #10B981; }
+  .tag-amber { background: #F59E0B; }
+  .tag-red { background: #EF4444; }
+  .tag-purple { background: #7c3aed; }
+  .tag-cyan { background: #00C2FF; color: #11295A; }
+  .tag-navy { background: #11295A; }
+  .tag-blue-outline { background: #fff; border: 1.5px solid #056DFF; color: #056DFF; }
+  .tag-grey { background: #94a3b8; }
+  .new { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; color: #fff; background: #10B981; margin-left: 4px; vertical-align: middle; letter-spacing: 0.5px; }
+  .links { margin-top: 28px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
   .links a { color: #056DFF; text-decoration: none; font-size: 13px; }
   .links a:hover { text-decoration: underline; }
   ul { padding-left: 20px; }
-  li { margin: 4px 0; }
+  li { margin: 5px 0; }
+  code { background: #f1f5f9; padding: 2px 6px; border-radius: 3px; font-size: 12px; color: #334155; }
+  .section-flow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 12px 0 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .flow-box {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #f0f6ff;
+    border: 1px solid #dbeafe;
+    color: #11295A;
+  }
+  .flow-box.active { background: #056DFF; color: #fff; border-color: #056DFF; }
+  .flow-arrow { color: #94a3b8; }
+  hr { border: none; border-top: 1px solid #e5e7eb; margin: 32px 0; }
 </style>
 </head>
 <body>
 
 <h1>L&D Monitor 2026 — Report Architecture</h1>
-<p class="subtitle">Internal overview: structure, choices, tools and link-outs</p>
+<p class="subtitle">Internal overview for Lenny, Imke, Twan &amp; Ena: structure, interactive tools, design logic, and what&rsquo;s built</p>
+<p class="updated">Updated: March 11, 2026 &middot; Reflects storyline v8 NL</p>
 
 <div class="callout">
-  <p><strong>TL;DR</strong></p>
-  <p>The report reads like a funnel. We open with a shock, confront the reader, diagnose the root cause, show the way out, and close with a personal action plan. Every chapter follows the same pattern: <strong>Data → So What? → Now What? → (only then) Studytube</strong>.</p>
+  <p><strong>The Core Logic in 30 Seconds</strong></p>
+  <p>Strategy exists &rarr; doesn&rsquo;t translate &rarr; operations stuck in survival mode &rarr; culture your people barely recognize &rarr; no clear path to what comes next. <strong>A self-reinforcing pattern.</strong></p>
+  <p style="margin-top: 8px; font-size: 12px; color: #666;">This pattern is the throughline. Every chapter opens with a <strong>data anchor block</strong> (stats first, then interpretation). The maturity framework is introduced in Ch2 as a compass. Each chapter has one climax. Bridges connect chapters explicitly. Not every organization hits them in the same order &mdash; the pattern matters, the sequence is yours.</p>
 </div>
 
-<h2>The Big Idea</h2>
+<!-- ============================================ -->
+<h2>Editorial Frame: Data &rarr; So What? &rarr; Now What?</h2>
 
-<p>Two clocks are diverging. <strong>L&D is investing more and standing still</strong> — budgets are growing (+51%), strategies exist (73%), but nothing has actually moved: 72% are still reactive, only 8.5% have skill visibility.</p>
+<table>
+  <tr>
+    <th style="width: 120px;">Layer</th>
+    <th>Content</th>
+  </tr>
+  <tr>
+    <td><strong>Data</strong></td>
+    <td>73% strategie, 8.5% zichtbaarheid, 31% budgetbenutting, 51% groeiend budget</td>
+  </tr>
+  <tr>
+    <td><strong>So What?</strong></td>
+    <td>More money in, same results out. Skills depreciating in 2.5yr means your investment window is shorter than your planning cycle.</td>
+  </tr>
+  <tr>
+    <td><strong>Now What?</strong></td>
+    <td>Strategy-to-KPI audit, budget impact report, start met 3 meetbare skills</td>
+  </tr>
+  <tr>
+    <td><strong>With What?</strong></td>
+    <td>L&amp;D Impact Scan &mdash; personal diagnosis at <code>scan.studytube.nl</code></td>
+  </tr>
+</table>
 
-<p><strong>Meanwhile, the outside world is accelerating</strong> — skills depreciate in ~2.5 years, AI compresses tasks 12x, 39% of skills will be obsolete by 2030.</p>
+<p style="font-size: 12px; color: #666;">This is the report-level frame. Each chapter has its own Data &rarr; So What? &rarr; Now What? breakdown in the section flow below.</p>
 
-<p>The gap isn't closing. It's accelerating open. <em>That's the red thread through every chapter.</em></p>
+<!-- ============================================ -->
+<h2>Report Structure — Full Section Flow</h2>
 
-<h2>The 5 Chapters</h2>
+<div class="section-flow">
+  <span class="flow-box active">Cover</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box">Summary</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box">Foreword + Video</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box">Research Methodology</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box">Benchmark Quiz</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box active">Ch1 Slide Deck</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box active">Ch2 Ambition Trap</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box active">Ch3 Culture Gap</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box active">Ch4 Future-Proof</span>
+  <span class="flow-arrow">&rarr;</span>
+  <span class="flow-box">Conclusion: The Pattern</span>
+</div>
+
+<table>
+  <tr>
+    <th>Section</th>
+    <th>ID</th>
+    <th>What it contains</th>
+    <th>Data &rarr; So What? &rarr; Now What?</th>
+  </tr>
+  <tr>
+    <td><strong>Cover</strong></td>
+    <td><code>#cover</code></td>
+    <td>Cinematic 100vh dark cover with animated glass cards showing hero stats from each chapter. &ldquo;Read the Report&rdquo; CTA. Studytube wordmark + research credentials bar at bottom.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><strong>3-Minute Summary</strong></td>
+    <td><code>#welcome</code></td>
+    <td>6 animated stat cards (2&times;3 grid), each with chapter link. Role summary: In the boardroom / Run L&amp;D / Manage a team &mdash; personalized 2-minute &ldquo;what this means for you&rdquo; summary with starting points + first actions.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><strong>Foreword + Video</strong></td>
+    <td><code>#foreword</code></td>
+    <td>2-column: editor&rsquo;s note left, video placeholder right (90s, play overlay).</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><strong>Research Methodology</strong></td>
+    <td><code>#research</code></td>
+    <td>Survey design: 1,017 NL respondents (259 HR, 252 Managers, 506 Employees), Bilendi panel, 4 chapter grid with stats per chapter.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><strong>Benchmark Intake</strong></td>
+    <td><code>#benchmark</code></td>
+    <td>4-question inline quiz (one per chapter dimension: Strategy, Operations, Culture, Future-Readiness). Scores feed into chapter gauges, radar chart, and maturity level assignment per dimension.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><strong>Chapter 1</strong></td>
+    <td><code>#chapter1</code></td>
+    <td><em>v8: Data anchor block first.</em> The Strategy That Never Left the Slide Deck. Data anchor: 73% / 44% / 18% / 15% cascade. Top barrier: two-sided gap. <strong>Climax:</strong> The strategy exists &mdash; it just never leaves the slide deck. Transfer Canvas download, expert opinion box. Action cards: boardroom / L&amp;D.</td>
+    <td>
+      <strong>Data:</strong> 73% strategie, 44% vaag gekoppeld, 18% meetbaar, 15% meet impact<br>
+      <strong>So What?</strong> The strategy exists on paper, the impact doesn&rsquo;t. Each step halves the previous one.<br>
+      <strong>Now What?</strong> Strategy-to-KPI audit. 3 meetbare doelen koppelen.<br>
+      <strong>With What?</strong> Transfer Canvas + L&amp;D Impact Scan
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Chapter 2</strong></td>
+    <td><code>#chapter2</code></td>
+    <td><em>v8: Data anchor + maturity framework introduced here.</em> The Ambition Trap. Data anchor: 29/43/23/5 maturity distribution + 53% ops override + budget paradox (51%/17%/19%). <strong>Maturity Map</strong> introduced as named framework &mdash; becomes reader&rsquo;s compass for rest of report. Benchmark quiz places reader on it. <strong>Climax:</strong> Inertia wins by default. Action cards: boardroom / team managers.</td>
+    <td>
+      <strong>Data:</strong> 72% survival mode, 51% groeiend budget, 19% benut volledig<br>
+      <strong>So What?</strong> More money in, same results out. Budget groeit, benutting niet.<br>
+      <strong>Now What?</strong> Budget impact report. Shift van catalogus naar 3 strategische prioriteiten.<br>
+      <strong>With What?</strong> Maturity Map + benchmark placement
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Chapter 3</strong></td>
+    <td><code>#chapter3</code></td>
+    <td><em>v8: Data anchor with perception gaps.</em> Learning Culture &mdash; Please Mind the Gap. Data anchor: &minus;14pp dev conversations, &minus;17pp feedback, &minus;16pp culture, 88%/41% budget gap. <strong>Perception Game</strong> (predict-and-reveal, embedded mid-chapter). Self-directed learning bridge section. 2 downloadable canvases from influencer collaboration (DE). <strong>Climax:</strong> Culture that lives on paper but not in reality. Action cards: L&amp;D / team managers.</td>
+    <td>
+      <strong>Data:</strong> &minus;14pp gesprekken, &minus;17pp feedback, 88% vs 41% budget awareness<br>
+      <strong>So What?</strong> HR bouwt, medewerkers merken het niet. Zelfregie vragen zonder kaart meegeven.<br>
+      <strong>Now What?</strong> Zichtbaarheidsaudit: kan elke medewerker in 2 min z&rsquo;n budget + opties vinden?<br>
+      <strong>With What?</strong> Perception Game + Influencer Canvases
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Chapter 4</strong></td>
+    <td><code>#chapter4</code></td>
+    <td><em>v8: Data anchor + one climax (skills deadline = peak).</em> From Reactive to Future-Proof. Data anchor: 39% skills transform (WEF), 9% visibility, 34% use AI, &euro;151-187B Wennink.<br><br><strong>Three beats, one climax:</strong><br><span class="arc-tag tag-red">PEAK</span> <strong>Skills deadline</strong> &mdash; 9% visibility, can&rsquo;t close what you can&rsquo;t see. The alarm.<br><span class="arc-tag tag-blue">BRIDGE</span> <strong>AI as the way forward</strong> &mdash; gives lean L&amp;D teams capacity to stop surviving and start steering.<br><span class="arc-tag tag-navy">CODA</span> <strong>The 2030 organization</strong> &mdash; brief, quiet closing note: every element exists today. The difference is infrastructure, not ambition. One or two decisions away.<br><br>Action cards: all 3 roles.</td>
+    <td>
+      <strong>Data:</strong> 39% skills transformeren (WEF), 9% zichtbaarheid, 34% AI, &euro;151-187B Wennink<br>
+      <strong>So What?</strong> Skills depreciating in 2.5yr &mdash; investment window is shorter than your planning cycle.<br>
+      <strong>Now What?</strong> Start met 3 meetbare skills. Map AI-taken vs. menselijk oordeelsvermogen.<br>
+      <strong>With What?</strong> L&amp;D Impact Scan + skills visibility assessment
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Conclusion</strong></td>
+    <td><code>#conclusion</code></td>
+    <td>&ldquo;A Self-Reinforcing Pattern&rdquo;. Pattern visualization (strategy &rarr; survival mode &rarr; culture gap &rarr; no path forward). Not every org hits them in the same order &mdash; the pattern matters, the sequence is yours. Radar chart + breakdown table + prioritized action plan. <strong>CTA:</strong> &ldquo;You&rsquo;ve seen where the market stands. Now find out where you stand.&rdquo; &rarr; <code>scan.studytube.nl</code></td>
+    <td>
+      <strong>So What?</strong> These four problems reinforce each other. Your entry point is different, the pattern is the same.<br>
+      <strong>Now What?</strong> L&amp;D Impact Scan &mdash; personal diagnosis in 5 min.<br>
+      <strong>With What?</strong> <code>scan.studytube.nl</code>
+    </td>
+  </tr>
+</table>
+
+<!-- ============================================ -->
+<h2>The 4 Chapters — v8 Arc</h2>
+
+<div class="callout-green">
+  <p><strong>v8 structural changes:</strong> Each chapter now opens with a <strong>data anchor block</strong> (evidence first, editorial second). Maturity framework introduced in Ch2 as a compass. Explicit bridge paragraphs between all chapters (Ch2&rarr;3 strengthened). Ch4 has one climax (skills deadline = peak). No Studytube references in the narrative.</p>
+</div>
 
 <table>
   <tr>
     <th>#</th>
     <th>Chapter</th>
     <th>Arc</th>
-    <th>What it does</th>
+    <th>Core tension + v8 notes</th>
   </tr>
   <tr>
     <td><strong>1</strong></td>
-    <td><strong>The Strategy Paradox</strong></td>
-    <td><span class="arc-tag arc-shock">SHOCK</span></td>
-    <td>Opens with the big numbers: 73% have a strategy, 8.5% can prove impact. More money in, same results out.</td>
+    <td><strong>The Strategy That Never Left the Slide Deck</strong></td>
+    <td><span class="arc-tag tag-red">THE SETUP</span></td>
+    <td><strong>Data anchor:</strong> 73% / 44% / 18% / 15% cascade. Two-sided gap: business goals not defined clearly enough + L&amp;D can&rsquo;t translate them. <strong>Climax:</strong> <em>The strategy exists. It just never leaves the slide deck.</em><br><span style="color:#999;font-size:11px;">&darr; Bridge 1&rarr;2: &ldquo;Strategy exists on paper. But what happens when it has to travel?&rdquo;</span></td>
   </tr>
   <tr>
     <td><strong>2</strong></td>
-    <td><strong>The Perception Gap</strong></td>
-    <td><span class="arc-tag arc-confrontation">CONFRONTATION</span></td>
-    <td>Managers think they develop people. Employees disagree — by 17pp (NL) to 28pp (DE). First time quantified.</td>
+    <td><strong>The Ambition Trap</strong></td>
+    <td><span class="arc-tag tag-blue">THE TRAP</span></td>
+    <td><strong>Data anchor:</strong> 29/43/23/5 maturity + 53% ops override + budget paradox (51%/17%/19%). <strong>Maturity Map framework introduced here</strong> &mdash; reader&rsquo;s compass for rest of report. <strong>Climax:</strong> <em>Inertia wins by default.</em><br><span style="color:#999;font-size:11px;">&darr; Bridge 2&rarr;3 <em>(strengthened in v8):</em> &ldquo;What does that actually feel like for the people on the receiving end?&rdquo;</span></td>
   </tr>
   <tr>
     <td><strong>3</strong></td>
-    <td><strong>The Visibility Crisis</strong></td>
-    <td><span class="arc-tag arc-diagnosis">DIAGNOSIS</span></td>
-    <td>The root cause: you can't develop what you can't see. 91.5% are investing blind.</td>
+    <td><strong>Learning Culture &mdash; Please Mind the Gap</strong></td>
+    <td><span class="arc-tag tag-amber">THE CONSEQUENCE</span></td>
+    <td><strong>Data anchor:</strong> Perception gaps (&minus;14pp conversations, &minus;17pp feedback, &minus;16pp culture). Budget: HR 88% confirms vs 41% employees unaware. Perception Game embedded mid-chapter. Self-directed learning bridge section. <strong>Climax:</strong> <em>Culture that lives on paper but not in reality.</em><br><span style="color:#999;font-size:11px;">&darr; Bridge 3&rarr;4: &ldquo;The deadline isn&rsquo;t internal anymore &mdash; it&rsquo;s structural, and it&rsquo;s 2030.&rdquo;</span></td>
   </tr>
   <tr>
     <td><strong>4</strong></td>
-    <td><strong>Breaking Out</strong></td>
-    <td><span class="arc-tag arc-wayout">WAY OUT</span></td>
-    <td>The 28% that escaped aren't spending more — they have a different model. Plus: only 32% use AI in L&D (new in 2026).</td>
-  </tr>
-  <tr>
-    <td><strong>5</strong></td>
-    <td><strong>Your Next Step</strong></td>
-    <td><span class="arc-tag arc-action">ACTION</span></td>
-    <td>From market data to personal action plan. All interactive tools converge here.</td>
+    <td><strong>From Reactive to Future-Proof</strong></td>
+    <td><span class="arc-tag tag-green">THE DEADLINE</span></td>
+    <td><strong>Data anchor:</strong> 39% skills transform (WEF), 9% visibility, 34% AI, &euro;151-187B Wennink. <strong>Three beats, one climax:</strong> <span class="arc-tag tag-red">PEAK</span> Skills deadline. <em>Bridge:</em> AI as way forward. <em>Coda:</em> 2030 org (brief). <strong>Climax:</strong> <em>The window to turn slides into systems is 2026-2030.</em></td>
   </tr>
 </table>
 
-<h2>Deep Dive Blog Posts (per chapter)</h2>
+<h3>Overall Conclusion: A Self-Reinforcing Pattern</h3>
+<p>v8 reframes the chapters as <strong>a self-reinforcing pattern, not a linear chain</strong>. Not every organization hits them in the same order. The benchmark quiz places readers on the Maturity Map from Ch2 and shows where their biggest gap is. Radar chart + breakdown table + prioritized action plan + downloads + L&amp;D Impact Scan CTA.</p>
 
-<p>Each chapter links out to a dedicated article that goes deeper than the report can:</p>
-
-<table>
-  <tr>
-    <th>Ch</th>
-    <th>Blog Post</th>
-    <th>What it adds</th>
-  </tr>
-  <tr>
-    <td><strong>Ch1</strong></td>
-    <td><strong>The Two Clocks</strong></td>
-    <td>The velocity gap metaphor with external disruption data (WEF, Anthropic, Lancet)</td>
-  </tr>
-  <tr>
-    <td><strong>Ch2</strong></td>
-    <td><strong>The Manager Mirage</strong></td>
-    <td>Full 5-dimension perception gap analysis NL vs DE</td>
-  </tr>
-  <tr>
-    <td><strong>Ch3</strong></td>
-    <td><strong>Meta-Skills + From Operator to Director</strong></td>
-    <td>Which skills compound and how to reposition — both the portfolio and the people managing it</td>
-  </tr>
-  <tr>
-    <td><strong>Ch4</strong></td>
-    <td><strong>The Shadow AI Problem</strong></td>
-    <td>Why only 32% use AI in L&D while employees are already using it</td>
-  </tr>
-  <tr>
-    <td><strong>Ch5</strong></td>
-    <td><strong>Organisation of the Future</strong></td>
-    <td>Skill-based teams as the 2030 destination</td>
-  </tr>
-</table>
-
-<h2>Interactive Tools</h2>
+<!-- ============================================ -->
+<h2>Interactive Tools (11)</h2>
 
 <table>
   <tr>
     <th>Tool</th>
-    <th>Where</th>
+    <th>Location</th>
     <th>What it does</th>
+    <th>State</th>
   </tr>
   <tr>
-    <td><strong>Benchmark Quiz</strong></td>
-    <td>Ch1 → results in Ch5</td>
-    <td>10 questions → radar chart: you vs. NL vs. DE</td>
+    <td><strong>1. Role Summary</strong></td>
+    <td>Summary</td>
+    <td>2-minute personalized summary by role. Reader selects their function (&ldquo;In the boardroom&rdquo; / &ldquo;Run L&amp;D&rdquo; / &ldquo;Manage a team&rdquo;) and sees tailored key findings, starting points, and first actions.</td>
+    <td><span class="arc-tag tag-blue">IN DEV</span></td>
   </tr>
   <tr>
-    <td><strong>Predict Your Employees</strong></td>
-    <td>Ch2</td>
-    <td>Guess what your employees think → reveal the actual gap</td>
+    <td><strong>2. 6 Stat Cards</strong> <span class="new">NEW</span></td>
+    <td>Summary</td>
+    <td>2&times;3 grid, animated counters + bars. Each stat links to its chapter (&ldquo;More in Ch. X &rarr;&rdquo;). Tells the chain story visually.</td>
+    <td><span class="arc-tag tag-blue-outline">DECIDED</span></td>
   </tr>
   <tr>
-    <td><strong>CEO Dashboard Generator</strong></td>
-    <td>Ch1/Ch5</td>
-    <td>5 questions → ready-to-paste dashboard for your CEO</td>
+    <td><strong>3. Benchmark Quiz</strong></td>
+    <td>Pre-Ch1</td>
+    <td>4 questions (one per chapter dimension: Strategy, Operations, Culture, Future-Readiness) for personalization. Each answer feeds into per-chapter gauges, radar chart, and maturity level. <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-personalization-poc.html" style="color:#056DFF;">POC preview &rarr;</a></td>
+    <td><span class="arc-tag tag-cyan">POC DONE</span></td>
   </tr>
   <tr>
-    <td><strong>Gap Prioritizer</strong></td>
-    <td>Ch5</td>
-    <td>10 questions → prioritized action cards (exportable)</td>
+    <td><strong>4. Executive 2-Pager</strong></td>
+    <td>Summary</td>
+    <td>C-level executive summary: key findings, strategic implications, and action priorities in a shareable 2-page format for leadership presentations. <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-exec-summary.html" style="color:#056DFF;">Preview &rarr;</a></td>
+    <td><span class="arc-tag tag-blue">IN PROGRESS</span></td>
   </tr>
   <tr>
-    <td><strong>Action Plan Bar</strong></td>
-    <td>Persistent</td>
-    <td>Shopping list that builds up as you read</td>
+    <td><strong>5. Perception Game</strong> <span class="new">NEW</span></td>
+    <td>Chapter 3 (mid-chapter)</td>
+    <td>5-slider predict-and-reveal game. Reader guesses what % of employees agree with statements about learning support. Reveals: your guess vs. managers vs. employees with gap visualization. NL/DE market toggle. Embedded between perception gap data and &ldquo;Self-directed learning&rdquo; section. <a href="https://shareables-gray.vercel.app/lnd-monitor-2026-predict-game.html" style="color:#056DFF;">Live preview &rarr;</a></td>
+    <td><span class="arc-tag tag-cyan">POC DONE</span></td>
+  </tr>
+  <tr>
+    <td><strong>6. Influencer Canvases (2&times;)</strong> <span class="new">NEW</span></td>
+    <td>Chapter 3</td>
+    <td>2 downloadable canvases from German influencer collaboration. Practical frameworks readers can apply immediately. Email-gated download &mdash; blurred preview in report, full PDF sent after submit.</td>
+    <td><span class="arc-tag tag-amber">PENDING</span></td>
+  </tr>
+  <tr>
+    <td><strong>7. Scroll-Spy Navigation</strong></td>
+    <td>Sidebar</td>
+    <td>Fixed 260px dark sidebar. Active chapter highlighting on scroll. Progress bar at top. Smooth scroll on click. Score counter badge.</td>
+    <td><span class="arc-tag tag-green">BUILT</span></td>
+  </tr>
+  <tr>
+    <td><strong>8. Reveal Animations</strong></td>
+    <td>Throughout</td>
+    <td>IntersectionObserver-based fade-in for all content blocks. Counter animations. Bar fill animations. Radar polygon animation on scroll.</td>
+    <td><span class="arc-tag tag-blue">IN PROGRESS</span></td>
+  </tr>
+  <tr>
+    <td><strong>9. Print Preparation</strong></td>
+    <td>Global</td>
+    <td><code>beforeprint</code> handler: forces all bars/counters to final values, reveals all content, hides sidebar/progress.</td>
+    <td><span class="arc-tag tag-amber">PENDING</span></td>
+  </tr>
+  <tr>
+    <td><strong>10. Full Data Dashboard</strong> <span class="new">NEW</span></td>
+    <td>Conclusion</td>
+    <td>Full Bilendi survey data &mdash; every question, filterable by market (NL/DE), role (HR/Manager/Employee), and theme. Email-gated: blurred preview at end of report, full dashboard sent after submit.</td>
+    <td><span class="arc-tag tag-grey">TO UPDATE</span></td>
+  </tr>
+  <tr>
+    <td><strong>11. AI Co-Reader</strong> <span class="arc-tag tag-amber">OPTIONAL</span></td>
+    <td>Sidebar + every chapter</td>
+    <td><strong>Dynamic prompt assembly</strong> &mdash; pulls role selection and benchmark scores at click time. ChatGPT (URL deep-link), Claude (clipboard + new tab), Copy for any agent. Per-chapter prompts with market data + personalized instruction.</td>
+    <td><span class="arc-tag tag-blue-outline">TO DECIDE</span></td>
   </tr>
 </table>
 
-<h2>Key Design Choices</h2>
+<!-- ============================================ -->
+<h2>6 Summary Stat Cards</h2>
 
+<p>2&times;3 grid in the summary section. Each with animated counter, bar fill, description, and chapter link:</p>
+
+<table>
+  <tr>
+    <th>Row</th>
+    <th>Stat</th>
+    <th>Value</th>
+    <th>Chapter</th>
+    <th>Story role</th>
+  </tr>
+  <tr><td>1</td><td>Have a learning strategy</td><td>73%</td><td>Ch. 1</td><td>The promising start</td></tr>
+  <tr><td>1</td><td>Linked to business goals</td><td>18%</td><td>Ch. 1</td><td>The first drop</td></tr>
+  <tr><td>1</td><td>Stuck in survival mode</td><td>72%</td><td>Ch. 2</td><td>The ambition trap</td></tr>
+  <tr><td>2</td><td>Perception gap</td><td>14pp</td><td>Ch. 3</td><td>Managers overestimate their impact</td></tr>
+  <tr><td>2</td><td>Employees unaware of budget</td><td>41%</td><td>Ch. 3</td><td>Money allocated but invisible</td></tr>
+  <tr><td>2</td><td>Real skill visibility</td><td>9%</td><td>Ch. 4</td><td>Flying blind</td></tr>
+</table>
+
+<p style="font-size: 12px; color: #666;">Read left to right, top to bottom: strategy exists &rarr; doesn&rsquo;t translate &rarr; operations in survival mode &rarr; people don&rsquo;t feel it &rarr; budget invisible &rarr; capabilities invisible.</p>
+
+<!-- ============================================ -->
+<h2>Supporting Assets &amp; Distribution Layer</h2>
+
+<p>The report doesn&rsquo;t live in isolation. Three assets form the ecosystem around it &mdash; driving traffic to the report, bridging from last year&rsquo;s edition, and converting interest into downloads.</p>
+
+<table>
+  <tr>
+    <th>Asset</th>
+    <th>Role</th>
+    <th>How it connects</th>
+  </tr>
+  <tr>
+    <td><strong>Landing Page (NL/DE)</strong><br><span style="font-size:11px;color:#666;">Download gate for the report</span></td>
+    <td><span class="arc-tag tag-blue">CONVERSION</span></td>
+    <td>The single entry point for downloading the report. Form captures name + email before granting access. Hero section sets up the value proposition (500+ respondents, key stats preview, &ldquo;Wat zit erin?&rdquo; section with chapter previews). Every external link &mdash; ads, social, blog, email &mdash; points here. <strong>This is where the drip campaign starts.</strong></td>
+  </tr>
+  <tr>
+    <td><strong>Blog Post: 2025 &rarr; 2026</strong><br><span style="font-size:11px;color:#666;">Bridge article on studytube.nl/de</span></td>
+    <td><span class="arc-tag tag-green">SEO + BRIDGE</span></td>
+    <td>Publicly indexed blog post that bridges from the 2025 L&amp;D Monitor to the 2026 edition. Serves two purposes: (1) <strong>SEO</strong> &mdash; captures search traffic from people looking for the 2025 report or L&amp;D benchmarks, redirects that intent to the new edition. (2) <strong>Narrative bridge</strong> &mdash; &ldquo;here&rsquo;s what changed, here&rsquo;s what&rsquo;s new, here&rsquo;s why the 2026 data matters more.&rdquo; Links directly to the landing page. The 2025 report itself gets ungated as part of this &mdash; free access builds trust and drives interest in the new data.</td>
+  </tr>
+  <tr>
+    <td><strong>Internal Linking (studytube.nl/de)</strong><br><span style="font-size:11px;color:#666;">Site-wide integration</span></td>
+    <td><span class="arc-tag tag-purple">TRAFFIC</span></td>
+    <td>Contextual links placed across existing high-traffic pages on studytube.nl and studytube.de. Not a banner campaign &mdash; relevant in-content mentions on pages where the report data adds value (e.g., pages about learning strategy, skills development, learning culture). Drives organic discovery from visitors already on the site. Also includes: navigation/resource hub placement, related-content blocks on blog posts, and footer or sidebar callouts during launch period.</td>
+  </tr>
+</table>
+
+<div class="callout" style="margin-top: 16px;">
+  <p><strong>Traffic flow:</strong> Internal linking + blog post &rarr; <strong>Landing page</strong> (email capture) &rarr; Report access &rarr; Drip campaign &rarr; L&amp;D Impact Scan</p>
+  <p style="font-size: 12px; color: #666; margin-top: 4px;">External channels (ads, social, PR, newsletter) also feed into the landing page. The blog post is the only asset that also works as a standalone SEO play.</p>
+</div>
+
+<!-- ============================================ -->
+<h2>Gated vs. Ungated Content</h2>
+
+<div class="callout">
+  <p><strong>Principle:</strong> The report itself is fully accessible. Gates exist only for bonus tools and follow-up assets &mdash; never for the core narrative.</p>
+</div>
+
+<table>
+  <tr>
+    <th>Access</th>
+    <th>Asset</th>
+    <th>Where / How</th>
+  </tr>
+  <tr>
+    <td colspan="3" style="background:#f0fdf4; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:#059669;">Ungated &mdash; free in the report</td>
+  </tr>
+  <tr><td>&check;</td><td>Full report (all 4 chapters + conclusion)</td><td>Direct access after download</td></tr>
+  <tr><td>&check;</td><td>Role Summary (3 personas)</td><td>Summary section</td></tr>
+  <tr><td>&check;</td><td>6 Stat Cards</td><td>Summary section</td></tr>
+  <tr><td>&check;</td><td>Benchmark Quiz (4 questions)</td><td>Pre-Ch1</td></tr>
+  <tr><td>&check;</td><td>Executive 2-Pager</td><td>Summary &mdash; shareable link</td></tr>
+  <tr><td>&check;</td><td>Perception Game</td><td>Mid-Chapter 3</td></tr>
+  <tr><td>&check;</td><td>Per-chapter action cards</td><td>End of each chapter</td></tr>
+  <tr>
+    <td colspan="3" style="background:#fffbeb; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:#d97706;">Email-gated &mdash; leave email to receive</td>
+  </tr>
+  <tr><td>&#9993;</td><td>Influencer Canvases (2&times;)</td><td>Chapter 3 &mdash; blurred preview, email gate, PDF sent</td></tr>
+  <tr><td>&#9993;</td><td>Full Data Dashboard</td><td>End of report &mdash; blurred preview, email gate, access link sent</td></tr>
+  <tr>
+    <td colspan="3" style="background:#f0f6ff; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; color:#056DFF;">Post-download &mdash; drip campaign sequence</td>
+  </tr>
+  <tr><td>&#9993;</td><td><strong>The Two Clocks</strong> (Ch1 deep dive)<br><span style="font-size:11px;color:#666;">The velocity gap metaphor with external disruption data (WEF, Anthropic, Lancet)</span></td><td>Email 1 &mdash; ~3 days after report download</td></tr>
+  <tr><td>&#9993;</td><td><strong>The Shadow AI Problem</strong> (Ch2 deep dive)<br><span style="font-size:11px;color:#666;">Why only 34% use AI in L&amp;D while employees already use it daily</span></td><td>Email 2</td></tr>
+  <tr><td>&#9993;</td><td><strong>The Manager Mirage</strong> (Ch3 deep dive)<br><span style="font-size:11px;color:#666;">Full perception gap analysis: all 6 dimensions, NL vs DE comparison</span></td><td>Email 3</td></tr>
+  <tr><td>&#9993;</td><td><strong>Meta-Skills + From Operator to Director</strong> (Ch4)<br><span style="font-size:11px;color:#666;">Which skills compound &amp; how to reposition the capability map for 2030</span></td><td>Email 4</td></tr>
+  <tr><td>&#9993;</td><td><strong>L&amp;D Impact Scan CTA</strong><br><span style="font-size:11px;color:#666;">Personal diagnosis: &ldquo;where do you stand?&rdquo; &mdash; turns market-level insights into individual action</span></td><td>Email 5 &mdash; final email, CTA to <code>scan.studytube.nl</code></td></tr>
+</table>
+
+<!-- ============================================ -->
+<h2>AI Co-Reader — How It Works <span class="arc-tag tag-amber">OPTIONAL / LATER</span></h2>
+
+<div class="callout-green">
+  <p><strong>Dynamic, not static.</strong> Every reader gets a personalized prompt based on what they&rsquo;ve done in the report.</p>
+</div>
+
+<p>The AI Co-Reader builds prompts at click time from 2 data sources:</p>
+
+<table>
+  <tr>
+    <th>Data Source</th>
+    <th>What it adds to the prompt</th>
+    <th>When available</th>
+  </tr>
+  <tr>
+    <td><strong>Role Selection</strong></td>
+    <td>&ldquo;I am in the boardroom / I run L&amp;D / I manage a team. Tailor to my perspective.&rdquo;</td>
+    <td>After selecting role in the summary</td>
+  </tr>
+  <tr>
+    <td><strong>Benchmark Scores</strong></td>
+    <td>All 4 self-assessment answers with market averages and maturity level. E.g.: &ldquo;Strategy: Conceptual &mdash; you&rsquo;re at 44% (market: 18% linked)&rdquo;</td>
+    <td>After completing the 4-question benchmark quiz</td>
+  </tr>
+</table>
+
+<p><strong>Prompt structure:</strong></p>
+<ol>
+  <li><strong>Chapter title + source</strong> (Bilendi panel, sample sizes)</li>
+  <li><strong>Market data</strong> (the actual stats from that chapter)</li>
+  <li><strong>Key insight</strong> (the narrative takeaway)</li>
+  <li><strong>Personal context</strong> (role + benchmark scores)</li>
+  <li><strong>Specific instruction</strong> (not &ldquo;help me understand&rdquo; but &ldquo;compare my scores, identify my 3 biggest gaps, give me a 90-day action plan&rdquo;)</li>
+</ol>
+
+<p>If no self-assessment is completed, the prompt instead says: <em>&ldquo;Ask me about my industry, company size, and role to personalize your analysis.&rdquo;</em></p>
+
+<p><strong>Three output channels:</strong></p>
 <ul>
-  <li><strong>Studytube only appears in the "With What?" layer</strong> — never before. Data first, always.</li>
-  <li><strong>Every data point answers "So what does this mean for me?"</strong> — Lenny's lesson from 2025.</li>
-  <li><strong>NL vs DE comparisons throughout</strong> — teaser for a separate deep dive later.</li>
-  <li><strong>Foreword with video</strong> — 60-90s, with animated diverging lines (the two clocks).</li>
-  <li><strong>3-minute AI summary</strong> — role-toggle: CHRO / L&D Manager / CEO view.</li>
+  <li><strong>ChatGPT</strong> &mdash; compact prompt, opens <code>chatgpt.com/?q=...</code> as URL (length-aware)</li>
+  <li><strong>Claude</strong> &mdash; full markdown prompt copied to clipboard, opens <code>claude.ai/new</code></li>
+  <li><strong>Copy for agent</strong> &mdash; full markdown to clipboard for any AI tool</li>
 </ul>
 
-<div class="links">
-  <p><strong>Interactive versions:</strong></p>
-  <p><a href="https://shareables-gray.vercel.app/lnd-monitor-2026-report-architecture.html">→ Full interactive blueprint</a></p>
-  <p><a href="https://shareables-gray.vercel.app/lnd-monitor-2026-wireframes.html">→ Wireframes</a></p>
-  <p><a href="https://shareables-gray.vercel.app/lnd-monitor-2026-predict-game.html">→ Predict Game prototype</a></p>
+<!-- ============================================ -->
+<h2>L&D Impact Scan — Follow-Up CTA</h2>
+
+<div class="callout">
+  <p><strong>The report is the start, not the end.</strong> The conclusion links to the L&D Impact Scan as the logical next step &mdash; turning market-level insights into a personalized diagnosis.</p>
 </div>
+
+<p><strong>The follow-up chain:</strong></p>
+<ol>
+  <li><strong>L&amp;D Monitor Report</strong> &mdash; market-level data, shows the landscape</li>
+  <li><strong>L&amp;D Impact Scan</strong> &mdash; personal diagnosis: &ldquo;where do <em>you</em> stand?&rdquo; (linked at end of conclusion)</li>
+  <li><strong>Webinar</strong> &mdash; live discussion of findings, surfaces real pain points</li>
+  <li><strong>Targeted content &amp; tools</strong> &mdash; specific solutions for identified gaps</li>
+</ol>
+
+<p>The scan link appears in the <strong>conclusion</strong> as a natural next step: <em>&ldquo;You&rsquo;ve seen where the market stands. Now find out where you stand.&rdquo;</em> &mdash; linking to <code>scan.studytube.nl</code>.</p>
+
+<!-- ============================================ -->
+<h2>Key Design Choices</h2>
+
+<h3>v8 Structural Principles</h3>
+<ul>
+  <li><strong>Data first, interpretation second</strong> &mdash; Each chapter opens with a &ldquo;Chapter X in numbers&rdquo; data anchor block. Stats presented together before any editorial. Research publication rhythm, not thought piece. <span class="new">v8</span></li>
+  <li><strong>One climax per chapter</strong> &mdash; Each chapter has one argument at its peak. Supporting beats subordinate to it. Ch4: skills deadline = peak; AI = bridge; 2030 org = coda. <span class="new">v8</span></li>
+  <li><strong>Maturity map from Ch2 onward</strong> &mdash; The 29/43/23/5 distribution introduced as a named framework in Ch2. Reader can place themselves. Benchmark quiz feeds into it. Subsequent chapters reference it. <span class="new">v8</span></li>
+  <li><strong>Explicit chapter bridges</strong> &mdash; Each transition has a bridging paragraph. Ch2&rarr;3 specifically strengthened: &ldquo;What does that actually feel like for the people on the receiving end?&rdquo; <span class="new">v8</span></li>
+  <li><strong>Trust the data to land</strong> &mdash; Research register, not keynote register. Where the numbers are alarming on their own, the editorial steps back. Punchlines reserved for where data alone doesn&rsquo;t convey the implication. <span class="new">v8</span></li>
+  <li><strong>No Studytube in the narrative</strong> &mdash; No &ldquo;organizations we work with&rdquo; or &ldquo;our customer base&rdquo; in analytical chapters. Studytube appears only in cover, footer, and CTA. <span class="new">v8</span></li>
+  <li><strong>Warm bridge to advice</strong> &mdash; Transitional sentence before each &ldquo;What to do about it&rdquo; section. Smooths register change from analytical to prescriptive. <span class="new">v8</span></li>
+  <li><strong>Pattern, not chain</strong> &mdash; The conclusion frames 4 chapters as a self-reinforcing pattern. Different starting points. Benchmark shows yours.</li>
+</ul>
+
+<h3>Design &amp; Experience Choices</h3>
+<ul>
+  <li><strong>Function-based personas, not titles</strong> &mdash; &ldquo;In the boardroom&rdquo; / &ldquo;Run L&amp;D&rdquo; / &ldquo;Manage a team.&rdquo; Resolves Imke&rsquo;s overlap concern.</li>
+  <li><strong>Progressive personalization</strong> &mdash; the more the reader interacts (role &rarr; benchmark &rarr; perception game), the richer their experience.</li>
+  <li><strong>Perception Game as emotional turning point</strong> &mdash; embedded mid-Chapter 3. Visceral discovery &gt; being told numbers.</li>
+  <li><strong>Lead capture built in</strong> &mdash; Influencer canvases + full data dashboard as email gates.</li>
+  <li><strong>Chapter-linked stat cards</strong> &mdash; summary cards are navigation, not decoration. Each links to its source chapter.</li>
+</ul>
+
+<!-- ============================================ -->
+<h2>How We Addressed Lenny&rsquo;s v7 Feedback</h2>
+
+<p style="font-size: 13px; color: #666; margin-bottom: 16px;">5 structural points from Lenny&rsquo;s v7 review, each with his original note, what changed, and where it landed in the architecture.</p>
+
+<table>
+  <tr>
+    <th style="width: 30px;">#</th>
+    <th style="width: 200px;">Lenny&rsquo;s feedback</th>
+    <th style="width: 200px;">What he said</th>
+    <th>v8 response</th>
+    <th style="width: 100px;">Where</th>
+  </tr>
+  <tr>
+    <td><strong>1</strong></td>
+    <td><strong>Let the data lead the story</strong></td>
+    <td style="font-size: 12px; color: #666;">&ldquo;In 2025, &lsquo;L&amp;D in cijfers&rsquo; gave the data its own space. Readers could see stats together, draw their own interpretation, then read our analysis. That rhythm of evidence first, interpretation second, is missing. The report feels more like a thought piece than a research publication. We surveyed 2,832 people &mdash; the storyline should show that off, not bury it.&rdquo;</td>
+    <td>Every chapter now opens with a <strong>&ldquo;Chapter X in numbers&rdquo; data anchor block</strong>. Stats presented together before any editorial. Research publication rhythm, not thought piece. Reader forms their own view first.</td>
+    <td><span class="arc-tag tag-green">All 4 chapters</span></td>
+  </tr>
+  <tr>
+    <td><strong>2</strong></td>
+    <td><strong>Ch2 &rarr; Ch3 handoff is the weakest link</strong></td>
+    <td style="font-size: 12px; color: #666;">&ldquo;V7 fixed most transitions, but this one doesn&rsquo;t land. Ch2 ends with tactical advice, Ch3 opens with a general statement. The reader doesn&rsquo;t feel the causal handoff. One bridging paragraph would fix it.&rdquo;</td>
+    <td>Explicit bridge paragraph added: <em>&ldquo;We&rsquo;ve seen how strategy stalls and operations default to survival mode. But what does that actually feel like for the people on the receiving end?&rdquo;</em> Moves from system-level (Ch2) to human-level (Ch3).</td>
+    <td><span class="arc-tag tag-green">Bridge 2&rarr;3</span></td>
+  </tr>
+  <tr>
+    <td><strong>3</strong></td>
+    <td><strong>Introduce the maturity framework earlier</strong></td>
+    <td style="font-size: 12px; color: #666;">&ldquo;In 2025, the L&amp;D impact model was a compass throughout. V7 moved the self-assessment to the conclusion, which is better than v6, but the reader still doesn&rsquo;t get a framework to orient themselves until the end. Consider introducing the maturity levels (29/43/23/5) as a structured framework in Ch2.&rdquo;</td>
+    <td>The <strong>29/43/23/5 Maturity Map</strong> is now introduced as a named, visual framework in Chapter 2. Benchmark quiz places the reader on it. Each subsequent chapter adds context. The reader has a compass from Ch2 onward, not just in the conclusion.</td>
+    <td><span class="arc-tag tag-green">Ch2 framework</span></td>
+  </tr>
+  <tr>
+    <td><strong>4</strong></td>
+    <td><strong>Decide on one climax for Chapter 4</strong></td>
+    <td style="font-size: 12px; color: #666;">&ldquo;Ch4 remains the longest chapter and still carries three distinct storylines: the skills deadline, AI as the way forward, and the 2030 organization. What is the climax of this report? Pick one as the peak and let the other two support it.&rdquo;</td>
+    <td><strong>Skills deadline = peak.</strong> The one argument: 39% transform by 2030, 9% visibility, can&rsquo;t close what you can&rsquo;t see. <strong>AI = bridge</strong> (supports the peak: gives capacity to act). <strong>2030 org = coda</strong> (brief closing note: every element exists today, difference is infrastructure). Three beats, one climax.</td>
+    <td><span class="arc-tag tag-green">Ch4 structure</span></td>
+  </tr>
+  <tr>
+    <td><strong>5</strong></td>
+    <td><strong>Remove Studytube from the narrative</strong></td>
+    <td style="font-size: 12px; color: #666;">&ldquo;V7 introduces &lsquo;organizations we work with&rsquo; and &lsquo;our own customer base&rsquo; inside the analytical chapters. V6 actually had a more objective tone here. The credibility of the story depends on the reader trusting that we&rsquo;re presenting research, not making a case for our platform.&rdquo;</td>
+    <td><strong>All Studytube references removed from analytical chapters.</strong> No &ldquo;organizations we work with&rdquo; or &ldquo;our customer base&rdquo; in the narrative. Studytube appears only in cover, footer, and CTA &mdash; never in the argument.</td>
+    <td><span class="arc-tag tag-green">Ch1&ndash;4 narrative</span></td>
+  </tr>
+</table>
+
+<p style="font-size: 12px; color: #999; margin-top: 8px;"><strong>Also addressed (copy-level):</strong> Keynote register softened &mdash; where data is already alarming, the editorial steps back. Warm bridging sentences added before each &ldquo;What to do about it&rdquo; section. Both documented under Key Design Choices above.</p>
 
 </body>
 </html>
