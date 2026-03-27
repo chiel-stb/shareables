@@ -561,40 +561,65 @@
   }
 
   /* === CHAIN VIZ === */
-  .chain-container {
-    display: flex; flex-direction: column; gap: 0; margin: 40px 0; position: relative;
+  /* Wirkungskette Pyramid */
+  .pyramid-container {
+    position: relative; width: 100%; max-width: 800px; margin: 40px auto; padding-bottom: 16px;
   }
-  .chain-node {
-    display: flex; align-items: center; gap: 20px; padding: 20px 24px;
-    background: #fff;
-    border: 1px solid #e5e7eb; border-radius: 16px;
-    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
-    opacity: 0; transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+  .pyramid-level {
+    position: relative; height: 130px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 32px; border-radius: 14px; overflow: hidden;
+    cursor: default;
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.3s ease;
   }
-  .chain-node.visible { opacity: 1; transform: translateY(0); }
-  .chain-node-num {
-    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 700; color: #fff;
-    background: #056DFF;
+  .pyramid-level.visible { opacity: 1; transform: translateY(0); }
+  .pyramid-level:hover { box-shadow: 0 12px 32px rgba(5,109,255,0.2); }
+  .pyramid-level.plvl-4 {
+    background: linear-gradient(135deg, #056DFF 0%, #3B8FFF 100%);
+    width: 45%; margin-left: 27.5%;
   }
-  .chain-node-title { font-size: 15px; font-weight: 700; color: #11295A; margin-bottom: 2px; }
-  .chain-node-stat { font-size: 13px; color: #6b7280; }
-  .chain-arrow {
-    display: flex; justify-content: center; padding: 4px 0;
-    color: #d1d5db; font-size: 20px;
-    opacity: 0; transition: opacity 0.4s ease;
+  .pyramid-level.plvl-3 {
+    background: linear-gradient(135deg, #3B8FFF 0%, #6BA8FF 100%);
+    width: 65%; margin-left: 17.5%;
   }
-  .chain-arrow.visible { opacity: 1; }
-  .chain-loop {
+  .pyramid-level.plvl-2 {
+    background: linear-gradient(135deg, #6BA8FF 0%, #A3CAFF 100%);
+    width: 85%; margin-left: 7.5%;
+  }
+  .pyramid-level.plvl-1 {
+    background: linear-gradient(135deg, #A3CAFF 0%, #D4E4FF 100%);
+    width: 100%; margin-left: 0;
+  }
+  .pyramid-level-content {
+    flex: 1; display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 5;
+  }
+  .pyramid-level-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85;
+  }
+  .pyramid-level-text {
+    font-size: 15px; font-weight: 400; line-height: 1.45; max-width: 90%;
+  }
+  .plvl-4 .pyramid-level-label, .plvl-4 .pyramid-level-text, .plvl-4 .pyramid-pct,
+  .plvl-3 .pyramid-level-label, .plvl-3 .pyramid-level-text, .plvl-3 .pyramid-pct { color: #fff; }
+  .plvl-2 .pyramid-level-label, .plvl-2 .pyramid-level-text, .plvl-2 .pyramid-pct,
+  .plvl-1 .pyramid-level-label, .plvl-1 .pyramid-level-text, .plvl-1 .pyramid-pct { color: #11295A; }
+  .pyramid-pct {
+    font-size: 48px; font-weight: 700; line-height: 1; margin-left: 24px;
+    min-width: 100px; text-align: right; position: relative; z-index: 5;
+  }
+  .pyramid-cutout {
+    position: absolute; bottom: -1px; right: -1px; width: 90px; height: 36px; z-index: 10;
+  }
+  .pyramid-cutout svg { width: 100%; height: 100%; display: block; }
+  .pyramid-loop {
     text-align: center; margin-top: 16px; padding: 16px 24px;
     background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2);
     border-radius: 12px; font-size: 13px; font-weight: 700; color: var(--st-red);
     opacity: 0; transform: scale(0.95);
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
-  .chain-loop.visible { opacity: 1; transform: scale(1); }
+  .pyramid-loop.visible { opacity: 1; transform: scale(1); }
 
   /* === CTA SECTION === */
   .cta-big {
@@ -805,7 +830,11 @@
     .gauge-row { grid-template-columns: 1fr; }
     .bento-grid-interactive { grid-template-columns: 1fr; }
     .gp-options { flex-direction: column; }
-    .chain-node { flex-direction: column; text-align: center; }
+    .pyramid-level { height: auto; min-height: 110px; padding: 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .pyramid-level.plvl-4, .pyramid-level.plvl-3, .pyramid-level.plvl-2, .pyramid-level.plvl-1 { width: 100%; margin-left: 0; }
+    .pyramid-pct { margin-left: 0; font-size: 38px; text-align: left; }
+    .pyramid-level-text { max-width: 100%; font-size: 14px; }
+    .pyramid-cutout { width: 60px; height: 26px; }
     .ceo-skill-inputs { grid-template-columns: 1fr; }
     .ceo-fold-body { max-height: none !important; opacity: 1 !important; }
   }
@@ -1710,40 +1739,65 @@
       <p class="narrative-text">Das Problem liegt nicht in einzelnen Schwachstellen, sondern in einer Wirkungskette, in der jedes schwache Glied die gesamte Kette beeintr&auml;chtigt.</p>
     </div>
 
-    <!-- Wirkungskette Chain Visualization -->
-    <div class="chain-container reveal" id="chainViz">
-      <div class="chain-node" data-chain="1">
-        <div class="chain-node-num">1</div>
-        <div>
-          <div class="chain-node-title">Strategie</div>
-          <div class="chain-node-stat">71&nbsp;% haben Strategie, nur 21&nbsp;% verkn&uuml;pfen mit Zielen</div>
+    <!-- Wirkungskette Pyramid Visualization -->
+    <div class="pyramid-container reveal" id="chainViz">
+      <!-- Level 4: Peak — Skills transparency -->
+      <div class="pyramid-level plvl-4" data-chain="1">
+        <div class="pyramid-cutout">
+          <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 40L13.3 40C17.9 40 21.8 36.5 22.2 31.9L22.9 22.1C23.3 17.5 27.2 14 31.8 14L90.9 14C95.8 14 99.8 10 99.8 5.1L99.8 0L99.8 40Z" fill="#f8f9fb"/>
+          </svg>
         </div>
-      </div>
-      <div class="chain-arrow">&darr;</div>
-      <div class="chain-node" data-chain="2">
-        <div class="chain-node-num">2</div>
-        <div>
-          <div class="chain-node-title">Operativ</div>
-          <div class="chain-node-stat">72&nbsp;% arbeiten reaktiv</div>
+        <div class="pyramid-level-content">
+          <div class="pyramid-level-label">Skill-Transparenz</div>
+          <div class="pyramid-level-text">Systematische Transparenz &uuml;ber vorhandene und ben&ouml;tigte Skills</div>
         </div>
+        <div class="pyramid-pct">10&nbsp;%</div>
       </div>
-      <div class="chain-arrow">&darr;</div>
-      <div class="chain-node" data-chain="3">
-        <div class="chain-node-num">3</div>
-        <div>
-          <div class="chain-node-title">Wahrnehmung</div>
-          <div class="chain-node-stat">28 PP L&uuml;cke zwischen FK und MA</div>
+
+      <!-- Level 3: Perception gap -->
+      <div class="pyramid-level plvl-3" data-chain="2">
+        <div class="pyramid-cutout">
+          <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 40L13.3 40C17.9 40 21.8 36.5 22.2 31.9L22.9 22.1C23.3 17.5 27.2 14 31.8 14L90.9 14C95.8 14 99.8 10 99.8 5.1L99.8 0L99.8 40Z" fill="#f8f9fb"/>
+          </svg>
         </div>
-      </div>
-      <div class="chain-arrow">&darr;</div>
-      <div class="chain-node" data-chain="4">
-        <div class="chain-node-num">4</div>
-        <div>
-          <div class="chain-node-title">Skills</div>
-          <div class="chain-node-stat">Nur 10&nbsp;% haben Transparenz</div>
+        <div class="pyramid-level-content">
+          <div class="pyramid-level-label">Wahrnehmung</div>
+          <div class="pyramid-level-text">Lernangebot wird als zielgerichtet und relevant wahrgenommen</div>
         </div>
+        <div class="pyramid-pct">21&nbsp;%</div>
       </div>
-      <div class="chain-loop" data-chain="loop">&#x21BB; Wirkungskette verst&auml;rkt sich selbst</div>
+
+      <!-- Level 2: Operational link -->
+      <div class="pyramid-level plvl-2" data-chain="3">
+        <div class="pyramid-cutout">
+          <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 40L13.3 40C17.9 40 21.8 36.5 22.2 31.9L22.9 22.1C23.3 17.5 27.2 14 31.8 14L90.9 14C95.8 14 99.8 10 99.8 5.1L99.8 0L99.8 40Z" fill="#f8f9fb"/>
+          </svg>
+        </div>
+        <div class="pyramid-level-content">
+          <div class="pyramid-level-label">Operativ</div>
+          <div class="pyramid-level-text">Verbindung zu Unternehmenszielen erkannt, aber nicht in klare Priorit&auml;ten &uuml;bersetzt</div>
+        </div>
+        <div class="pyramid-pct">45&nbsp;%</div>
+      </div>
+
+      <!-- Level 1: Base — Strategy exists -->
+      <div class="pyramid-level plvl-1" data-chain="4">
+        <div class="pyramid-cutout">
+          <svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 40L13.3 40C17.9 40 21.8 36.5 22.2 31.9L22.9 22.1C23.3 17.5 27.2 14 31.8 14L90.9 14C95.8 14 99.8 10 99.8 5.1L99.8 0L99.8 40Z" fill="#f8f9fb"/>
+          </svg>
+        </div>
+        <div class="pyramid-level-content">
+          <div class="pyramid-level-label">Strategie</div>
+          <div class="pyramid-level-text">Eine Lernstrategie oder klare Leitlinien sind vorhanden</div>
+        </div>
+        <div class="pyramid-pct">71&nbsp;%</div>
+      </div>
+
+      <div class="pyramid-loop" data-chain="loop">&#x21BB; Wirkungskette verst&auml;rkt sich selbst</div>
     </div>
 
     <!-- Closing Text -->
@@ -2190,7 +2244,7 @@ function initGapPrioritizer() {
 }
 
 // ============================================================
-// CHAIN VIZ — Animate Wirkungskette nodes on scroll
+// PYRAMID VIZ — Animate Wirkungskette pyramid on scroll
 // ============================================================
 function initChainViz() {
   var chainContainer = document.getElementById('chainViz');
@@ -2201,23 +2255,16 @@ function initChainViz() {
       if (entry.isIntersecting) {
         observer.disconnect();
 
-        var nodes = chainContainer.querySelectorAll('.chain-node');
-        var arrows = chainContainer.querySelectorAll('.chain-arrow');
-        var loop = chainContainer.querySelector('.chain-loop');
+        var levels = chainContainer.querySelectorAll('.pyramid-level');
+        var loop = chainContainer.querySelector('.pyramid-loop');
 
+        // Animate from bottom (base) up — reverse order for visual cascade
         var delay = 0;
-        for (var i = 0; i < nodes.length; i++) {
-          (function(node, d) {
-            setTimeout(function() { node.classList.add('visible'); }, d);
-          })(nodes[i], delay);
-          delay += 400;
-
-          if (i < arrows.length) {
-            (function(arrow, d) {
-              setTimeout(function() { arrow.classList.add('visible'); }, d);
-            })(arrows[i], delay);
-            delay += 200;
-          }
+        for (var i = levels.length - 1; i >= 0; i--) {
+          (function(level, d) {
+            setTimeout(function() { level.classList.add('visible'); }, d);
+          })(levels[i], delay);
+          delay += 350;
         }
 
         // Loop indicator last
