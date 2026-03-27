@@ -133,7 +133,7 @@
   /* Full-bleed background image */
   .cover-bg-image {
     position: absolute; top: 0; right: 0;
-    width: 58%; height: 100%;
+    width: 44%; height: 100%;
     z-index: 1;
   }
   .cover-bg-image img {
@@ -144,15 +144,15 @@
 
   /* Gradient blend from left bg into image */
   .cover-blend {
-    position: absolute; top: 0; left: 0;
-    width: 62%; height: 100%;
-    background: linear-gradient(to right, #f2f5f8 65%, rgba(242,245,248,0) 100%);
+    position: absolute; top: 0; right: 0;
+    width: 48%; height: 100%;
+    background: linear-gradient(to right, #f2f5f8 6%, rgba(242,245,248,0) 45%);
     z-index: 2;
   }
 
   /* Shapes pattern in text area */
   .cover-pattern-bg {
-    position: absolute; top: 0; left: 0; width: 55%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 60%; height: 100%;
     z-index: 0; pointer-events: none; overflow: hidden; opacity: 0.45;
   }
   .cover-pattern-bg img {
@@ -168,7 +168,7 @@
     position: relative; z-index: 10;
     display: flex; flex-direction: column; justify-content: center;
     height: 100vh;
-    max-width: 560px;
+    max-width: 620px;
     padding: 0 0 0 max(48px, calc((100vw - 1200px)/2 + 48px));
   }
   .cover-label {
