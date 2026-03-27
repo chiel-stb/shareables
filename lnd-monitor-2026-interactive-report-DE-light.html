@@ -1227,217 +1227,15 @@
       <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:0;">Es wird still im Raum. Niemand kann die Frage beantworten. Genau hier zeigt sich die L&uuml;cke zwischen Strategie und Praxis &ndash; und genau dieses Szenario erleben viele L&amp;D-Verantwortliche regelm&auml;&szlig;ig.</p>
     </div>
 
-    <!-- CEO Dashboard Generator -->
-    <div class="reveal" style="margin-top:32px;">
-      <div id="ceoFoldTrigger" class="glass ceo-fold-trigger" onclick="toggleCeoDashboard()" style="margin-bottom:0;">
-        <div style="display:flex;align-items:flex-start;gap:20px;">
-          <div style="flex:1;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-              <span style="font-size:24px;">&#x1F4CA;</span>
-              <h3 style="font-size:20px;font-weight:700;color:#11295A;">Strategie-Dashboard erstellen</h3>
-              <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(16,185,129,0.15);color:var(--st-green);border:1px solid rgba(16,185,129,0.3);">INTERAKTIV</span>
-            </div>
-            <p style="font-size:14px;color:#6b7280;line-height:1.6;">Wenn Ihre Gesch&auml;ftsf&uuml;hrung den Business-Impact Ihrer Lernstrategie nicht in 30 Sekunden sehen kann, existiert dieser Impact effektiv nicht. Erstellen Sie ein Dashboard, das die Sprache Ihres CEO spricht.</p>
-            <div style="display:flex;align-items:center;gap:16px;margin-top:14px;">
-              <span style="font-size:13px;color:#056DFF;font-weight:700;">5 Fragen &rarr; 1 kopierbares Dashboard</span>
-              <span class="ceo-fold-chevron pulse-arrow" style="color:#056DFF;font-size:18px;">&#x25BC;</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="ceoFoldBody" class="ceo-fold-body">
-        <div style="padding-top:2px;">
-          <div class="glass" style="border-top:none;border-top-left-radius:0;border-top-right-radius:0;margin-bottom:24px;">
-            <p style="font-size:14px;color:#6b7280;margin-bottom:16px;">Beantworten Sie 5 Fragen &uuml;ber Ihre Organisation. Wir erstellen ein kopierbares 30-Sekunden-Dashboard, das Sie morgen Ihrem CEO oder CFO mailen k&ouml;nnen.</p>
-            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-              <div class="ceo-guess-badge">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="6"/><line x1="7" y1="4" x2="7" y2="7"/><circle cx="7" cy="9.5" r="0.5" fill="currentColor"/></svg>
-                Wenn Sie raten m&uuml;ssen, ist das Ihr erster blinder Fleck.
-              </div>
-              <div style="display:flex;gap:8px;" id="ceoDots">
-                <div class="ceo-c-dot" data-q="1"></div>
-                <div class="ceo-c-dot" data-q="2"></div>
-                <div class="ceo-c-dot" data-q="3"></div>
-                <div class="ceo-c-dot" data-q="4"></div>
-                <div class="ceo-c-dot" data-q="5"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Q1 -->
-          <div class="glass-light reveal" style="margin-bottom:16px;">
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ceo-q-number">1</div>
-              <div style="flex:1;">
-                <h4 style="font-size:15px;font-weight:700;color:#11295A;margin-bottom:4px;">Das oberste Ziel</h4>
-                <p style="font-size:13px;color:#6b7280;margin-bottom:14px;">Was ist die #1 strategische Priorit&auml;t Ihres CEO f&uuml;r die n&auml;chsten 12 Monate?</p>
-                <select id="ceoQ1" class="ceo-q-select" onchange="ceoCheckCompletion()">
-                  <option value="">Priorit&auml;t ausw&auml;hlen...</option>
-                  <option value="KI &amp; Digitale Transformation">KI &amp; Digitale Transformation</option>
-                  <option value="Neue M&auml;rkte erschlie&szlig;en">Neue M&auml;rkte erschlie&szlig;en</option>
-                  <option value="Margen- &amp; Kosteneffizienz">Margen- &amp; Kosteneffizienz</option>
-                  <option value="Talente binden &amp; gewinnen">Talente binden &amp; gewinnen</option>
-                  <option value="Produkteinf&uuml;hrung oder Innovation">Produkteinf&uuml;hrung oder Innovation</option>
-                  <option value="Organisatorisches Wachstum &amp; Skalierbarkeit">Organisatorisches Wachstum &amp; Skalierbarkeit</option>
-                  <option value="Nachhaltigkeit &amp; Compliance">Nachhaltigkeit &amp; Compliance</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <!-- Q2 -->
-          <div class="glass-light reveal" style="margin-bottom:16px;">
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ceo-q-number">2</div>
-              <div style="flex:1;">
-                <h4 style="font-size:15px;font-weight:700;color:#11295A;margin-bottom:4px;">Die Skill-Festung</h4>
-                <p style="font-size:13px;color:#6b7280;margin-bottom:14px;">Top 3 kritische F&auml;higkeiten, um diese Priorit&auml;t umzusetzen?</p>
-                <div class="ceo-skill-inputs">
-                  <input type="text" id="ceoQ2a" class="ceo-q-input" placeholder="F&auml;higkeit 1" oninput="ceoCheckCompletion()" maxlength="40">
-                  <input type="text" id="ceoQ2b" class="ceo-q-input" placeholder="F&auml;higkeit 2" oninput="ceoCheckCompletion()" maxlength="40">
-                  <input type="text" id="ceoQ2c" class="ceo-q-input" placeholder="F&auml;higkeit 3" oninput="ceoCheckCompletion()" maxlength="40">
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Q3 -->
-          <div class="glass-light reveal" style="margin-bottom:16px;">
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ceo-q-number">3</div>
-              <div style="flex:1;">
-                <h4 style="font-size:15px;font-weight:700;color:#11295A;margin-bottom:4px;">Die Sichtbarkeit</h4>
-                <p style="font-size:13px;color:#6b7280;margin-bottom:14px;">Welcher Anteil Ihrer Mitarbeitenden hat ein messbares Profil f&uuml;r diese F&auml;higkeiten?</p>
-                <div style="display:flex;align-items:center;gap:24px;">
-                  <div style="position:relative;width:100%;padding-top:8px;flex:1;">
-                    <div class="ceo-vis-fill" id="ceoVisFill" style="width:0%;"></div>
-                    <input type="range" class="ceo-vis-slider" id="ceoQ3" min="0" max="100" value="0" oninput="ceoUpdateVisSlider(this.value);ceoCheckCompletion();">
-                  </div>
-                  <div id="ceoVisValue" style="font-size:36px;font-weight:700;color:#11295A;min-width:70px;text-align:right;">0%</div>
-                </div>
-                <div style="font-size:12px;color:#9ca3af;margin-top:6px;">L&amp;D Monitor Durchschnitt: Nur 10&nbsp;% haben vollst&auml;ndige Transparenz.</div>
-              </div>
-            </div>
-          </div>
-          <!-- Q4 -->
-          <div class="glass-light reveal" style="margin-bottom:16px;">
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ceo-q-number">4</div>
-              <div style="flex:1;">
-                <h4 style="font-size:15px;font-weight:700;color:#11295A;margin-bottom:4px;">Die Capability-Investition</h4>
-                <p style="font-size:13px;color:#6b7280;margin-bottom:14px;">Wie hoch ist Ihr gesamtes L&amp;D-Budget in diesem Jahr?</p>
-                <div style="position:relative;">
-                  <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#9ca3af;font-weight:700;font-size:16px;">&euro;</span>
-                  <input type="text" id="ceoQ4" class="ceo-q-input" placeholder="z.B. 250.000" oninput="ceoFormatBudget(this);ceoCheckCompletion();" style="padding-left:36px;">
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Q5 -->
-          <div class="glass-light reveal" style="margin-bottom:24px;">
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div class="ceo-q-number">5</div>
-              <div style="flex:1;">
-                <h4 style="font-size:15px;font-weight:700;color:#11295A;margin-bottom:4px;">Die Lerngeschwindigkeit</h4>
-                <p style="font-size:13px;color:#6b7280;margin-bottom:14px;">Wenn der Markt morgen Disruption bringt, wie lange dauert es, ein kritisches Team umzuschulen?</p>
-                <select id="ceoQ5" class="ceo-q-select" onchange="ceoCheckCompletion()">
-                  <option value="">Zeitraum ausw&auml;hlen...</option>
-                  <option value="Weniger als 1 Monat">Weniger als 1 Monat</option>
-                  <option value="1-3 Monate">1-3 Monate</option>
-                  <option value="3-6 Monate">3-6 Monate</option>
-                  <option value="6+ Monate">6+ Monate</option>
-                  <option value="Das wissen wir nicht">Das wissen wir nicht</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <!-- Generate -->
-          <div class="reveal" style="text-align:center;margin-bottom:32px;">
-            <button id="ceoBtnGenerate" class="ceo-btn-generate" disabled onclick="ceoGenerateDashboard()">
-              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="14" height="14" rx="2"/><line x1="7" y1="8" x2="13" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/></svg>
-              Dashboard erstellen
-            </button>
-            <div id="ceoIncompleteBadge" style="margin-top:10px;font-size:13px;color:#9ca3af;">Beantworten Sie alle 5 Fragen</div>
-          </div>
-
-          <!-- Dashboard output -->
-          <div id="ceoDashboardResult" style="display:none;">
-            <div class="glass" style="margin-bottom:24px;padding:0;overflow:hidden;">
-              <div style="padding:28px 28px 8px 28px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                  <div>
-                    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:4px;">Generierter Report</div>
-                    <h4 style="font-size:18px;font-weight:700;color:#11295A;">L&amp;D Capability &amp; Risk Report</h4>
-                  </div>
-                  <div style="font-size:13px;color:#9ca3af;" id="ceoDashDate"></div>
-                </div>
-              </div>
-              <div class="ceo-dashboard-output" style="margin:0 12px 12px 12px;">
-                <div class="ceo-dash-line" id="ceoDLine1">
-                  <div class="ceo-dash-icon" style="background:rgba(5,109,255,0.12);">&#x1F3AF;</div>
-                  <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#9ca3af;margin-bottom:3px;">Strategische Ausrichtung</div><div style="font-size:14px;color:#374151;">Unsere #1 Priorit&auml;t ist <span class="ceo-dash-highlight" id="ceoDPriority"></span>. Erfolg h&auml;ngt ab von <span class="ceo-dash-highlight" id="ceoDSkills"></span>.</div></div>
-                </div>
-                <div class="ceo-dash-line" id="ceoDLine2">
-                  <div class="ceo-dash-icon" style="background:rgba(245,158,11,0.12);">&#x26A0;&#xFE0F;</div>
-                  <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#9ca3af;margin-bottom:3px;">Das Sichtbarkeitsrisiko</div><div style="font-size:14px;color:#374151;">Wir haben Daten &uuml;ber <span class="ceo-dash-highlight" id="ceoDVis"></span> unserer Capabilities. Wir operieren mit einem <span class="ceo-dash-highlight" style="color:var(--st-yellow);" id="ceoDBlind"></span> blinden Fleck.</div></div>
-                </div>
-                <div class="ceo-dash-line" id="ceoDLine3">
-                  <div class="ceo-dash-icon" style="background:rgba(16,185,129,0.12);">&#x1F4B0;</div>
-                  <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#9ca3af;margin-bottom:3px;">Capability-Investition</div><div style="font-size:14px;color:#374151;">Wir investieren <span class="ceo-dash-highlight" id="ceoDB"></span> in diesem Jahr. Unser Nachweis, dass diese Investition die Skill-L&uuml;cken schlie&szlig;t, wird durch fehlende Sichtbarkeit eingeschr&auml;nkt.</div></div>
-                </div>
-                <div class="ceo-dash-line" id="ceoDLine4">
-                  <div class="ceo-dash-icon" style="background:rgba(0,194,255,0.12);">&#x23F1;&#xFE0F;</div>
-                  <div><div style="font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#9ca3af;margin-bottom:3px;">Lerngeschwindigkeit</div><div style="font-size:14px;color:#374151;">Unsere Lerngeschwindigkeit ist derzeit <span class="ceo-dash-highlight" id="ceoDVel"></span>.</div></div>
-                </div>
-                <div class="ceo-dash-line" id="ceoDLine5" style="border-bottom:none;">
-                  <div class="ceo-dash-icon" style="background:rgba(239,68,68,0.12);">&#x1F4A1;</div>
-                  <div><div class="ceo-bottom-line"><div style="font-size:14px;font-weight:700;color:#11295A;">Die Quintessenz</div><div style="font-size:13px;color:#374151;margin-top:4px;" id="ceoDBottom"></div></div></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Blind Spot Ring -->
-            <div class="glass reveal" style="margin-bottom:24px;">
-              <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
-                <div class="ceo-blind-spot-ring">
-                  <svg width="160" height="160" viewBox="0 0 160 160">
-                    <circle cx="80" cy="80" r="70" fill="none" stroke="#e5e7eb" stroke-width="12"/>
-                    <circle id="ceoBlindRing" cx="80" cy="80" r="70" fill="none" stroke="url(#ceoBlindGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="439.82" stroke-dashoffset="439.82"/>
-                    <defs><linearGradient id="ceoBlindGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--st-yellow)"/><stop offset="100%" stop-color="var(--st-red)"/></linearGradient></defs>
-                  </svg>
-                  <div class="ceo-blind-spot-value">
-                    <div id="ceoBlindPct" style="font-size:36px;font-weight:700;color:#11295A;">0%</div>
-                    <div style="font-size:11px;color:#9ca3af;">blinder Fleck</div>
-                  </div>
-                </div>
-                <div style="flex:1;min-width:240px;">
-                  <h4 style="font-size:16px;font-weight:700;color:#11295A;margin-bottom:6px;" id="ceoBlindHL"></h4>
-                  <p style="font-size:13px;color:#6b7280;" id="ceoBlindBody"></p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Copy / Reset -->
-            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px;">
-              <button class="ceo-btn-copy" onclick="ceoCopyDashboard()">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="8" height="8" rx="1.5"/><path d="M3 11V3h8"/></svg>
-                In die Zwischenablage kopieren
-              </button>
-              <button class="ceo-btn-reset" onclick="ceoResetDashboard()">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7a5 5 0 0 1 9-3M12 7a5 5 0 0 1-9 3"/><path d="M2 3v4h4M12 11v-4h-4"/></svg>
-                Zur&uuml;cksetzen
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Expert Card -->
-    <div class="glass reveal" style="margin-top:40px;margin-bottom:32px;border-left:3px solid var(--st-blue);position:relative;overflow:hidden;">
-      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
-        <div style="flex:1;min-width:280px;">
-          <div style="font-size:12px;color:#056DFF;font-weight:700;margin-bottom:6px;">Dr. Cornelia Hattula &mdash; Learning Strategist &amp; Author</div>
-          <h4 style="font-size:18px;font-weight:700;color:#11295A;margin-bottom:12px;">Lern-Ma&szlig;nahmenplan ist nicht gleich Lernstrategie</h4>
+    <!-- Expert Card — Dr. Cornelia Hattula -->
+    <div class="reveal" style="margin-top:40px;margin-bottom:32px;background:#EDF6FF;border-radius:16px;position:relative;overflow:hidden;padding:0;">
+      <div style="display:flex;align-items:stretch;min-height:280px;">
+        <!-- Text left -->
+        <div style="flex:1;padding:32px 28px 48px 32px;min-width:0;">
+          <div style="font-size:12px;color:#056DFF;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Experteneinsch&auml;tzung</div>
+          <h4 style="font-size:20px;font-weight:700;color:#11295A;margin-bottom:4px;">Dr. Cornelia Hattula</h4>
+          <div style="font-size:13px;color:#6b7280;margin-bottom:16px;">Learning Strategist &amp; Author</div>
+          <h5 style="font-size:16px;font-weight:700;color:#11295A;margin-bottom:12px;">Lern-Ma&szlig;nahmenplan ist nicht gleich Lernstrategie</h5>
           <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:12px;">Dass <strong style="color:#11295A;">71&nbsp;% der Organisationen</strong> eine Lernstrategie haben, klingt vielversprechend. Doch was als &bdquo;Lernstrategie&ldquo; bezeichnet wird, ist meist ein Ma&szlig;nahmenplan. Eine echte Lernstrategie beginnt bei der Unternehmensstrategie und arbeitet sich r&uuml;ckw&auml;rts vor:</p>
           <ol style="font-size:13px;color:#374151;line-height:1.7;padding-left:20px;margin-bottom:12px;">
             <li><strong style="color:#11295A;">Priorit&auml;ten:</strong> Welche strategischen Priorit&auml;ten verfolgt das Unternehmen?</li>
@@ -1446,9 +1244,16 @@
           </ol>
           <p style="font-size:13px;color:#6b7280;line-height:1.6;font-style:italic;"><strong style="color:#11295A;">Mein Rat:</strong> Erstens, Ma&szlig;nahmenplanung nicht mit Strategie verwechseln. Zweitens, eine aktivere Rolle einnehmen &ndash; Priorit&auml;ten analysieren, Capabilities ableiten, Kausalkette aufzeigen.</p>
         </div>
-        <div style="width:120px;height:120px;border-radius:12px;overflow:hidden;flex-shrink:0;">
-          <img src="./lnd-monitor-2026-assets/cornelia-hattula-portrait.png" alt="Dr. Cornelia Hattula" style="width:100%;height:100%;object-fit:cover;">
+        <!-- Photo right -->
+        <div style="width:220px;flex-shrink:0;display:flex;align-items:flex-end;justify-content:center;padding-top:20px;">
+          <img src="./lnd-monitor-2026-assets/cornelia-hattula-portrait.png" alt="Dr. Cornelia Hattula" style="width:100%;height:auto;display:block;object-fit:contain;object-position:bottom;">
         </div>
+      </div>
+      <!-- SVG cutout bottom-left -->
+      <div style="position:absolute;bottom:-1px;left:-1px;pointer-events:none;transform:scaleX(-1);">
+        <svg width="179" height="62" viewBox="0 0 179 62" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0 62L23.7872 62C32.0281 62 38.9211 55.7405 39.7131 47.5377L41.1036 33.1367C41.8956 24.9339 48.7886 18.6744 57.0296 18.6744L162.5 18.6744C171.337 18.6744 178.5 11.511 178.5 2.67443L178.5 0L178.5 20.1686L178.5 40.3372L178.5 62L0 62Z" fill="#f8f9fb"/>
+        </svg>
       </div>
     </div>
 
