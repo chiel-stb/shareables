@@ -3265,6 +3265,15 @@ if (document.readyState === 'loading') {
   init();
 }
 
+// Expose functions needed by onclick attributes
+window.startQuiz = startQuiz;
+window.selectQuizOption = selectQuizOption;
+window.skipQuizQuestion = skipQuizQuestion;
+window.nextQuizQuestion = nextQuizQuestion;
+window.closeQuizAndReveal = closeQuizAndReveal;
+window.scrollToBenchmark = scrollToBenchmark;
+window.resetBenchmark = resetBenchmark;
+
 })();
 </script>
 
