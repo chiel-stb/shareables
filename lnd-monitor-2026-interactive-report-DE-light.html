@@ -70,7 +70,7 @@
   }
   .glass-light {
     background: #f8f9fb;
-    border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px;
+    border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px;
   }
 
   /* === BARS === */
@@ -86,7 +86,7 @@
   }
   .bar-fill.blue { background: linear-gradient(90deg, var(--st-blue), var(--st-cyan)); }
   .bar-fill.navy { background: linear-gradient(90deg, #11295A, #133E95); }
-  .bar-fill.purple { background: linear-gradient(90deg, var(--st-purple), #9456FB); }
+  .bar-fill.purple { background: linear-gradient(90deg, #64748b, #94a3b8); }
   .bar-fill.green { background: linear-gradient(90deg, #059669, var(--st-green)); }
   .bar-fill.yellow { background: linear-gradient(90deg, #d97706, var(--st-yellow)); }
   .bar-fill.red { background: linear-gradient(90deg, #dc2626, var(--st-red)); }
@@ -252,7 +252,7 @@
     color: #11295A;
   }
   .summary-stat-value.purple-grad {
-    color: #7C3AED;
+    color: #64748b;
   }
   .summary-stat-bar { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
   .summary-stat-bar-fill {
@@ -261,7 +261,7 @@
     transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1); width: 0%;
   }
   .summary-stat-bar-fill.navy { background: linear-gradient(90deg, #11295A, #133E95); }
-  .summary-stat-bar-fill.purple { background: linear-gradient(90deg, var(--st-purple), #9456FB); }
+  .summary-stat-bar-fill.purple { background: linear-gradient(90deg, #64748b, #94a3b8); }
   .summary-stat-desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
   .summary-stat-note { font-size: 11px; color: #9ca3af; margin-top: 6px; font-style: italic; }
 
@@ -630,9 +630,9 @@
     box-shadow: 0 1px 8px rgba(0,0,0,0.06);
     margin-bottom: 12px; transition: opacity 0.5s, transform 0.5s;
   }
-  .gp-result-card.priority-red { border-left: 4px solid var(--st-red); }
-  .gp-result-card.priority-yellow { border-left: 4px solid var(--st-yellow); }
-  .gp-result-card.priority-green { border-left: 4px solid var(--st-green); }
+  .gp-result-card.priority-red { border-left: 3px solid #e5e7eb; }
+  .gp-result-card.priority-yellow { border-left: 3px solid #e5e7eb; }
+  .gp-result-card.priority-green { border-left: 3px solid #e5e7eb; }
 
   .gp-action-item {
     font-size: 13px; color: #374151; line-height: 1.6;
@@ -929,8 +929,8 @@
 
   /* === BENCHMARK REVEAL CARDS === */
   .benchmark-reveal {
-    border-left: 3px solid #056DFF; background: #f0f6ff;
-    border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 20px 0;
+    border-left: 3px solid #e5e7eb; background: #f0f6ff;
+    border-radius: 12px; padding: 16px 20px; margin: 20px 0;
     display: none; opacity: 0; transform: translateY(10px);
     transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   }
@@ -994,8 +994,8 @@
 
   /* === BENCHMARK BANNER === */
   .bm-banner {
-    border-left: 3px solid #059669; background: #ecfdf5;
-    border-radius: 0 12px 12px 0; padding: 14px 20px; margin-top: 24px;
+    border-left: 3px solid #e5e7eb; background: #ecfdf5;
+    border-radius: 12px; padding: 14px 20px; margin-top: 24px;
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   }
 </style>
@@ -1232,10 +1232,10 @@
             <span>Datenbasiert (6%)</span>
           </div>
           <div class="maturity-strip">
-            <div class="maturity-strip-seg" data-width="23" style="background:#EF4444;">23%</div>
-            <div class="maturity-strip-seg" data-width="49" style="background:#F59E0B;">49%</div>
-            <div class="maturity-strip-seg" data-width="22" style="background:var(--st-blue);">22%</div>
-            <div class="maturity-strip-seg" data-width="6" style="background:var(--st-green);">6%</div>
+            <div class="maturity-strip-seg" data-width="23" style="background:#cbd5e1;color:#1e293b;">23%</div>
+            <div class="maturity-strip-seg" data-width="49" style="background:#64748b;">49%</div>
+            <div class="maturity-strip-seg" data-width="22" style="background:#056DFF;">22%</div>
+            <div class="maturity-strip-seg" data-width="6" style="background:#11295A;font-size:9px;">6%</div>
           </div>
         </div>
         <button class="qc-result-link" onclick="document.getElementById('operative').scrollIntoView({behavior:'smooth'})">Mehr dazu in Kapitel 2 &rarr;</button>
@@ -1432,7 +1432,7 @@
     </div>
 
     <!-- Scenario Box -->
-    <div class="glass-light reveal" style="margin-bottom:32px;border-left:3px solid var(--st-yellow);padding:24px 28px;">
+    <div class="glass-light reveal" style="margin-bottom:32px;border-left:3px solid #e5e7eb;padding:24px 28px;">
       <div style="font-size:11px;font-weight:700;color:var(--st-yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Szenario</div>
       <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:8px;"><strong style="color:#11295A;">Stellen Sie sich vor:</strong> Sie pr&auml;sentieren dem Vorstand Ihre 20-seitige Lernstrategie. Viele Wochen Arbeit stecken darin, die Folien sind sauber aufbereitet, die Ziele klar formuliert.</p>
       <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:8px;">Die Frage des Head of Finance: <em style="color:#056DFF;">&bdquo;Und welches dieser Ziele zahlt auf unser Q2-Umsatzziel ein?&ldquo;</em></p>
@@ -1470,19 +1470,19 @@
     </div>
 
     <!-- Reflection Questions -->
-    <div class="glass-light reveal" style="margin-bottom:32px;border-left:3px solid var(--st-purple);padding:28px;">
-      <div style="font-size:13px;font-weight:700;color:var(--st-purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Reflexionsfragen f&uuml;r Ihre Organisation</div>
+    <div class="glass-light reveal" style="margin-bottom:32px;border-left:3px solid #e5e7eb;padding:28px;">
+      <div style="font-size:13px;font-weight:700;color:#056DFF;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Reflexionsfragen f&uuml;r Ihre Organisation</div>
       <div style="display:flex;flex-direction:column;gap:14px;">
         <div style="display:flex;align-items:flex-start;gap:12px;">
-          <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,0.15);color:var(--st-purple);font-size:13px;font-weight:700;flex-shrink:0;">1</div>
+          <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(5,109,255,0.1);color:#056DFF;font-size:13px;font-weight:700;flex-shrink:0;">1</div>
           <p style="font-size:14px;color:#374151;line-height:1.6;">Befindet sich Ihre Lernstrategie auf dem Slide-Deck &mdash; oder in den t&auml;glichen Entscheidungen?</p>
         </div>
         <div style="display:flex;align-items:flex-start;gap:12px;">
-          <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,0.15);color:var(--st-purple);font-size:13px;font-weight:700;flex-shrink:0;">2</div>
+          <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(5,109,255,0.1);color:#056DFF;font-size:13px;font-weight:700;flex-shrink:0;">2</div>
           <p style="font-size:14px;color:#374151;line-height:1.6;">K&ouml;nnen Sie in drei S&auml;tzen erkl&auml;ren, wie L&amp;D zu den Top-3-Unternehmenszielen beitr&auml;gt?</p>
         </div>
         <div style="display:flex;align-items:flex-start;gap:12px;">
-          <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,0.15);color:var(--st-purple);font-size:13px;font-weight:700;flex-shrink:0;">3</div>
+          <div style="display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(5,109,255,0.1);color:#056DFF;font-size:13px;font-weight:700;flex-shrink:0;">3</div>
           <p style="font-size:14px;color:#374151;line-height:1.6;">Wenn die Gesch&auml;ftsleitung fragt &bdquo;Was bringt uns L&amp;D?&ldquo; &mdash; haben Sie dann Daten oder ein Gef&uuml;hl?</p>
         </div>
       </div>
@@ -1512,28 +1512,28 @@
       <div class="maturity-strip" style="height:36px;margin-bottom:20px;">
         <div class="maturity-strip-seg" data-width="23" style="background:linear-gradient(90deg, #AFBBC6, #D1D9E0);color:#1e293b;">23&nbsp;%</div>
         <div class="maturity-strip-seg" data-width="49" style="background:linear-gradient(90deg, #288CFF, #056DFF);">49&nbsp;%</div>
-        <div class="maturity-strip-seg" data-width="22" style="background:linear-gradient(90deg, #9456FB, #B07EFC);">22&nbsp;%</div>
+        <div class="maturity-strip-seg" data-width="22" style="background:linear-gradient(90deg, #11295A, #1a3a7a);">22&nbsp;%</div>
         <div class="maturity-strip-seg" data-width="6" style="background:linear-gradient(90deg, #11295A, #133E95);font-size:9px;">6&nbsp;%</div>
       </div>
 
       <!-- 4 mode explanation cards -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-        <div class="glass-light" style="padding:16px;text-align:center;">
+        <div class="glass-light" style="padding:24px;text-align:center;">
           <div style="font-size:24px;font-weight:700;color:#AFBBC6;margin-bottom:4px;">23&nbsp;%</div>
           <div style="font-size:13px;font-weight:700;color:#11295A;margin-bottom:4px;">Ad hoc</div>
           <div style="font-size:11px;color:#6b7280;line-height:1.4;">Ohne klare Strukturen oder Steuerung</div>
         </div>
-        <div class="glass-light" style="padding:16px;text-align:center;">
+        <div class="glass-light" style="padding:24px;text-align:center;">
           <div style="font-size:24px;font-weight:700;color:var(--st-blue);margin-bottom:4px;">49&nbsp;%</div>
           <div style="font-size:13px;font-weight:700;color:#11295A;margin-bottom:4px;">Standardisiert</div>
           <div style="font-size:11px;color:#6b7280;line-height:1.4;">Gewisse Struktur, selten an Bedarfen ausgerichtet</div>
         </div>
-        <div class="glass-light" style="padding:16px;text-align:center;">
-          <div style="font-size:24px;font-weight:700;color:var(--st-purple);margin-bottom:4px;">22&nbsp;%</div>
+        <div class="glass-light" style="padding:24px;text-align:center;">
+          <div style="font-size:24px;font-weight:700;color:#056DFF;margin-bottom:4px;">22&nbsp;%</div>
           <div style="font-size:13px;font-weight:700;color:#11295A;margin-bottom:4px;">Fortgeschritten</div>
           <div style="font-size:11px;color:#6b7280;line-height:1.4;">Erste strategische Ans&auml;tze, teilweise datenbasiert</div>
         </div>
-        <div class="glass-light" style="padding:16px;text-align:center;">
+        <div class="glass-light" style="padding:24px;text-align:center;">
           <div style="font-size:24px;font-weight:700;color:#133E95;margin-bottom:4px;">6&nbsp;%</div>
           <div style="font-size:13px;font-weight:700;color:#11295A;margin-bottom:4px;">Datenbasiert</div>
           <div style="font-size:11px;color:#6b7280;line-height:1.4;">Strategisch gesteuert, Impact gemessen</div>
@@ -1561,7 +1561,7 @@
     </div>
 
     <!-- Scenario Box -->
-    <div class="glass-light reveal" style="margin-bottom:32px;border-left:3px solid var(--st-yellow);padding:24px 28px;">
+    <div class="glass-light reveal" style="margin-bottom:32px;border-left:3px solid #e5e7eb;padding:24px 28px;">
       <div style="font-size:11px;font-weight:700;color:var(--st-yellow);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Szenario</div>
       <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:8px;"><strong style="color:#11295A;">Stellen Sie sich einen typischen Montag vor:</strong> Um neun Uhr warten drei Meeting-Anfragen von F&uuml;hrungskr&auml;ften. Ein LMS-Bug muss gel&ouml;st werden. Ihr Chef fragt nach etwas Wichtigem &mdash; den ROI-Zahlen bis Freitag.</p>
       <p style="font-size:14px;color:#374151;line-height:1.7;margin-bottom:8px;">Das strategische L&amp;D-Projekt? Verschoben auf n&auml;chste Woche. <em style="color:#056DFF;">Schon wieder.</em></p>
@@ -1602,7 +1602,7 @@
       </div>
 
       <!-- Tip box -->
-      <div class="glass-light" style="margin-top:16px;border-left:3px solid #056DFF;padding:20px 24px;">
+      <div class="glass-light" style="margin-top:16px;border-left:3px solid #e5e7eb;padding:20px 24px;">
         <div style="font-size:12px;font-weight:700;color:#056DFF;margin-bottom:6px;">Technologiepotenzial</div>
         <p style="font-size:13px;color:#374151;line-height:1.6;">KI-gest&uuml;tzte Systeme k&ouml;nnen Zuweisungen und Follow-ups automatisieren, Lernangebote ohne manuellen Aufwand personalisieren, datenbasierte Entscheidungen in Echtzeit erm&ouml;glichen und Skill-Gap-Analysen auf Knopfdruck liefern. <strong style="color:#11295A;">59&nbsp;%</strong> erwarten, dass L&amp;D zum strategischen Partner wird. <strong style="color:#11295A;">61&nbsp;%</strong> sehen datenbasierte Steuerung als Zukunft.</p>
       </div>
@@ -1851,7 +1851,7 @@
 
     <!-- WEF Pull Quote -->
     <div class="reveal" style="margin-top:32px;">
-      <div class="glass" style="border-left:3px solid #056DFF;padding:32px;">
+      <div class="glass" style="border-left:3px solid #e5e7eb;padding:32px;">
         <div style="font-size:28px;font-weight:700;color:#11295A;line-height:1.3;margin-bottom:12px;">&bdquo;39&nbsp;% der bestehenden Skills ver&auml;ndern sich bis 2030.&ldquo;</div>
         <div style="font-size:13px;color:#6b7280;">World Economic Forum &middot; Future of Jobs Report 2025</div>
         <p class="narrative-text" style="margin-top:16px;margin-bottom:0;">Viele F&auml;higkeiten verlieren bereits nach drei bis vier Jahren an Aktualit&auml;t. F&uuml;r Organisationen bedeutet das: Sie m&uuml;ssen ihre Kompetenzen nicht nur kontinuierlich weiterentwickeln, sondern auch wissen, wo sie stehen und wohin sie sich bewegen m&uuml;ssen.</p>
