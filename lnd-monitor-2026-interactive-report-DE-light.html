@@ -351,6 +351,86 @@
   }
   .qc-card.answered .qc-check { display: inline-flex; }
 
+  /* === INTAKE CARD (Benchmark CTA) === */
+  .intake-card {
+    background: linear-gradient(135deg, #11295A 0%, #1a3a7a 100%);
+    border-radius: 16px; padding: 40px; color: #fff; text-align: center;
+    margin: 24px 0;
+  }
+  .intake-card h3 { font-size: 24px; margin-bottom: 8px; }
+  .intake-card p { color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+  .intake-card .start-btn {
+    background: #056DFF; color: #fff; border: none;
+    padding: 14px 32px; border-radius: 99px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .intake-card .start-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(5,109,255,0.4);
+  }
+
+  /* === QUIZ OVERLAY === */
+  .quiz-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(17,41,90,0.92); z-index: 200;
+    justify-content: center; align-items: center; padding: 24px;
+  }
+  .quiz-overlay.active { display: flex; }
+  .quiz-card {
+    background: #fff; border-radius: 16px; padding: 40px;
+    max-width: 560px; width: 100%; position: relative;
+  }
+  .quiz-progress { display: flex; gap: 6px; margin-bottom: 28px; justify-content: center; }
+  .quiz-progress .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #e5e7eb; transition: background 0.3s;
+  }
+  .quiz-progress .dot.active { background: #056DFF; }
+  .quiz-progress .dot.done { background: #059669; }
+  .quiz-chapter-tag {
+    font-size: 12px; color: #9ca3af; margin-bottom: 8px;
+  }
+  .quiz-question-text {
+    font-size: 20px; font-weight: 700; color: #11295A;
+    line-height: 1.4; margin-bottom: 24px;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  .quiz-opt-btn {
+    display: flex; align-items: center; padding: 14px 18px;
+    border: 1px solid #e5e7eb; border-radius: 12px;
+    background: #fff; font-size: 15px; color: #374151;
+    cursor: pointer; font-family: inherit; font-weight: 500;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .quiz-opt-btn:hover { border-color: #056DFF; background: #f0f6ff; }
+  .quiz-opt-btn.selected { border-color: #056DFF; background: #056DFF; color: #fff; }
+  .quiz-actions { display: flex; justify-content: space-between; align-items: center; }
+  .quiz-skip {
+    background: none; border: none; font-size: 13px; color: #9ca3af;
+    cursor: pointer; font-family: inherit; padding: 8px 0;
+  }
+  .quiz-skip:hover { color: #6b7280; }
+  .quiz-next {
+    background: #e5e7eb; color: #9ca3af; border: none;
+    padding: 10px 24px; border-radius: 99px;
+    font-size: 14px; font-weight: 600; cursor: default;
+    font-family: inherit; transition: all 0.2s;
+  }
+  .quiz-next.enabled {
+    background: #056DFF; color: #fff; cursor: pointer;
+  }
+  .quiz-next.enabled:hover { background: #0455cc; }
+  .quiz-complete-view { text-align: center; padding: 20px 0; }
+  .quiz-complete-view h3 { font-size: 24px; color: #11295A; margin: 16px 0 8px; }
+  .quiz-complete-view p { font-size: 15px; color: #6b7280; line-height: 1.5; margin-bottom: 20px; }
+  .quiz-complete-check {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #059669; display: inline-flex;
+    align-items: center; justify-content: center;
+  }
+
   /* === MATURITY STRIP (Q2) === */
   .maturity-strip {
     display: flex; height: 32px; border-radius: 8px; overflow: hidden; margin-bottom: 12px;
@@ -1091,6 +1171,17 @@
       <p class="section-sub" style="max-width:600px;">Beantworten Sie vier Fragen &mdash; und vergleichen Sie sich mit dem deutschen Markt.</p>
     </div>
 
+    <!-- INTAKE CARD (shown before quiz) -->
+    <div class="intake-card reveal" id="intakeCard">
+      <h3>Personalisieren Sie den L&amp;D Monitor</h3>
+      <p style="font-weight:600;font-size:16px;margin-bottom:6px;color:rgba(255,255,255,0.9);">Benchmark gegen 483 andere L&amp;D-Organisationen</p>
+      <p>4 Fragen &middot; 1 Minute &middot; Ihre Ergebnisse erscheinen in den Kapiteln</p>
+      <button class="start-btn" onclick="startQuiz()">Schnell-Check starten &rarr;</button>
+    </div>
+
+    <!-- QC CARDS (hidden until quiz is completed) -->
+    <div id="qcCardsContainer" style="display:none;">
+
     <!-- Q1: Strategie-Ziel-Verkn&uuml;pfung -->
     <div class="qc-card reveal" id="qcCard1">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
@@ -1218,6 +1309,8 @@
       </div>
       <button onclick="resetBenchmark()" style="background:none;border:1px solid #d1d5db;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;color:#9ca3af;flex-shrink:0;">Zur&uuml;cksetzen</button>
     </div>
+
+    </div><!-- /qcCardsContainer -->
 
   </div>
 </section>
@@ -2288,6 +2381,7 @@ function scrollToBenchmark() {
 function resetBenchmark() {
   bmAnswers = {};
   bmDone = false;
+  quizCurrentQ = 0;
   // Hide banner
   var banner = document.getElementById('bmBanner');
   if (banner) banner.style.display = 'none';
@@ -2311,6 +2405,158 @@ function resetBenchmark() {
   document.querySelectorAll('.qc-result').forEach(function(res) {
     res.classList.remove('show');
   });
+  // Show intake card, hide qc cards container
+  var intake = document.getElementById('intakeCard');
+  if (intake) intake.style.display = '';
+  var container = document.getElementById('qcCardsContainer');
+  if (container) container.style.display = 'none';
+}
+
+// ============================================================
+// QUIZ OVERLAY — Step-by-step flow
+// ============================================================
+var quizCurrentQ = 0;
+var quizQuestions = [
+  { id: 'q1', num: 1, chapter: 'Kapitel 1 \u2014 Strategie',
+    question: 'Ist Ihre Lernstrategie mit messbaren Unternehmenszielen verkn\u00fcpft?',
+    options: [
+      { label: 'Ja, klar verkn\u00fcpft', value: 'ja' },
+      { label: 'Teilweise', value: 'teilweise' },
+      { label: 'Nein', value: 'nein' },
+      { label: 'Wei\u00df nicht', value: 'weissnicht' }
+    ]},
+  { id: 'q2', num: 2, chapter: 'Kapitel 2 \u2014 Operative Umsetzung',
+    question: 'Wie w\u00fcrden Sie den L&D-Modus Ihrer Organisation beschreiben?',
+    options: [
+      { label: 'Ad hoc', value: 'adhoc' },
+      { label: 'Standardisiert', value: 'standard' },
+      { label: 'Strategisch gesteuert', value: 'strategisch' },
+      { label: 'Datenbasiert', value: 'daten' }
+    ]},
+  { id: 'q3', num: 3, chapter: 'Kapitel 3 \u2014 Wahrnehmung',
+    question: 'Wie bewerten Ihre Mitarbeitenden die Lernkultur im Vergleich zu F\u00fchrungskr\u00e4ften?',
+    options: [
+      { label: '\u00c4hnlich positiv', value: 'aehnlich' },
+      { label: 'Etwas kritischer', value: 'etwas' },
+      { label: 'Deutlich kritischer', value: 'deutlich' },
+      { label: 'Wei\u00df nicht', value: 'weissnicht' }
+    ]},
+  { id: 'q4', num: 4, chapter: 'Kapitel 4 \u2014 Zukunft',
+    question: 'Verf\u00fcgt Ihre Organisation \u00fcber eine aktiv genutzte Skill-\u00dcbersicht?',
+    options: [
+      { label: 'Ja, aktiv genutzt', value: 'ja' },
+      { label: 'Vorhanden, aber nicht genutzt', value: 'vorhanden' },
+      { label: 'Nein', value: 'nein' },
+      { label: 'In Planung', value: 'planung' }
+    ]}
+];
+
+function startQuiz() {
+  quizCurrentQ = 0;
+  bmAnswers = {};
+  document.getElementById('quizOverlay').classList.add('active');
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  var q = quizQuestions[quizCurrentQ];
+  var total = quizQuestions.length;
+  var card = document.getElementById('quizCard');
+
+  var dotsHTML = '';
+  for (var i = 0; i < total; i++) {
+    var cls = 'dot';
+    if (i < quizCurrentQ) cls += ' done';
+    if (i === quizCurrentQ) cls += ' active';
+    dotsHTML += '<div class="' + cls + '"></div>';
+  }
+
+  var optsHTML = '';
+  for (var j = 0; j < q.options.length; j++) {
+    optsHTML += '<button class="quiz-opt-btn" onclick="selectQuizOption(this, \'' + q.options[j].value + '\')">' + q.options[j].label + '</button>';
+  }
+
+  card.innerHTML =
+    '<div class="quiz-progress">' + dotsHTML + '</div>' +
+    '<div class="quiz-chapter-tag">' + q.chapter + '</div>' +
+    '<div class="quiz-question-text">' + q.question + '</div>' +
+    '<div class="quiz-options">' + optsHTML + '</div>' +
+    '<div class="quiz-actions">' +
+      '<button class="quiz-skip" onclick="skipQuizQuestion()">\u00dcberspringen</button>' +
+      '<button class="quiz-next" id="quizNextBtn" onclick="nextQuizQuestion()">' +
+        (quizCurrentQ === total - 1 ? 'Abschlie\u00dfen' : 'Weiter \u2192') +
+      '</button>' +
+    '</div>';
+}
+
+var quizSelectedValue = null;
+
+function selectQuizOption(el, val) {
+  document.querySelectorAll('.quiz-opt-btn').forEach(function(b) { b.classList.remove('selected'); });
+  el.classList.add('selected');
+  quizSelectedValue = val;
+  document.getElementById('quizNextBtn').classList.add('enabled');
+}
+
+function skipQuizQuestion() {
+  quizSelectedValue = null;
+  nextQuizQuestion();
+}
+
+function nextQuizQuestion() {
+  var q = quizQuestions[quizCurrentQ];
+  if (quizSelectedValue) {
+    bmAnswers[q.id] = quizSelectedValue;
+    // Also mark the inline qc-card as answered
+    var inlineCard = document.getElementById('qcCard' + q.num);
+    if (inlineCard) {
+      inlineCard.classList.add('answered');
+      var matchBtn = inlineCard.querySelector('.qc-option[data-value="' + quizSelectedValue + '"]');
+      if (matchBtn) matchBtn.classList.add('selected');
+      var result = document.getElementById('qcResult' + q.num);
+      if (result) {
+        result.classList.add('show');
+        setTimeout(function() {
+          result.querySelectorAll('.qc-result-bar-fill').forEach(function(bar) { bar.style.width = bar.dataset.width + '%'; });
+          result.querySelectorAll('.maturity-strip-seg').forEach(function(seg) { seg.style.width = seg.dataset.width + '%'; });
+          result.querySelectorAll('.qc-gap-bar-fk').forEach(function(bar) { bar.style.width = bar.dataset.width + '%'; });
+          result.querySelectorAll('.qc-gap-bar-ma').forEach(function(bar) { bar.style.width = bar.dataset.width + '%'; });
+        }, 100);
+      }
+    }
+  }
+  quizSelectedValue = null;
+  quizCurrentQ++;
+  if (quizCurrentQ >= quizQuestions.length) {
+    showQuizCompletion();
+  } else {
+    renderQuizQuestion();
+  }
+}
+
+function showQuizCompletion() {
+  var card = document.getElementById('quizCard');
+  var answeredCount = Object.keys(bmAnswers).length;
+  card.innerHTML =
+    '<div class="quiz-complete-view">' +
+      '<div class="quiz-complete-check">' +
+        '<svg width="24" height="24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>' +
+      '</div>' +
+      '<h3>Fertig!</h3>' +
+      '<p>' + answeredCount + ' von 4 Fragen beantwortet.<br>Ihre Vergleichswerte erscheinen nun in den Kapiteln.</p>' +
+      '<button class="start-btn" onclick="closeQuizAndReveal()" style="margin-top:8px;">Zum Bericht \u2192</button>' +
+    '</div>';
+}
+
+function closeQuizAndReveal() {
+  document.getElementById('quizOverlay').classList.remove('active');
+  // Hide intake card, show answered qc-cards
+  document.getElementById('intakeCard').style.display = 'none';
+  document.getElementById('qcCardsContainer').style.display = '';
+  // Trigger benchmark reveals if enough answers
+  if (Object.keys(bmAnswers).length > 0 && !bmDone) {
+    completeBenchmark();
+  }
 }
 
 // ============================================================
@@ -3021,5 +3267,11 @@ if (document.readyState === 'loading') {
 
 })();
 </script>
+
+<!-- QUIZ OVERLAY -->
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-card" id="quizCard"></div>
+</div>
+
 </body>
 </html>
