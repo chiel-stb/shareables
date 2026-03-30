@@ -846,6 +846,78 @@
     .glass, .glass-light, .qc-card { background: #f8fafc; border-color: #e2e8f0; }
     .section-header, .qc-question { color: #1e293b; }
   }
+
+  /* === BENCHMARK REVEAL CARDS === */
+  .benchmark-reveal {
+    border-left: 3px solid #056DFF; background: #f0f6ff;
+    border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 20px 0;
+    display: none; opacity: 0; transform: translateY(10px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  .benchmark-reveal.visible { opacity: 1; transform: translateY(0); }
+  .bm-header {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: #056DFF; margin-bottom: 10px;
+  }
+  .bm-dimension { font-size: 14px; font-weight: 700; color: #11295A; margin-bottom: 10px; }
+  .bm-bars { margin: 10px 0; }
+  .bm-bar-row { margin-bottom: 5px; }
+  .bm-bar-track {
+    height: 26px; background: #e5e7eb; border-radius: 6px;
+    position: relative; overflow: hidden;
+  }
+  .bm-bar-fill {
+    height: 100%; border-radius: 6px; display: flex; align-items: center;
+    padding: 0 10px; font-size: 11px; font-weight: 700; min-width: 36px;
+    transition: width 1s ease-out;
+  }
+  .bm-bar-fill.market { background: rgba(5,109,255,0.18); color: #6b7280; }
+  .bm-bar-fill.above { background: rgba(22,163,74,0.25); color: #059669; }
+  .bm-bar-fill.below { background: rgba(239,68,68,0.22); color: #EF4444; }
+  .bm-bar-fill.neutral { background: rgba(5,109,255,0.18); color: #6b7280; }
+  .bm-legend {
+    display: flex; gap: 16px; margin-top: 6px;
+    font-size: 11px; color: #9ca3af;
+  }
+  .bm-badge {
+    display: inline-block; padding: 4px 12px; border-radius: 99px;
+    font-size: 11px; font-weight: 700; color: #fff; margin-top: 10px;
+  }
+  .bm-badge.above { background: #059669; }
+  .bm-badge.below { background: #EF4444; }
+  .bm-badge.neutral-badge { background: #F59E0B; }
+  .bm-note {
+    font-size: 11px; color: #9ca3af; font-style: italic; margin-top: 8px; line-height: 1.5;
+  }
+  .bm-mode-strip {
+    display: flex; height: 22px; border-radius: 99px; overflow: hidden; margin: 8px 0;
+  }
+  .bm-mode-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+  }
+  .bm-mode-labels {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: #9ca3af; margin-bottom: 8px;
+  }
+
+  /* === GHOST CTA === */
+  .ghost-cta {
+    border: 2px dashed #d1d5db; border-radius: 12px; padding: 14px 20px;
+    margin: 20px 0; display: flex; align-items: center; gap: 12px;
+    cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  }
+  .ghost-cta:hover { border-color: #056DFF; background: rgba(5,109,255,0.02); }
+  .ghost-cta-text { font-size: 13px; color: #9ca3af; line-height: 1.5; }
+  .ghost-cta-text strong { color: #056DFF; font-weight: 700; }
+  .ghost-cta-arrow { margin-left: auto; color: #056DFF; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+
+  /* === BENCHMARK BANNER === */
+  .bm-banner {
+    border-left: 3px solid #059669; background: #ecfdf5;
+    border-radius: 0 12px 12px 0; padding: 14px 20px; margin-top: 24px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
 </style>
 </head>
 <body>
@@ -1137,6 +1209,16 @@
         <button class="qc-result-link" onclick="document.getElementById('future').scrollIntoView({behavior:'smooth'})">Mehr dazu in Kapitel 4 &rarr;</button>
       </div>
     </div>
+
+    <!-- Benchmark completion banner -->
+    <div class="bm-banner" id="bmBanner" style="display:none;">
+      <div style="flex:1;">
+        <strong style="color:#059669;">Schnell-Check abgeschlossen</strong>
+        <span style="color:#374151;"> &mdash; Ihre personalisierten Vergleiche erscheinen nun in den Kapiteln.</span>
+      </div>
+      <button onclick="resetBenchmark()" style="background:none;border:1px solid #d1d5db;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;color:#9ca3af;flex-shrink:0;">Zur&uuml;cksetzen</button>
+    </div>
+
   </div>
 </section>
 
@@ -1202,6 +1284,14 @@
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid #e5e7eb;">
         <p style="font-size:13px;color:#6b7280;text-align:center;font-style:italic;">Die Strategie-Kaskade: Von 71&nbsp;% zu 21&nbsp;% &mdash; ein Verlust von 50 Prozentpunkten auf dem Weg von Konzept zu Praxis.</p>
       </div>
+
+      <!-- Benchmark: Ghost CTA Q1 -->
+      <div class="ghost-cta" id="ghostQ1" onclick="scrollToBenchmark()">
+        <span class="ghost-cta-text"><strong>Schnell-Check</strong> &mdash; Wo steht Ihre Organisation bei der Zielverkn&uuml;pfung? Beantworten Sie 4 Fragen und sehen Sie Ihren Vergleich.</span>
+        <span class="ghost-cta-arrow">&uarr;</span>
+      </div>
+      <!-- Benchmark: Reveal Q1 -->
+      <div class="benchmark-reveal" id="bmRevealQ1"></div>
     </div>
 
     <!-- Root Cause Bars -->
@@ -1358,6 +1448,14 @@
       </div>
 
       <div style="font-size:11px;color:#9ca3af;margin-top:12px;">HR-Verantwortliche (n=483)</div>
+
+      <!-- Benchmark: Ghost CTA Q2 -->
+      <div class="ghost-cta" id="ghostQ2" onclick="scrollToBenchmark()">
+        <span class="ghost-cta-text"><strong>Schnell-Check</strong> &mdash; In welchem Modus arbeitet Ihre L&amp;D-Abteilung?</span>
+        <span class="ghost-cta-arrow">&uarr;</span>
+      </div>
+      <!-- Benchmark: Reveal Q2 -->
+      <div class="benchmark-reveal" id="bmRevealQ2"></div>
     </div>
 
     <!-- Time/Budget Barrier -->
@@ -1552,6 +1650,14 @@
     <!-- Dramatisch paragraph -->
     <div class="reveal" style="margin-top:32px;">
       <p class="narrative-text">Die Einsch&auml;tzung von Lernen unterscheidet sich je nach Perspektive <strong>dramatisch</strong>. Die Daten zeigen eine systematische Wahrnehmungsl&uuml;cke, die sich durch alle zentralen Dimensionen der Lernkultur zieht.</p>
+
+      <!-- Benchmark: Ghost CTA Q3 -->
+      <div class="ghost-cta" id="ghostQ3" onclick="scrollToBenchmark()">
+        <span class="ghost-cta-text"><strong>Schnell-Check</strong> &mdash; Wie gro&szlig; ist die Wahrnehmungsl&uuml;cke in Ihrer Organisation?</span>
+        <span class="ghost-cta-arrow">&uarr;</span>
+      </div>
+      <!-- Benchmark: Reveal Q3 -->
+      <div class="benchmark-reveal" id="bmRevealQ3"></div>
     </div>
 
     <!-- FK vs MA Comparison Table -->
@@ -1679,6 +1785,14 @@
     <!-- Skill Transparency Text -->
     <div class="reveal" style="margin-top:32px;">
       <p class="narrative-text">Doch genau hier zeigt sich eine zentrale Schwachstelle: Nur <strong>10&nbsp;%</strong> der Organisationen verf&uuml;gen &uuml;ber eine klare, aktiv genutzte &Uuml;bersicht ihrer vorhandenen Skills und Skill-Gaps. Weitere <strong>37&nbsp;%</strong> haben zwar einen &Uuml;berblick, nutzen diesen jedoch nicht konsequent. Damit fehlt in der gro&szlig;en Mehrheit der Organisationen die Grundlage, um Entwicklung gezielt zu steuern.</p>
+
+      <!-- Benchmark: Ghost CTA Q4 -->
+      <div class="ghost-cta" id="ghostQ4" onclick="scrollToBenchmark()">
+        <span class="ghost-cta-text"><strong>Schnell-Check</strong> &mdash; Wie steht es um die Skill-Transparenz in Ihrer Organisation?</span>
+        <span class="ghost-cta-arrow">&uarr;</span>
+      </div>
+      <!-- Benchmark: Reveal Q4 -->
+      <div class="benchmark-reveal" id="bmRevealQ4"></div>
     </div>
 
     <!-- Neue Rolle von L&D -->
@@ -1999,20 +2113,20 @@ function initQuickCheck() {
         // Mark card as answered
         card.classList.add('answered');
 
+        // Store answer for benchmark
+        bmAnswers['q' + qNum] = btn.dataset.value;
+
         // Show result
         result.classList.add('show');
 
         // Animate bars in result
         setTimeout(() => {
-          // Standard bars
           result.querySelectorAll('.qc-result-bar-fill').forEach(bar => {
             bar.style.width = bar.dataset.width + '%';
           });
-          // Maturity strip segments (Q2)
           result.querySelectorAll('.maturity-strip-seg').forEach(seg => {
             seg.style.width = seg.dataset.width + '%';
           });
-          // Gap bars (Q3)
           result.querySelectorAll('.qc-gap-bar-fk').forEach(bar => {
             bar.style.width = bar.dataset.width + '%';
           });
@@ -2020,8 +2134,182 @@ function initQuickCheck() {
             bar.style.width = bar.dataset.width + '%';
           });
         }, 100);
+
+        // Check if all 4 answered → trigger benchmark
+        if (Object.keys(bmAnswers).length >= 4 && !bmDone) {
+          setTimeout(completeBenchmark, 600);
+        }
       });
     });
+  });
+}
+
+// ============================================================
+// BENCHMARK ENGINE — Personalized comparison cards
+// ============================================================
+var bmAnswers = {};
+var bmDone = false;
+var bmConfig = {
+  q1: { marketPct: 21, dimension: 'Strategie-Ziel-Verkn\u00fcpfung',
+        map: {ja:90, teilweise:45, nein:15, weissnicht:30},
+        note: 'Verglichen mit 483 HR-Verantwortlichen.' },
+  q2: { mode: true, distribution: [23,49,22,6],
+        labels: ['Ad hoc','Standardisiert','Fortgeschritten','Datenbasiert'],
+        map: {adhoc:0, standard:1, strategisch:2, daten:3},
+        note: '72\u00a0% arbeiten ad hoc oder standardisiert.' },
+  q3: { gap: true, marketGap: 28, dimension: 'Wahrnehmungsl\u00fccke',
+        map: {aehnlich:5, etwas:15, deutlich:35, weissnicht:null},
+        note: 'Die durchschnittliche L\u00fccke betr\u00e4gt 28 Prozentpunkte.' },
+  q4: { marketPct: 10, dimension: 'Skill-Transparenz',
+        map: {ja:90, vorhanden:45, nein:5, planung:25},
+        note: 'Nur 10\u00a0% haben eine aktiv genutzte Skill-\u00dcbersicht.' }
+};
+
+function completeBenchmark() {
+  bmDone = true;
+  // Show banner
+  var banner = document.getElementById('bmBanner');
+  if (banner) banner.style.display = 'flex';
+  // Hide ghost CTAs
+  ['ghostQ1','ghostQ2','ghostQ3','ghostQ4'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  // Render and reveal cards with stagger
+  var delay = 200;
+  ['q1','q2','q3','q4'].forEach(function(qId) {
+    var answerVal = bmAnswers[qId];
+    if (answerVal === undefined) return;
+    var revealEl = document.getElementById('bmReveal' + qId.toUpperCase());
+    if (!revealEl) return;
+    var cfg = bmConfig[qId];
+    if (cfg.mode) renderModeReveal(revealEl, cfg, answerVal);
+    else if (cfg.gap) renderGapReveal(revealEl, cfg, answerVal);
+    else renderBarReveal(revealEl, cfg, answerVal);
+    revealEl.style.display = 'block';
+    (function(el, d) {
+      setTimeout(function() { el.classList.add('visible'); }, d);
+    })(revealEl, delay);
+    delay += 300;
+  });
+}
+
+function renderBarReveal(el, cfg, answerVal) {
+  var userPct = cfg.map[answerVal] || 30;
+  var marketPct = cfg.marketPct;
+  var delta = userPct - marketPct;
+  var barClass = 'neutral', badgeClass = 'neutral-badge', badgeText = 'Im Bereich des Marktdurchschnitts';
+  if (delta > 10) { barClass = 'above'; badgeClass = 'above'; badgeText = '+' + delta + ' PP \u00fcber Markt'; }
+  else if (delta < -10) { barClass = 'below'; badgeClass = 'below'; badgeText = delta + ' PP unter Markt'; }
+  el.innerHTML =
+    '<div class="bm-header">Ihre Organisation vs. Markt</div>' +
+    '<div class="bm-dimension">' + cfg.dimension + '</div>' +
+    '<div class="bm-bars">' +
+      '<div class="bm-bar-row"><div class="bm-bar-track"><div class="bm-bar-fill market" id="' + el.id + 'M" style="width:0%;">Markt: ' + marketPct + '\u00a0%</div></div></div>' +
+      '<div class="bm-bar-row"><div class="bm-bar-track"><div class="bm-bar-fill ' + barClass + '" id="' + el.id + 'U" style="width:0%;">Sie: ' + userPct + '\u00a0%</div></div></div>' +
+      '<div class="bm-legend"><span>Markt (n=1.686)</span><span>Ihre Einsch\u00e4tzung</span></div>' +
+    '</div>' +
+    '<span class="bm-badge ' + badgeClass + '">' + badgeText + '</span>' +
+    '<div class="bm-note">' + cfg.note + '</div>';
+  setTimeout(function() {
+    var mBar = document.getElementById(el.id + 'M');
+    var uBar = document.getElementById(el.id + 'U');
+    if (mBar) mBar.style.width = marketPct + '%';
+    if (uBar) uBar.style.width = userPct + '%';
+  }, 300);
+}
+
+function renderModeReveal(el, cfg, answerVal) {
+  var idx = cfg.map[answerVal];
+  if (idx === undefined) idx = 0;
+  var dist = cfg.distribution;
+  var labels = cfg.labels;
+  var userMode = labels[idx];
+  var userShare = dist[idx];
+  var isReactive = idx <= 1;
+  var badgeClass = isReactive ? 'below' : 'above';
+  var badgeText = isReactive
+    ? 'Reaktiver Bereich (' + (dist[0]+dist[1]) + '\u00a0% der Organisationen)'
+    : 'Strategischer Bereich (' + (dist[2]+dist[3]) + '\u00a0% der Organisationen)';
+  var stripHTML = '';
+  for (var i = 0; i < dist.length; i++) {
+    var bg = i === idx ? '#056DFF' : '#e5e7eb';
+    var color = i === idx ? '#fff' : '#9ca3af';
+    stripHTML += '<div class="bm-mode-seg" style="flex:' + dist[i] + ';background:' + bg + ';color:' + color + ';">' + (dist[i] >= 10 ? dist[i] + '%' : '') + '</div>';
+  }
+  el.innerHTML =
+    '<div class="bm-header">Ihre Organisation vs. Markt</div>' +
+    '<div class="bm-dimension">' + cfg.dimension + ': ' + userMode + '</div>' +
+    '<div style="font-size:13px;color:#11295A;margin-bottom:8px;"><strong>' + userShare + '\u00a0%</strong> der Organisationen befinden sich im gleichen Modus.</div>' +
+    '<div class="bm-mode-strip">' + stripHTML + '</div>' +
+    '<div class="bm-mode-labels"><span>Ad hoc</span><span>Datenbasiert</span></div>' +
+    '<span class="bm-badge ' + badgeClass + '">' + badgeText + '</span>' +
+    '<div class="bm-note">' + cfg.note + '</div>';
+}
+
+function renderGapReveal(el, cfg, answerVal) {
+  var userGap = cfg.map[answerVal];
+  var marketGap = cfg.marketGap;
+  if (userGap === null) {
+    el.innerHTML =
+      '<div class="bm-header">Ihre Organisation vs. Markt</div>' +
+      '<div class="bm-dimension">' + cfg.dimension + '</div>' +
+      '<div style="font-size:13px;color:#11295A;margin-bottom:8px;">Ohne Daten zur Wahrnehmung k\u00f6nnen Sie die L\u00fccke nicht einsch\u00e4tzen. Die durchschnittliche L\u00fccke betr\u00e4gt <strong>28 Prozentpunkte</strong>.</div>' +
+      '<span class="bm-badge neutral-badge">Keine Einsch\u00e4tzung m\u00f6glich</span>' +
+      '<div class="bm-note">' + cfg.note + '</div>';
+    return;
+  }
+  var badgeClass = 'neutral-badge', badgeText = 'Im Bereich des Marktdurchschnitts (' + userGap + ' PP)';
+  if (userGap < marketGap - 5) { badgeClass = 'above'; badgeText = 'Kleinere L\u00fccke als der Markt (' + userGap + ' vs. ' + marketGap + ' PP)'; }
+  else if (userGap > marketGap + 5) { badgeClass = 'below'; badgeText = 'Gr\u00f6\u00dfere L\u00fccke als der Markt (' + userGap + ' vs. ' + marketGap + ' PP)'; }
+  el.innerHTML =
+    '<div class="bm-header">Ihre Organisation vs. Markt</div>' +
+    '<div class="bm-dimension">' + cfg.dimension + '</div>' +
+    '<div class="bm-bars">' +
+      '<div class="bm-bar-row"><div class="bm-bar-track"><div class="bm-bar-fill market" id="' + el.id + 'M" style="width:0%;">Markt: ' + marketGap + ' PP</div></div></div>' +
+      '<div class="bm-bar-row"><div class="bm-bar-track"><div class="bm-bar-fill ' + (badgeClass === 'above' ? 'above' : badgeClass === 'below' ? 'below' : 'neutral') + '" id="' + el.id + 'U" style="width:0%;">Sie: ~' + userGap + ' PP</div></div></div>' +
+      '<div class="bm-legend"><span>Markt-L\u00fccke</span><span>Ihre Einsch\u00e4tzung</span></div>' +
+    '</div>' +
+    '<span class="bm-badge ' + badgeClass + '">' + badgeText + '</span>' +
+    '<div class="bm-note">' + cfg.note + '</div>';
+  setTimeout(function() {
+    var mBar = document.getElementById(el.id + 'M');
+    var uBar = document.getElementById(el.id + 'U');
+    if (mBar) mBar.style.width = Math.min(marketGap * 2, 100) + '%';
+    if (uBar) uBar.style.width = Math.min(userGap * 2, 100) + '%';
+  }, 300);
+}
+
+function scrollToBenchmark() {
+  var el = document.getElementById('selbsteinschaetzung');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetBenchmark() {
+  bmAnswers = {};
+  bmDone = false;
+  // Hide banner
+  var banner = document.getElementById('bmBanner');
+  if (banner) banner.style.display = 'none';
+  // Show ghost CTAs
+  ['ghostQ1','ghostQ2','ghostQ3','ghostQ4'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = 'flex';
+  });
+  // Hide reveals
+  ['bmRevealQ1','bmRevealQ2','bmRevealQ3','bmRevealQ4'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.style.display = 'none'; el.classList.remove('visible'); el.innerHTML = ''; }
+  });
+  // Reset quick-check cards
+  document.querySelectorAll('.qc-card').forEach(function(card) {
+    card.classList.remove('answered');
+  });
+  document.querySelectorAll('.qc-option').forEach(function(btn) {
+    btn.classList.remove('selected');
+  });
+  document.querySelectorAll('.qc-result').forEach(function(res) {
+    res.classList.remove('show');
   });
 }
 
