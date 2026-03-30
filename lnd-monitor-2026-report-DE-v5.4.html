@@ -1067,14 +1067,16 @@
 
     .tips-section-v4 {
       margin: 4mm 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
 
     .tip-card-v4 {
       position: relative;
       background: var(--st-blue-050);
-      border-radius: 16px;
-      padding: 20px 100px 20px 20px;
-      margin-bottom: 10px;
+      border-radius: 12px;
+      padding: 14px 16px;
       overflow: hidden;
     }
 
@@ -1082,26 +1084,22 @@
       position: absolute;
       right: -1px;
       bottom: -1px;
-      width: 90px;
-      height: 32px;
+      width: 70px;
+      height: 26px;
       pointer-events: none;
     }
 
-    .tip-card-v4:last-child {
-      margin-bottom: 0;
-    }
-
     .tip-card-v4-title {
-      font-size: 10pt;
+      font-size: 9pt;
       font-weight: 700;
       color: var(--st-navy);
       margin-bottom: 3px;
     }
 
     .tip-card-v4-desc {
-      font-size: 8.5pt;
+      font-size: 7.5pt;
       color: var(--st-navy);
-      line-height: 1.5;
+      line-height: 1.45;
       opacity: 0.75;
     }
 
